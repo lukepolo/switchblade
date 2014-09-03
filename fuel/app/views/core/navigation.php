@@ -23,19 +23,42 @@
                 <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">SmartAdmin Intel</span></a>
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">Jump/Split</span></a>
                 <ul>
                     <li>
-                        <a href="ajax/difver.html"><i class="fa fa-stack-overflow"></i> Different Versions</a>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpDetail</span></a>
+                <ul>
                     <li>
-                        <a href="ajax/applayout.html"><i class="fa fa-cube"></i> App Settings</a>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpHeat</span></a>
+                <ul>
                     <li>
-                        <a href="http://192.241.236.31/smartadmin/BUGTRACK/track_/documentation/index.html" target="_blank"><i class="fa fa-book"></i> Documentation</a>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpRate</span></a>
+                <ul>
                     <li>
-                        <a href="http://192.241.236.31/smartadmin/BUGTRACK/track_/" target="_blank"><i class="fa fa-bug"></i> Bug Tracker</a>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpPing</span></a>
+                <ul>
+                    <li>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
                 </ul>
             </li>

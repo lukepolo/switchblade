@@ -121,7 +121,7 @@ return array(
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
 		 */
-		 'token_salt'            => 'put your salt value here to make the token more secure',
+		 'token_salt'            => 'sotheSaltIsSoSalty',
 
 		/**
 		 * Allow the Input class to use X headers when present
@@ -137,7 +137,7 @@ return array(
 		 * WARNING: Using xss_clean will cause a performance hit.
 		 * How much is dependant on how much input data there is.
 		 */
-		'uri_filter'       => array('htmlentities'),
+		'uri_filter'       => array(),
 
 		/**
 		 * This input filter can be any normal PHP function as well as 'xss_clean'
@@ -221,12 +221,12 @@ return array(
 		/**
 		 * Whether URI routing is case sensitive or not
 		 */
-		 'case_sensitive' => true,
+		 'case_sensitive' => false,
 
 		/**
 		 *  Wether to strip the extension
 		 */
-		 'strip_extension' => true,
+		 'strip_extension' => false,
 	 ),
 
 	/**

@@ -1,9 +1,9 @@
 <?php
-	class Controller_Home extends Controller_Template
+class Controller_Home extends Controller_Template
+{
+	public function action_index()
 	{
-		public function action_index()
-		{
-		    $this->template->title = ''; 
-		    $this->template->content = View::forge('home/index');
-		}
+	    $this->template->title = ''; 
+	    $this->template->content = View::forge('home/index');
 	}
+}

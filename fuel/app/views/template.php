@@ -22,6 +22,8 @@
             Casset::css('smartadmin-skins.min.css');
             echo Casset::render_css();
         ?>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     </head>
 	<!--  Add smart styles  smart-style-* -->
     <body class="menu-on-top">
@@ -37,8 +39,8 @@
         <footer>
             <?php echo $footer; ?>
         </footer>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        
+	
         <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
         <?php
             // JS FILES Here
@@ -62,6 +64,8 @@
             Casset::js('select2.min.js');
             //JQUERY UI + Bootstrap Slider
             Casset::js('plugin/bootstrap-slider/bootstrap-slider.min.js');
+	    // SUMMER NOTE
+	    Casset::js('plugin/summernote/summernote.min.js');
             // browser msie issue fix
             Casset::js('plugin/msie-fix/jquery.mb.browser.min.js');
             // FastClick: For mobile devices: you can disable this in app.js
@@ -73,5 +77,12 @@
             
             echo Casset::render_js();
         ?>
+	<script>
+	    $(document).ready(function()
+	    {
+		// Generate all selects as select2
+		$('select').select2();
+	    });
+	</script>
     </body>
 </html>
