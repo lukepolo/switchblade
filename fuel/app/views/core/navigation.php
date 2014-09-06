@@ -62,6 +62,14 @@
                     </li>
                 </ul>
             </li>
+            <li class="top-menu-hidden">
+                <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
+                 <ul>
+                    <li>
+                        <a target="_blank" href="https://jumpcord.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </nav>
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
