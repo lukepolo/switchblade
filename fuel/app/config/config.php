@@ -54,13 +54,13 @@ return array(
 	/**
 	 * Settings for the file finder cache (the Cache class has it's own config!)
 	 */
-	 'caching'         => false,
+	 'caching'         => true,
 	 'cache_lifetime'  => 3600, // In Seconds
 
 	/**
 	 * Callback to use with ob_start(), set this to 'ob_gzhandler' for gzip encoding of output
 	 */
-	 'ob_callback'  => null,
+	 'ob_callback'  => 'ob_gzhandler',
 
 	 'errors'  => array(
 		// Which errors should we show, but continue execution? You can add the following:
@@ -93,8 +93,8 @@ return array(
 	 * server_gmt_offset	in seconds the server offset from gmt timestamp when time() is used
 	 * default_timezone		optional, if you want to change the server's default timezone
 	 */
-	 'server_gmt_offset'  => 0,
-	 'default_timezone'   => null,
+	 'server_gmt_offset'  => -18000,
+	 'default_timezone'   => "EST",
 
 	/**
 	 * Logging Threshold.  Can be set to any of the following:
@@ -121,7 +121,7 @@ return array(
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
 		 */
-		 'token_salt'            => 'sotheSaltIsSoSalty',
+		 'token_salt'            => '!Th3JumPisSoHigh!',
 
 		/**
 		 * Allow the Input class to use X headers when present
@@ -194,7 +194,7 @@ return array(
 		// Restrict the domain that the cookie is available to
 		 'domain'      => null,
 		// Only transmit cookies over secure connections
-		 'secure'      => false,
+		 'secure'      => true,
 		// Only transmit cookies over HTTP, disabling Javascript access
 		 'http_only'   => false,
 	// ),
@@ -226,7 +226,7 @@ return array(
 		/**
 		 *  Wether to strip the extension
 		 */
-		 'strip_extension' => false,
+		 'strip_extension' => true,
 	 ),
 
 	/**
