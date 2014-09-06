@@ -79,6 +79,22 @@
                 </ul>
             </li>
             <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpBonus</span></a>
+                <ul>
+                    <li>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpShare</span></a>
+                <ul>
+                    <li>
+                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="top-menu-hidden">
                 <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
                  <ul>
                     <li>
