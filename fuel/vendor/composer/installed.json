@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "020fa1983597249bfcb947b485c5aac8e0e36652"
+            "reference": "74fb0a7a1a23696d9c8cc2fba5903f6711cdd067"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/020fa1983597249bfcb947b485c5aac8e0e36652",
-            "reference": "020fa1983597249bfcb947b485c5aac8e0e36652",
+            "url": "https://api.github.com/repos/composer/installers/zipball/74fb0a7a1a23696d9c8cc2fba5903f6711cdd067",
+            "reference": "74fb0a7a1a23696d9c8cc2fba5903f6711cdd067",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-07-09 14:29:42",
+        "time": "2014-08-18 20:00:12",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -44,8 +44,7 @@
             {
                 "name": "Kyle Robinson Young",
                 "email": "kyle@dontkry.com",
-                "homepage": "https://github.com/shama",
-                "role": "Developer"
+                "homepage": "https://github.com/shama"
             }
         ],
         "description": "A multi-framework Composer library installer",
@@ -61,6 +60,7 @@
             "annotatecms",
             "bitrix",
             "cakephp",
+            "chef",
             "codeigniter",
             "concrete5",
             "croogo",
@@ -80,6 +80,7 @@
             "phpbb",
             "piwik",
             "ppi",
+            "puppet",
             "roundcube",
             "shopware",
             "silverstripe",
