@@ -226,7 +226,7 @@ return array(
 		/**
 		 *  Wether to strip the extension
 		 */
-		 'strip_extension' => true,
+		 'strip_extension' => false,
 	 ),
 
 	/**

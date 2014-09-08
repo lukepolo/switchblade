@@ -6,5 +6,5 @@ return array(
 
     // Modules default path
     'jumpsplit' => 'jumpsplit/home',
-    'jumpsplit/url/(:any)' => 'jumpsplit/url'
+    'jumpsplit/get/(:segment)/(:any)' => 'jumpsplit/editor/get/$1/$2'
 );
