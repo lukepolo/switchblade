@@ -46,20 +46,15 @@ class Controller_Editor extends \Controller_Template
         }
         
         // force all relative paths to their own URL
-        $body_url = '<base href="'.$url_parsed['scheme'].'://'.$url_host.'">';
+        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
         $html = preg_replace('/(<head*>)(.*)(<\/head>)/s', "$1$2$body_url$3", $html); 
-        
-        $jumpcord_css = \Uri::Create('jumpsplit/get/css');
-        $jumpcord_js = \Uri::Create('jumpsplit/get/js');
         
         if($url_parsed['scheme'] != 'https')
         {
+            // Fix relative links first
+            $html = preg_replace('/<(link|script)(href|src)=(\'|")(?!http)(?!\/\/)(.*)/', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
             // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-            // CSS
-            // TODO - check if relative path, probably wont work without! :-)
-            $html = preg_replace('/<link(.*)href=(\'|")(?!\/\/)(.*)(\.css)(\'|")/' , '<link$1href="'.$jumpcord_css.'/$3"', $html);
-            // JS
-            $html = preg_replace('/<script(.*)src=(\'|")(?!\/\/)(.*)(\.js)(\'|")/' , '<script$1src="'.$jumpcord_js.'/$3"', $html);
+            $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('jumpsplit/get').'/$5"', $html);
         }
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
@@ -144,28 +139,43 @@ class Controller_Editor extends \Controller_Template
         die;
     }
     
-    public function action_get($type)
+    public function action_get()
     {
+        echo false;
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/jumpsplit/get/'.$type.'/','', $_SERVER['REQUEST_URI'])).'.'.$type;
+        $url = urldecode(str_replace('/jumpsplit/get/','', $_SERVER['REQUEST_URI']));
+        
+        $extension = pathinfo($url)['extension'];
         
         $cURL = curl_init($url);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt ($cURL, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt ($cURL, CURLOPT_CONNECTTIMEOUT, 2);
         
         
         $file = curl_exec($cURL);
         
         curl_close($cURL);
         
-        switch($type)
+        switch($extension)
         {
             case 'css' : 
                 header("Content-type: text/css", true);
             break;
             case 'js':
                 header('Content-Type: application/javascript', true);
+            break;
+            case 'atom':
+                header('Content-Type: application/atom+xml');
+            break;
+            case 'pdf':
+                header('Content-Type: application/pdf');
+            break;
+            case 'rss':
+                header('Content-Type: application/rss+xml; charset=ISO-8859-1');
+            break;
+            case 'xml':
+                header('Content-Type: text/xml');
             break;
         }
         echo $file;
