@@ -38,10 +38,6 @@
                     <i class="fa fa-check"></i> Save
                 </button>	
             </div>
-            <label class="checkbox pull-left">
-                <input type="checkbox" checked="checked" name="autosave" id="autosave">
-                <i></i>Auto Save 
-            </label> 
         </div>
     </div>
     <!-- end widget content -->

@@ -44,7 +44,7 @@
         jumpsplit_widget_positions();
     }
     
-        // Shows the Classes editor
+    // Shows the Classes editor
     function jumpsplit_classes_editor()
     {
         $('.widget-templates').hide();
@@ -52,9 +52,18 @@
         
         default_classes = get_class_list(null, ',');
         
-        console.log(default_classes);
         $("#class_selector").val(default_classes.split(',')).trigger("change");
         $("#class_selector").select2({placeholder: 'Select or Enter a Class', tags:default_classes.split(',')});
+        
+        // Reset positions
+        jumpsplit_widget_positions();
+    }
+    
+    // Shows the CSS editor
+    function jumpsplit_css_editor()
+    {
+        $('.widget-templates').hide();
+        $('#jumpsplit-css').show();
         
         // Reset positions
         jumpsplit_widget_positions();
@@ -166,7 +175,7 @@
     <header role="heading">
         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
         <h2> </h2>
-        <ul class="nav nav-tabs pull-right in" id="myTab">
+        <ul class="nav nav-tabs pull-right in">
             <li class="active">
                 <a data-toggle="tab" href="#editor"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Editor</span></a>
             </li>
@@ -186,8 +195,8 @@
             <div class="tab-content">
                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="editor">
                     <?php
-                        $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-                        //$url = "http://lukepolo.com";
+//                        $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+                        $url = "http://lukepolo.com";
                     ?>
                     <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
@@ -209,3 +218,4 @@
 <?php echo \View::Forge('widgets/menu');?>
 <?php echo \View::Forge('widgets/html_editor');?>
 <?php echo \View::Forge('widgets/classes_editor');?>
+<?php echo \View::Forge('widgets/css_editor');?>

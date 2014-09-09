@@ -47,7 +47,7 @@
                 <a href="#" onclick="javascript:jumpsplit_classes_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
             </li>
             <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
+                <a href="#" onclick="javascript:jumpsplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
             </li>
             <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Update / Insert Link (change depending on options)</a>

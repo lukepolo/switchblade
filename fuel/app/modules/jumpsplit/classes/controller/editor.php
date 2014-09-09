@@ -12,12 +12,8 @@ class Controller_Editor extends \Controller_Template
 
     public function action_url()
     {
-
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
         $url = urldecode(str_replace('/jumpsplit/editor/url/','', $_SERVER['REQUEST_URI']));
-
-        $url_parsed = parse_url($url);
-        $url_host = '//'.$url_parsed['host'];
 
         $cURL = curl_init($url);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
@@ -27,15 +23,42 @@ class Controller_Editor extends \Controller_Template
         // Get the HTML
         $html = curl_exec($cURL);
 
-        // parse out the links jumpcord.com
-        $html = preg_replace('/(src)="(\/)(?!\/)(.*)/', '$1="'.$url_host.'/$3', $html);
+        // Get the status code
+        $status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+        if($status != 200)
+        {
+            $parsed_url = parse_url($url);
+            curl_setopt($cURL, CURLOPT_URL, $parsed_url['host']);
+            $html = curl_exec($cURL);
+        }
         
-        // currently hack till i fix the REG EXP
-        $html = preg_replace('/(href)="(\/)(?!\/)(.*)/', '$1="'.$url_host.'/$3', $html);
-
+        $url = curl_getinfo($cURL, CURLINFO_EFFECTIVE_URL);        
+        
+        $url_parsed = parse_url($url);
+        if(isset($url_parsed['host']) === true && empty($url_parsed['host']) === false)
+        {
+            $url_host = '//'.$url_parsed['host'];
+        }
+        else
+        {
+            $url_parsed['scheme'] = 'https';
+            $url_host = $url_parsed['path'];
+        }
+        
+        // force all relative paths to their own URL
+        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
+        $html = preg_replace('/(<head*>)(.*)(<\/head>)/s', "$1$2$body_url$3", $html); 
+        
+        if($url_parsed['scheme'] != 'https')
+        {
+            // Fix relative links first
+            $html = preg_replace('/<(link|script)(href|src)=(\'|")(?!http)(?!\/\/)(.*)/', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
+            // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
+            $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('jumpsplit/get').'/$5"', $html);
+        }
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
-        // Add CSS FILE
+        
         $html = $html."
         <style>
             .jumpsplit-border {
@@ -108,14 +131,54 @@ class Controller_Editor extends \Controller_Template
         
         </script>";
 
-        // Get the status code
-        $status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
-
         curl_close($cURL);
 
         echo $html;
         // Required to not use the template
         // TODO - Should i remove not a huge deal to me
+        die;
+    }
+    
+    public function action_get()
+    {
+        echo false;
+        // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
+        $url = urldecode(str_replace('/jumpsplit/get/','', $_SERVER['REQUEST_URI']));
+        
+        $extension = pathinfo($url)['extension'];
+        
+        $cURL = curl_init($url);
+        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt ($cURL, CURLOPT_CONNECTTIMEOUT, 2);
+        
+        
+        $file = curl_exec($cURL);
+        
+        curl_close($cURL);
+        
+        switch($extension)
+        {
+            case 'css' : 
+                header("Content-type: text/css", true);
+            break;
+            case 'js':
+                header('Content-Type: application/javascript', true);
+            break;
+            case 'atom':
+                header('Content-Type: application/atom+xml');
+            break;
+            case 'pdf':
+                header('Content-Type: application/pdf');
+            break;
+            case 'rss':
+                header('Content-Type: application/rss+xml; charset=ISO-8859-1');
+            break;
+            case 'xml':
+                header('Content-Type: text/xml');
+            break;
+        }
+        echo $file;
         die;
     }
 }
