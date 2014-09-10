@@ -98,10 +98,10 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
                  <ul>
                     <li>
-                        <a target="_blank" href="https://jumpcord.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
+                        <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
                     </li>
                     <li>
-                        <a target="_blank" href="https://jumpcord.atlassian.net">JIRA</a>
+                        <a target="_blank" href="https://switchblade.atlassian.net">JIRA</a>
                     </li>
                 </ul>
             </li>
