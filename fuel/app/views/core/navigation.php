@@ -100,6 +100,9 @@
                     <li>
                         <a target="_blank" href="https://jumpcord.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
                     </li>
+                    <li>
+                        <a target="_blank" href="https://jumpcord.atlassian.net">JIRA</a>
+                    </li>
                 </ul>
             </li>
         </ul>
