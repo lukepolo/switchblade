@@ -96,7 +96,7 @@ class Controller_Auth extends Controller_Template
                         {
                             // FORCE LOGIN AND REGISTER NEW AUTH
                             Auth::force_login($found_user->id);
-                            Controller_Auth::Create_User($opauth, $found_user->id);
+                            Controller_Auth::link_provider($found_user->id);
                         }
                         else
                         {
@@ -116,8 +116,6 @@ class Controller_Auth extends Controller_Template
                                 'fullname' =>   $opauth->get('auth.info.name'),
                             )
                         );
-                        
-                        Controller_Auth::Create_User($opauth, $user_id);
                     }
                     
                     $opauth->login_or_register();
@@ -152,7 +150,7 @@ class Controller_Auth extends Controller_Template
         }
     }
     
-    public static function Create_User($user_id)
+    public static function link_provider($user_id)
     {
         // do we have an auth strategy to match?
         if ($authentication = \Session::get('auth-strategy.authentication', array()))
