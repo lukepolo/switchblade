@@ -78,6 +78,10 @@ return array(
             'Google' => array(
                 'client_id' => Settings::get('google_client_id'),
                 'client_secret' => Settings::get('google_client_secret_id')
+            ),
+            'Twitter' => array(
+                'key' => Settings::get('twitter_client_id'),
+                'secret' => Settings::get('twitter_client_secret_id')
             )
 	 ),
 );
