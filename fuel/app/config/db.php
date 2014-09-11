@@ -1,11 +1,12 @@
 <?php
+return array(
     // a MySQL driver configuration
     'development' => array(
         'type'           => 'mysqli',
         'connection'     => array(
             'hostname'       => 'localhost',
-            'database'       => 'jumpcord_dev',
-            'username'       => 'jumpcord',
+            'database'       => 'switchblade_dev',
+            'username'       => 'switchblade',
             'password'       => '!MolyPOX!',
             'persistent'     => true,
             'compress'       => true,
@@ -23,8 +24,8 @@
         'type'           => 'mysqli',
         'connection'     => array(
             'hostname'       => 'localhost',
-            'database'       => 'jumpcord',
-            'username'       => 'jumpcord',
+            'database'       => 'switchblade',
+            'username'       => 'switchblade',
             'password'       => '!MolyPOX!',
             'persistent'     => true,
             'compress'       => true,
@@ -35,4 +36,5 @@
         'enable_cache'   => true,
         'profiling'      => false,
         'readonly'       => false,
-    ),
+    )
+)
