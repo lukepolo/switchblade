@@ -4,6 +4,9 @@
     "description" : "FuelPHP is a simple, flexible, community driven PHP 5.3+ framework, based on the best ideas of other frameworks, with a fresh start!",
     "keywords": ["application", "website", "development", "framework", "PHP"],
     "license": "MIT",
+    "repositories": [
+        { "type": "git", "url": "https://github.com/rasa/opauth-paypal.git" }
+    ],
     "require": {
         "php": ">=5.3.3",
         "composer/installers": "~1.0",
@@ -12,8 +15,10 @@
         "opauth/opauth": "0.4.*",
         "opauth/facebook": "dev-master",
         "opauth/google": "dev-master",
+	"opauth/paypal": "dev-master",
         "opauth/twitter": "dev-master",
-        "psr/log": "1.0.*@dev"
+        "psr/log": "1.0.*@dev",
+	"opauth/paypal": "dev-master"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
