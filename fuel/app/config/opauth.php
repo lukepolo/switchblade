@@ -80,8 +80,8 @@ return array(
                 'client_secret' => Settings::get('google_client_secret_id')
             ),
             'Twitter' => array(
-                'key' => Settings::get('twitter_client_id'),
-                'secret' => Settings::get('twitter_client_secret_id')
+                'key' => Settings::get('twitter_key'),
+                'secret' => Settings::get('twitter_secret_id')
             )
 	 ),
 );
