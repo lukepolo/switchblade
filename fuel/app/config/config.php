@@ -272,8 +272,9 @@ return array(
 		 * );
 		 */
 		 'packages'  => array(
-		 	'orm',
-                        'fuel-casset',
+                    'orm',
+                    'fuel-casset',
+                    'auth',
 		 ),
 
 		/**
@@ -299,7 +300,14 @@ return array(
 		 * add it like 'session' => 'auth'.
 		 * If you don't want the config in a group use null as groupname.
 		 */
-		 'config'  => array(),
+		 'config'  => array(
+                     'auth',
+                     'opauth',
+                     'crypt',
+                     'db',
+                     'session',
+                     'cache'
+                 ),
 
 		/**
 		 * Language files to autoload

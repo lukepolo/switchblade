@@ -18,7 +18,6 @@
  *
  * This will allow you to upgrade fuel without losing your custom config.
  */
-
 return array(
 
 	/**
@@ -76,18 +75,9 @@ return array(
 	 * Refer to individual strategy's documentation on configuration requirements.
 	 */
 	'Strategy' => array(
-            'Facebook' => array(
-                'app_id' => Settings::get('facebook_app_id'),
-                'app_secret' => Settings::get('facebook_app_secret_key'),
-            ),
             'Google' => array(
                 'client_id' => Settings::get('google_client_id'),
                 'client_secret' => Settings::get('google_client_secret_id')
-            ),
-            'Twitter' => array(
-                'key' => Settings::get('twitter_consumer_key'),
-                'secret' => Settings::get('twitter_consumer_secret_key'),
-                //'oauth_callback' => Uri::Create('auth/callback')
             )
 	 ),
 );

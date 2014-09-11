@@ -1,7 +1,6 @@
 <?php
 return array(
-    // a MySQL driver configuration
-    'development' => array(
+    'default' => array(
         'type'           => 'mysqli',
         'connection'     => array(
             'hostname'       => 'localhost',
@@ -18,8 +17,6 @@ return array(
         'profiling'      => true,
         'readonly'       => false,
     ),
-    
-    // a MySQL driver configuration
     'production' => array(
         'type'           => 'mysqli',
         'connection'     => array(
@@ -37,4 +34,4 @@ return array(
         'profiling'      => false,
         'readonly'       => false,
     )
-)
+);

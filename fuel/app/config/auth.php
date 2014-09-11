@@ -24,6 +24,6 @@
 return array(
 	'driver' => 'Ormauth',
 	'verify_multiple_logins' => true,
-	'salt' => '!soTheJumpIsHighYes?!',
+	'salt' => '!soTheBladeIsSharpYes?!',
 	'iterations' => 10000,
 );
