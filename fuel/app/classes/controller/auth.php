@@ -46,7 +46,6 @@ class Controller_Auth extends Controller_Template
             // fetch the provider name from the opauth response so we can display a message
             $provider = $opauth->get('auth.provider', '?');
             
-            
             // deal with the result of the callback process
             switch ($status)
             {
@@ -67,7 +66,6 @@ class Controller_Auth extends Controller_Template
                 case 'register':
                     // inform the user the login using the provider was succesful, but we need a local account to continue
                     // and set the redirect url for this status
-                    
                     switch ($provider)
                     {
                         case 'Twitter' :
@@ -83,27 +81,16 @@ class Controller_Auth extends Controller_Template
                             $email = $opauth->get('auth.raw.username').'@facebook.com';
                         break;
                     }
-                    
+                        
                     // call Auth to create this user
-                    $found_user = \Auth\Model\Auth_User::query()
+                    $user = \Auth\Model\Auth_User::query()
                         ->where('username', $user_login)
                         ->or_where('email', $email)
                         ->get_one();
                         
                     if(empty($found_user) === false)
                     {
-                        if($found_user->email == $email)
-                        {
-                            // FORCE LOGIN AND REGISTER NEW AUTH
-                            Auth::force_login($found_user->id);
-                            Controller_Auth::link_provider($found_user->id);
-                        }
-                        else
-                        {
-                            // Username already taken
-                            Session::set('error',$user_login.' , Username already taken, please register manually or try a differnt account');
-                            Response::Redirect(Uri::Base());
-                        }
+                        $user_id = $user->id;
                     }
                     else
                     {
@@ -117,8 +104,7 @@ class Controller_Auth extends Controller_Template
                             )
                         );
                     }
-                    
-                    $opauth->login_or_register();
+                    Controller_Auth::link_provider($user_id);
                     
                     Session::set('success','You have connected your '.$provider.' account!');
                 break;
