@@ -1,35 +1,132 @@
 <?php
 class Controller_Auth extends Controller_Template
 {
-    public function action_register($provider)
+    public function action_logout()
     {
-//        if(\Auth::Check())
-//        {
-//            //\Auth\Model\Auth_User::query()
-//            Debug::dump('use auth model');
-//            die;
-//            $user = Model_User::query()
-//                ->related('user_providers')
-//                ->where('id',static::$user_id)
-//                ->get_one();
-//
-//            if(empty($user->user_providers) === false)
-//            {
-//                $provider_array = array();
-//                foreach($user->user_providers as $provider)
-//                {
-//                    $provider_array[] = $provider->provider;
-//                }
-//            }
-//
-//            if(in_array($provider,$provider_array))
-//            {
-//                Response::Redirect(Uri::Base());
-//            }
-//        }
-
-        // load Opauth, it will load the provider strategy and redirect to the provider
-        \Auth_Opauth::forge();
+        \Auth::logout();
+        Response::Redirect(Uri::Create('login'));
+    }
+    
+    public function action_index()
+    {
+        // Show login form
+        $this->template->content = View::Forge('auth/index');
+        if(\Auth::Check())
+        {
+            Response::redirect_back(Uri::Base());
+        }
+        elseif(\Input::Method() === 'POST')
+        {
+            // They want to login without a provider!
+            if (Auth::login(Input::Post('email'), Input::Post('password')))
+            {
+                if (\Input::POST('remember', false))
+                {
+                    // create the remember-me cookie
+                    \Auth::remember_me();
+                }
+                else
+                {
+                    // delete the remember-me cookie if present
+                    \Auth::dont_remember_me();
+                }
+                Response::Redirect(Uri::Base());
+            }
+            else
+            {
+                // Check to see if they have a user!
+                $user = \Auth\Model\Auth_User::query()
+                    ->where('email', Input::Post('email'))
+                    ->or_where('username', Input::Post('email'))
+                    ->get_one();
+                
+                if(empty($user) === false)
+                {
+                    \Session::set('error', 'Invalid password!');
+                }
+                else
+                {
+                    \Session::set('error', 'This username / email does not exist!');
+                }
+                Response::Redirect(Uri::Create('login'));
+            }
+        }
+    }
+    
+    public function action_register($provider = null)
+    {
+        if(\Auth::Check())
+        {
+            if(empty($provider) === false)
+            {
+                // try to link their account
+                Controller_Auth::link_provider(uth::get_user_id()[1]);
+            }
+            else
+            {
+                Response::redirect_back(Uri::Base());
+            }
+        }
+        elseif(empty($provider) === false)
+        {
+            // load Opauth, it will load the provider strategy and redirect to the provider
+            \Auth_Opauth::forge();
+        }
+        elseif(\Input::Method() === "POST")
+        {
+            // TODO -- add in settings if registration is open!
+            if(Input::Post('terms') !== false)
+            {
+                // Check to see if they have a user!
+                $found_user = \Auth\Model\Auth_User::query()
+                    ->where('email', Input::Post('email'))
+                    ->or_where('username', Input::Post('username'))
+                    ->get_one();
+                
+                if(empty($found_user) === false)
+                {
+                    if($found_user->username == Input::Post('username'))
+                    {
+                        \Session::set('error', 'Username already exsists!');
+                    }
+                    else
+                    {
+                        \Session::set('error', 'Email already exsists!');
+                    }
+                    Response::Redirect_back(Uri::Create('login'));
+                }
+                else
+                {
+                    $user_id = \Auth::create_user(
+                        Input::Post('username'),
+                        Input::Post('password'), // PASSWORD
+                        Input::Post('email'),
+                        \Config::get('application.user.default_group', 3), // DEFAULT GROUP
+                        array(
+                            'first_name' => Input::Post('first_name'),
+                            'last_name' => Input::Post('last_name'),
+                            'gender' => Input::Post('gender'),
+                        )
+                    );   
+                    if(empty($user_id) == false)
+                    {
+                        Auth::force_login($user_id);
+                        Response::Redirect(Uri::Base());
+                    }
+                    else
+                    {
+                        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                    }
+                }
+            }
+            else
+            {
+                \Session::set('error', 'You must accept the Terms and Conditions!');
+            }
+        }
+        
+        // Send back an error!
+        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
     }
     
     public function action_callback()
@@ -45,6 +142,7 @@ class Controller_Auth extends Controller_Template
             
             // fetch the provider name from the opauth response so we can display a message
             $provider = $opauth->get('auth.provider', '?');
+            
             
             // deal with the result of the callback process
             switch ($status)
@@ -66,6 +164,7 @@ class Controller_Auth extends Controller_Template
                 case 'register':
                     // inform the user the login using the provider was succesful, but we need a local account to continue
                     // and set the redirect url for this status
+                    
                     switch ($provider)
                     {
                         case 'Twitter' :
@@ -81,16 +180,27 @@ class Controller_Auth extends Controller_Template
                             $email = $opauth->get('auth.raw.username').'@facebook.com';
                         break;
                     }
-                        
+                    
                     // call Auth to create this user
-                    $user = \Auth\Model\Auth_User::query()
+                    $found_user = \Auth\Model\Auth_User::query()
                         ->where('username', $user_login)
                         ->or_where('email', $email)
                         ->get_one();
                         
                     if(empty($found_user) === false)
                     {
-                        $user_id = $user->id;
+                        if($found_user->email == $email)
+                        {
+                            // FORCE LOGIN AND REGISTER NEW AUTH
+                            Auth::force_login($found_user->id);
+                            Controller_Auth::link_provider($found_user->id);
+                        }
+                        else
+                        {
+                            // Username already taken
+                            Session::set('error',$user_login.' , Username already taken, please register manually or try a differnt account');
+                            Response::Redirect(Uri::Base());
+                        }
                     }
                     else
                     {
@@ -104,7 +214,8 @@ class Controller_Auth extends Controller_Template
                             )
                         );
                     }
-                    Controller_Auth::link_provider($user_id);
+                    
+                    $opauth->login_or_register();
                     
                     Session::set('success','You have connected your '.$provider.' account!');
                 break;

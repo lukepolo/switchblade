@@ -30,17 +30,19 @@
         <?php echo $header; ?>
         <?php echo $navigation; ?>
         <div id="main" role="main">
-            <?php echo $ribbon; ?>
+            <?php //echo $ribbon; ?>
             <!--[if IE 8]>
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
-            <?php echo $content; ?>
+            <div id="content" class="<?php echo $container; ?>">
+                <?php echo $content; ?>
+            </div>
         </div>
         <footer>
             <?php echo $footer; ?>
         </footer>
-        
-	
+
+    
         <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
         <?php
             // JS FILES Here
@@ -81,8 +83,32 @@
 	    $(document).ready(function()
 	    {
 		// Generate all selects as select2
-		$('select').select2();
+		$('select:not(.no_select2)').each(function()
+                {
+                    $(this).prepend('<option selected="selected"></option>');
+                    $(this).select2();
+                });
 	    });
 	</script>
+        <?php
+            if(Session::get('error'))
+            {
+            ?>
+                <script>
+                    $(document).ready(function()
+                    {
+                       $.smallBox({
+                          title : 'Error', 
+                          content : '<?php echo Session::get('error'); ?>',
+                          icon : 'fa fa-bell swing animated',
+                          timeout : 10000,
+                          color : '#C46A69'
+                       });
+                    });
+                </script>
+            <?php
+                \Session::set('error', '');
+            }
+        ?>
     </body>
 </html>
