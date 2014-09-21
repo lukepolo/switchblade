@@ -91,9 +91,8 @@
            $('#profile_picture').click();
         });
 
-        $("#profile_picture").change(function(){
-            readURL(this);
-            
+        $("#profile_picture").change(function()
+        {
             data= new FormData();
             data.append("image", this.files[0]);
              
@@ -103,6 +102,22 @@
                 data: data,
                 processData: false,
                 contentType: false
+            }).done(function(result)
+            {
+                result = JSON.parse(result);
+                if($.type(result.message) == 'string')
+                {
+                    $.smallBox({
+                        title : 'Error', 
+                        content : result.message,
+                        icon : 'fa fa-warning swing animated',
+                        color : '#C46A69'
+                    });
+                }
+                else
+                {
+                    readURL(this);
+                }
             });
         });
         

@@ -69,10 +69,8 @@ class Controller_Profile extends Controller_Template
             // and process any errors
             foreach (Upload::get_errors() as $file)
             {
-                Debug::dump($file);
-                die;
-                echo json_encode($file);
-                die;
+                // need to test this?
+                echo json_encode($file['errors'][0]);
             }
         }
         die;
