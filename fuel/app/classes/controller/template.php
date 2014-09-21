@@ -8,7 +8,13 @@
             
             $data = new stdClass;
             
-            $data->controller = str_replace('controller_', '',strtolower($this->request->route->controller));
+            $controller = str_replace('controller_', '', strtolower($this->request->route->controller));
+            $data->controller = $controller;
+            
+            $this->template->title = 'Switch Blade | '.ucwords($controller);
+            
+            // Somtimes we dont want to have the content in a container, in which we can override this in the controller
+            $this->template->container = 'container';
             
             $this->template->footer = View::forge('core/footer');
             $this->template->navigation = View::forge('core/navigation');

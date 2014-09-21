@@ -6,10 +6,11 @@ class Controller_Editor extends \Controller_Template
 {
     public function action_index()
     {
-        $this->template->title = '';
+        $this->template->container = null;
         $this->template->content = \View::forge('home/editor');
     }
 
+    // TOOD - put a reason for no param
     public function action_url()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
