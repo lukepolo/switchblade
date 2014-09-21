@@ -9,8 +9,9 @@ class Controller_Auth extends Controller_Template
     
     public function action_index()
     {
-        // Show login form
-        $this->template->content = View::Forge('auth/index');
+        // Public Template
+        $this->template = Controller_Template::render_public($this->template);
+        
         if(\Auth::Check())
         {
             Response::redirect_back(Uri::Base());
@@ -51,6 +52,8 @@ class Controller_Auth extends Controller_Template
                 Response::Redirect(Uri::Create('login'));
             }
         }
+        // Show login form
+        $this->template->content = View::Forge('auth/index');
     }
     
     public function action_register($provider = null)
