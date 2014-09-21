@@ -1,4 +1,4 @@
-<div class="well well-light well-sm smart-form">
+<div class="well well-light well-sm">
     <section class="col col-5">
         <h1>Edit Site Settings</h1>
         <?php
