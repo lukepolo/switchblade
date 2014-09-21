@@ -115,6 +115,7 @@ class Controller_Auth extends Controller_Template
     
     public function action_register($provider = null)
     {
+        Debug::dump($provider);
         if(\Settings::get('registration') == false)
         {
             if(\Auth::Check())
@@ -122,7 +123,7 @@ class Controller_Auth extends Controller_Template
                 if(empty($provider) === false)
                 {
                     // try to link their account
-                    Controller_Auth::link_provider(uth::get_user_id()[1]);
+                    Controller_Auth::link_provider(Auth::get_user_id()[1]);
                 }
                 else
                 {
@@ -254,7 +255,7 @@ class Controller_Auth extends Controller_Template
                         ->where('username', $user_login)
                         ->or_where('email', $email)
                         ->get_one();
-                        
+                    
                     if(empty($found_user) === false)
                     {
                         if($found_user->email == $email)
@@ -281,6 +282,8 @@ class Controller_Auth extends Controller_Template
                                 'fullname' =>   $opauth->get('auth.info.name'),
                             )
                         );
+                        
+                        Auth::force_login($user_id);
                     }
                     
                     $opauth->login_or_register();
