@@ -79,7 +79,7 @@
     </div>
 </div>
 <script>
-
+    var image;
     $(document).ready(function()
     {
         $('#edit-profile').click(function()
@@ -93,8 +93,9 @@
 
         $("#profile_picture").change(function()
         {
+            image = this;
             data= new FormData();
-            data.append("image", this.files[0]);
+            data.append("image", image.files[0]);
              
             $.ajax({
                 url: '<?php echo Uri::Create('profile/update_img'); ?>',
@@ -116,7 +117,7 @@
                 }
                 else
                 {
-                    readURL(this);
+                    readURL(image);
                 }
             });
         });
