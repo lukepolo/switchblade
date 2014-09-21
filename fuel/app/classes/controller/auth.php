@@ -64,6 +64,8 @@ class Controller_Auth extends Controller_Template
     {
         if(\Settings::get('registration') === false)
         {
+            Debug::dump('here');
+            die;
             if(\Auth::Check())
             {
                 if(empty($provider) === false)
@@ -140,6 +142,7 @@ class Controller_Auth extends Controller_Template
         else
         {
             \Session::set('error', 'Sorry Registration is Disabled!');
+            Response::Redirect_back(Uri::Create('login'));
         }
     }
     
