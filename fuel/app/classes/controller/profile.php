@@ -58,12 +58,12 @@ class Controller_Profile extends Controller_Template
 
                 $files = Upload::get_files();
                 
-                var_dump($files[0]['saved_as']);
-                
                 // call a model method to update the database
                 Auth::update_user(array(
                     'user_image' => $files[0]['saved_as']
                 ));
+                
+                echo true;
             }
 
             // and process any errors
@@ -71,6 +71,7 @@ class Controller_Profile extends Controller_Template
             {
                 // need to test this?
                 echo json_encode($file['errors'][0]);
+                die;
             }
         }
         die;
