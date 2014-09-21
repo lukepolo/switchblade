@@ -64,8 +64,6 @@ class Controller_Auth extends Controller_Template
     {
         if(\Settings::get('registration') === false)
         {
-            Debug::dump('here');
-            die;
             if(\Auth::Check())
             {
                 if(empty($provider) === false)
