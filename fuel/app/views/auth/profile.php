@@ -6,7 +6,7 @@
             </div>
             <div class="col-sm-6">
                 <h1>
-                    <?php echo $first_name; ?> <span class="semi-bold"><?php echo $last_name; ?></span> <small id="edit-profile" style="cursor: pointer;">edit</small>
+                    <?php echo $first_name; ?> <span class="semi-bold"><?php echo $last_name; ?></span> <small id="edit-profile" style="cursor: pointer;"><a href="#">edit</a></small>
                 </h1>
                 <ul class="list-unstyled">
                     <li>
