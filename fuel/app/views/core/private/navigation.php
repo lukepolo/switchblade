@@ -110,10 +110,10 @@
                         <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
                     </li>
                     <li>
-                        <a target="_blank" href="https://bladeswitch.io">JIRA</a>
+                        <a target="_blank" href="http://bladeswitch.io">JIRA</a>
                     </li>
                     <li>
-                        <a target="_blank" href="https://box.bladeswitch.io">Share Drive</a>
+                        <a target="_blank" href="http://box.bladeswitch.io">Share Drive</a>
                     <li>
                 </ul>
             </li>
