@@ -12,3 +12,8 @@ html {
 .select2-hidden-accessible {
     display: none;
 }
+
+.select2-container.invalid .select2-default {
+    background-color: #fff0f0 !important;
+    border-color: #fff0f0 !important;
+}
