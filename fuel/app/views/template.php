@@ -85,29 +85,11 @@
 		// Generate all selects as select2
 		$('select:not(.no_select2)').each(function()
                 {
-                    $(this).prepend('<option selected="selected"></option>');
+                    $(this).prepend('<option></option>');
                     $(this).select2();
                 });
 	    });
-	</script>
-        <?php
-            if(Session::get('error'))
-            {
-            ?>
-                <script>
-                    $(document).ready(function()
-                    {
-                       $.smallBox({
-                          title : 'Error', 
-                          content : '<?php echo Session::get('error'); ?>',
-                          icon : 'fa fa-warning swing animated',
-                          color : '#C46A69'
-                       });
-                    });
-                </script>
-            <?php
-                \Session::set('error', '');
-            }
-        ?>
+	</script>   
+        <?php echo $php_session_errors; ?>
     </body>
 </html>

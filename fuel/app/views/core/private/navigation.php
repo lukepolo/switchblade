@@ -4,18 +4,9 @@
     <div class="login-info">
         <span> <!-- User image size is adjusted inside CSS, it should stay as is -->
             <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                <img src="/assets/img/avatars/sunny.png" alt="me" class="online" />
+                <?php echo \Html::img($user_image); ?>
                 <span>
-                    <?php 
-                        if(Auth::get('first_name'))
-                        {
-                            echo Auth::get('first_name'); 
-                        }
-                        elseif(Auth::get('fullname'))
-                        {
-                            echo Auth::get('fullname');
-                        }
-                    ?>
+                   <?php echo $first_name.' '.$last_name; ?>
                 </span>
                 <i class="fa fa-angle-down"></i>
             </a>

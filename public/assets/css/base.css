@@ -25,3 +25,22 @@ html {
     right:5px;
     font-family: "FontAwesome";
 }
+
+.select_picture {
+    width: 60px;
+    height: 60px;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+
+.row-centered [class^='col'] {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
