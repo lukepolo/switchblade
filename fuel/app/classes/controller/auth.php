@@ -1,6 +1,10 @@
 <?php
 class Controller_Auth extends Controller_Template
 {
+	public $public_classes = array(
+		'action_index',
+	);
+	
     public function action_logout()
     {
         \Auth::logout();
@@ -9,9 +13,6 @@ class Controller_Auth extends Controller_Template
     
     public function action_index()
     {
-        // Public Template
-        $this->template = Controller_Template::render_public($this->template);
-        
         if(\Auth::Check())
         {
             Response::redirect_back(Uri::Base());
