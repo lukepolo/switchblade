@@ -74,13 +74,7 @@
                                 Register
                         </button>
                     </footer>
-                    <div class="message">
-                        <i class="fa fa-check"></i>
-                        <p>
-                            Thank you for your registration!
-                        </p>
-                    </div>
-            </form>
+            <?php echo Form::close(); ?>
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">

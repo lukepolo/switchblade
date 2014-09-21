@@ -4,6 +4,35 @@ class Controller_Profile extends Controller_Template
     public function action_index()
     {
         $data = new stdClass;
+        if(Input::Method() === "POST")
+        {
+            $saved = Auth::update_user(
+                array(
+                    'email' => Input::Post('email'),
+                    'first_name' => Input::Post('first_name'),
+                    'last_name' => Input::Post('last_name'),
+                    'gender' => Input::Post('gender'),
+                )
+            );
+            
+            if($saved)
+            {
+                Session::set('success', 'Successfully updated your profile');
+            }
+            
+            if(Input::Post('current_password') !== null && Input::Post('new_password') != null)
+            {
+                if(Auth::change_password(Input::Post('current_password'), Input::Post('new_password')))
+                {
+                    Session::set('success', 'Successfully updated your password');
+                }
+                else
+                {
+                    Session::set('error', 'Your current password is incorrect, please try again');
+                }
+            }
+        }
+        
         $this->template->content = View::Forge('auth/profile');
     }
     

@@ -85,7 +85,7 @@
 		// Generate all selects as select2
 		$('select:not(.no_select2)').each(function()
                 {
-                    $(this).prepend('<option selected="selected"></option>');
+                    $(this).prepend('<option></option>');
                     $(this).select2();
                 });
 	    });
