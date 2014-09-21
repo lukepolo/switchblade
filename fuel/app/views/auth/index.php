@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8 hidden-xs hidden-sm">
+    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
         <div class="well no-padding">
                 <?php
                     echo \Form::open(array(
@@ -64,8 +64,8 @@
                         </div>
                         <section>
                                 <label class="checkbox">
-                                    <?php echo \Form::checkbox('terms'); ?>
                                     I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
+                                    <?php echo \Form::checkbox('terms'); ?>
                                 </label>
                         </section>
                     </fieldset>
@@ -89,7 +89,8 @@
                 echo \Form::open(array(
                     'action' => Uri::Create('login'),
                     'method' => 'POST',
-                    'class' => 'smart-form client-form'
+                    'class' => 'smart-form client-form',
+                    'id' => 'login-form'
                 ));
             ?>    
                 <header>
@@ -136,3 +137,66 @@
         </ul>
     </div>
 </div>
+<script>
+    $(document).ready(function()
+    {
+        $("#register-form").validate({
+            rules: {
+                username: "required",
+                first_name: "required",
+                last_name: "required",
+                email: {
+                    required: true,
+                        email: true
+                    },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                required: true,
+                    minlength: 5
+                },
+                gender: "required",
+                terms: "required"
+            },
+            messages: {
+                username: "Please enter a valid username",
+                first_name: "Please enter your firstname",
+                last_name: "Please enter your lastname",
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                confirm_password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                email: "Please enter a valid email address",
+                gender: "Please choose your gender",
+                terms: "<br>Please accept our policy"
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+        
+        $("#login-form").validate({
+            rules: {
+                email: "required",
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                email: "Please enter a valid username / email address",
+                password: {
+                    required: "Please provide a password",
+                }
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
