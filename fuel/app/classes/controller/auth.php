@@ -2,7 +2,10 @@
 class Controller_Auth extends Controller_Template
 {
 	public $public_classes = array(
-		'action_index',
+            'action_index',
+            'action_logout',
+            'action_register',
+            'action_callback',
 	);
 	
     public function action_logout()
@@ -137,6 +140,7 @@ class Controller_Auth extends Controller_Template
         else
         {
             \Session::set('error', 'Sorry Registration is Disabled!');
+            Response::Redirect_back(Uri::Create('login'));
         }
     }
     
