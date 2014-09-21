@@ -6,7 +6,7 @@
             <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
                 <img src="/assets/img/avatars/sunny.png" alt="me" class="online" />
                 <span>
-                    john.doe
+                    <?php echo Auth::get('first_name'); ?>
                 </span>
                 <i class="fa fa-angle-down"></i>
             </a>
