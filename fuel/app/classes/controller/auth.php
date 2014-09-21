@@ -1,10 +1,66 @@
 <?php
 class Controller_Auth extends Controller_Template
 {
-	public $public_classes = array(
-		'action_index',
-	);
-	
+    public $public_classes = array(
+        'action_index',
+        'action_logout',
+        'action_register',
+        'action_callback',
+        'action_forgot',
+    );
+    public function action_forgot()
+    {
+        if(\Auth::Check() === false)
+        {
+            if(Input::Method() === "POST")
+            {
+                $user = \Auth\Model\Auth_User::query()
+                    ->where('email', Input::Post('email'))
+                    ->or_where('username', Input::Post('email'))
+                    ->get_one();
+
+                if(empty($user) === false)
+                {
+                    // Create an instance
+                    $email = Email::forge();
+
+                    // Set the from address
+                    $email->from('Support@SwitchBlade.io', '[SwitchBlade.io] The Support Guy');
+
+                    // Set the to address
+                    $email->to($user->email);
+
+                    // Set a subject
+                    $email->subject('Reset your passsword');
+
+                    $data = new stdClass;
+                    $data->new_password = Auth::reset_password($user->username);
+                    // And set the body.
+                    $email->body(View::Forge('email/forgot_password', $data));
+
+                    if($email->send())
+                    {
+                        Session::set('success', 'We have sent you the email, please check within a couple of minuets');
+                        Response::redirect(Uri::Create('login'));
+                    }
+                    else
+                    {
+                        Session::set('error', 'We could not send the email, please contact '.Settings::get('helpdesk'));
+                    }
+                }
+                else
+                {
+                    Session::Set('error', 'There is no username / email matching '. Input::Post('email').'!');
+                }
+            }
+            $this->template->content = View::Forge('auth/forgot');
+        }
+        else
+        {
+            Response::Redirect(Uri::Base());
+        }
+    }
+    
     public function action_logout()
     {
         \Auth::logout();
@@ -59,78 +115,86 @@ class Controller_Auth extends Controller_Template
     
     public function action_register($provider = null)
     {
-        if(\Auth::Check())
+        if(\Settings::get('registration') == false)
         {
-            if(empty($provider) === false)
+            if(\Auth::Check())
             {
-                // try to link their account
-                Controller_Auth::link_provider(uth::get_user_id()[1]);
-            }
-            else
-            {
-                Response::redirect_back(Uri::Base());
-            }
-        }
-        elseif(empty($provider) === false)
-        {
-            // load Opauth, it will load the provider strategy and redirect to the provider
-            \Auth_Opauth::forge();
-        }
-        elseif(\Input::Method() === "POST")
-        {
-            // TODO -- add in settings if registration is open!
-            if(Input::Post('terms') !== false)
-            {
-                // Check to see if they have a user!
-                $found_user = \Auth\Model\Auth_User::query()
-                    ->where('email', Input::Post('email'))
-                    ->or_where('username', Input::Post('username'))
-                    ->get_one();
-                
-                if(empty($found_user) === false)
+                if(empty($provider) === false)
                 {
-                    if($found_user->username == Input::Post('username'))
-                    {
-                        \Session::set('error', 'Username already exsists!');
-                    }
-                    else
-                    {
-                        \Session::set('error', 'Email already exsists!');
-                    }
-                    Response::Redirect_back(Uri::Create('login'));
+                    // try to link their account
+                    Controller_Auth::link_provider(Auth::get_user_id()[1]);
                 }
                 else
                 {
-                    $user_id = \Auth::create_user(
-                        Input::Post('username'),
-                        Input::Post('password'), // PASSWORD
-                        Input::Post('email'),
-                        \Config::get('application.user.default_group', 3), // DEFAULT GROUP
-                        array(
-                            'first_name' => Input::Post('first_name'),
-                            'last_name' => Input::Post('last_name'),
-                            'gender' => Input::Post('gender'),
-                        )
-                    );   
-                    if(empty($user_id) == false)
+                    Response::redirect_back(Uri::Base());
+                }
+            }
+            elseif(empty($provider) === false)
+            {
+                // load Opauth, it will load the provider strategy and redirect to the provider
+                \Auth_Opauth::forge();
+            }
+            elseif(\Input::Method() === "POST")
+            {
+                // TODO -- add in settings if registration is open!
+                if(Input::Post('terms') !== false)
+                {
+                    // Check to see if they have a user!
+                    $found_user = \Auth\Model\Auth_User::query()
+                        ->where('email', Input::Post('email'))
+                        ->or_where('username', Input::Post('username'))
+                        ->get_one();
+
+                    if(empty($found_user) === false)
                     {
-                        Auth::force_login($user_id);
-                        Response::Redirect(Uri::Base());
+                        if($found_user->username == Input::Post('username'))
+                        {
+                            \Session::set('error', 'Username already exsists!');
+                        }
+                        else
+                        {
+                            \Session::set('error', 'Email already exsists!');
+                        }
+                        Response::Redirect_back(Uri::Create('login'));
                     }
                     else
                     {
-                        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                        $user_id = \Auth::create_user(
+                            Input::Post('username'),
+                            Input::Post('password'), // PASSWORD
+                            Input::Post('email'),
+                            \Config::get('application.user.default_group', 3), // DEFAULT GROUP
+                            array(
+                                'first_name' => Input::Post('first_name'),
+                                'last_name' => Input::Post('last_name'),
+                                'gender' => Input::Post('gender'),
+                            )
+                        );   
+                        if(empty($user_id) == false)
+                        {
+                            Auth::force_login($user_id);
+                            Response::Redirect(Uri::Base());
+                        }
+                        else
+                        {
+                            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                        }
                     }
                 }
+                else
+                {
+                    \Session::set('error', 'You must accept the Terms and Conditions!');
+                }
             }
-            else
-            {
-                \Session::set('error', 'You must accept the Terms and Conditions!');
-            }
+
+            // Send back an error!
+            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
         }
-        
-        // Send back an error!
-        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+        else
+        {
+            \Session::set('error', 'Sorry Registration is Disabled!');
+            Response::Redirect_back(Uri::Create('login'));
+        }
     }
     
     public function action_callback()
@@ -190,7 +254,7 @@ class Controller_Auth extends Controller_Template
                         ->where('username', $user_login)
                         ->or_where('email', $email)
                         ->get_one();
-                        
+                    
                     if(empty($found_user) === false)
                     {
                         if($found_user->email == $email)
@@ -217,6 +281,8 @@ class Controller_Auth extends Controller_Template
                                 'fullname' =>   $opauth->get('auth.info.name'),
                             )
                         );
+                        
+                        Auth::force_login($user_id);
                     }
                     
                     $opauth->login_or_register();

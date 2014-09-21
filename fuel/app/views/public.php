@@ -71,7 +71,7 @@
             // FastClick: For mobile devices: you can disable this in app.js
             Casset::js('plugin/fastclick/fastclick.min.js');
             // Main APP JS
-            Casset::js('app.min.js');
+            Casset::js('app.js');
             // Voice
             Casset::js('speech/voicecommand.min.js');
             
@@ -88,24 +88,6 @@
                 });
 	    });
 	</script>
-        <?php
-            if(Session::get('error'))
-            {
-            ?>
-                <script>
-                    $(document).ready(function()
-                    {
-                       $.smallBox({
-                          title : 'Error', 
-                          content : '<?php echo Session::get('error'); ?>',
-                          icon : 'fa fa-warning swing animated',
-                          color : '#C46A69'
-                       });
-                    });
-                </script>
-            <?php
-                \Session::set('error', '');
-            }
-        ?>
+        <?php echo $php_session_errors; ?>
     </body>
 </html>

@@ -4,18 +4,9 @@
     <div class="login-info">
         <span> <!-- User image size is adjusted inside CSS, it should stay as is -->
             <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                <img src="/assets/img/avatars/sunny.png" alt="me" class="online" />
+                <?php echo \Html::img($user_image); ?>
                 <span>
-                    <?php 
-                        if(Auth::get('first_name'))
-                        {
-                            echo Auth::get('first_name'); 
-                        }
-                        elseif(Auth::get('fullname'))
-                        {
-                            echo Auth::get('fullname');
-                        }
-                    ?>
+                   <?php echo ucwords(Auth::get('username')); ?>
                 </span>
                 <i class="fa fa-angle-down"></i>
             </a>
@@ -114,7 +105,10 @@
                     </li>
                     <li>
                         <a target="_blank" href="http://box.bladeswitch.io">Share Drive</a>
+                    </li>
                     <li>
+                        <a href="<?php echo Uri::Create('settings'); ?>">Settings</a>
+                    </li>
                 </ul>
             </li>
         </ul>

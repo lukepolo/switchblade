@@ -33,3 +33,4 @@ desktop.ini
 /fuel/app/cache/*/*
 
 /public/assets/cache/*
+/public/assets/img/users/*
