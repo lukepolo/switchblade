@@ -89,25 +89,7 @@
                     $(this).select2();
                 });
 	    });
-	</script>
-        <?php
-            if(Session::get('error'))
-            {
-            ?>
-                <script>
-                    $(document).ready(function()
-                    {
-                       $.smallBox({
-                          title : 'Error', 
-                          content : '<?php echo Session::get('error'); ?>',
-                          icon : 'fa fa-warning swing animated',
-                          color : '#C46A69'
-                       });
-                    });
-                </script>
-            <?php
-                \Session::set('error', '');
-            }
-        ?>
+	</script>   
+        <?php echo $php_session_errors; ?>
     </body>
 </html>

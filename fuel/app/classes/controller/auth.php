@@ -6,10 +6,59 @@ class Controller_Auth extends Controller_Template
         'action_logout',
         'action_register',
         'action_callback',
+        'action_forgot',
     );
-    public function forgot_password()
+    public function action_forgot()
     {
-        
+        if(\Auth::Check() === false)
+        {
+            if(Input::Method() === "POST")
+            {
+                $user = \Auth\Model\Auth_User::query()
+                    ->where('email', Input::Post('email'))
+                    ->or_where('username', Input::Post('email'))
+                    ->get_one();
+
+                if(empty($user) === false)
+                {
+                    // Create an instance
+                    $email = Email::forge();
+
+                    // Set the from address
+                    $email->from('Support@SwitchBlade.io', '[SwitchBlade.io] The Support Guy');
+
+                    // Set the to address
+                    $email->to($user->email);
+
+                    // Set a subject
+                    $email->subject('Reset your passsword');
+
+                    $data = new stdClass;
+                    $data->new_password = Auth::reset_password($user->username);
+                    // And set the body.
+                    $email->body(View::Forge('email/forgot_password', $data));
+
+                    if($email->send())
+                    {
+                        Session::set('success', 'We have sent you the email, please check within a couple of minuets');
+                        Response::redirect(Uri::Create('login'));
+                    }
+                    else
+                    {
+                        Session::set('error', 'We could not send the email, please contact '.Settings::get('helpdesk'));
+                    }
+                }
+                else
+                {
+                    Session::Set('error', 'There is no username / email matching '. Input::Post('email').'!');
+                }
+            }
+            $this->template->content = View::Forge('auth/forgot');
+        }
+        else
+        {
+            Response::Redirect(Uri::Base());
+        }
     }
     
     public function action_logout()
