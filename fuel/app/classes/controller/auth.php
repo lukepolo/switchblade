@@ -7,7 +7,11 @@ class Controller_Auth extends Controller_Template
         'action_register',
         'action_callback',
     );
-	
+    public function forgot_password()
+    {
+        
+    }
+    
     public function action_logout()
     {
         \Auth::logout();

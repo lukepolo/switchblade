@@ -86,7 +86,7 @@
         <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
             <li class="">
                 <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown"> 
-                    <img src="/assets/img/avatars/sunny.png" alt="John Doe" class="online" />
+                    <?php echo \Html::img($user_image); ?>
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li>
@@ -94,7 +94,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="#ajax/profile.php" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-user"></i> <u>P</u>rofile</a>
+                        <a href="<?php echo Uri::Create('my_profile'); ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-user"></i> <u>P</u>rofile</a>
                     </li>
                     <li class="divider"></li>
                     <li>
@@ -122,17 +122,6 @@
             <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
         </div>
         <!-- end search mobile button -->
-        
-        <!-- input: search field -->
-        <form action="#ajax/search.php" class="header-search pull-right">
-            <input type="text" name="param" placeholder="Find reports and more" id="search-fld">
-            <button type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-            <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
-        </form>
-        <!-- end input: search field -->
-        
         <!-- fullscreen button -->
         <div id="fullscreen" class="btn-header transparent pull-right">
             <span> <a href="javascript:void(0);" title="Full Screen" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i></a> </span>
@@ -158,47 +147,6 @@
             </div>
         </div>
         <!-- end voice command -->
-        
-        <!-- multiple lang dropdown : find all flags in the flags page -->
-        <ul class="header-dropdown-list hidden-xs">
-            <li>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-                        <img src="/assets/img/blank.gif" class="flag flag-us" alt="United States"> <span> English (US) </span> <i class="fa fa-angle-down"></i> </a>
-                <ul class="dropdown-menu pull-right">
-                    <li class="active">
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-us" alt="United States"> English (US)</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-fr" alt="France"> Français</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-es" alt="Spanish"> Español</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-de" alt="German"> Deutsch</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-jp" alt="Japan"> 日本語</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-cn" alt="China"> 中文</a>
-                    </li>	
-                    <li>
-                         <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-it" alt="Italy"> Italiano</a>
-                    </li>	
-                    <li>
-                         <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-pt" alt="Portugal"> Portugal</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-ru" alt="Russia"> Ру�?�?кий �?зык</a>
-                    </li>
-                    <li>
-                         <a href="javascript:void(0);"><img src="/assets/img/blank.gif" class="flag flag-kp" alt="Korea"> 한국어</a>
-                    </li>						
-                </ul>
-            </li>
-        </ul>
-        <!-- end multiple lang -->
     </div>
     <!-- end pulled right: nav area -->
 </header>

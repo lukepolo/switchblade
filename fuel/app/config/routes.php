@@ -5,7 +5,11 @@ return array(
 
     'login' => 'auth',
     'logout' => 'auth/logout',
+    
+    'my_profile' => 'profile',
+    
     // Modules default path
     'jumpsplit' => 'jumpsplit/home',
     'jumpsplit/get/(:any)' => 'jumpsplit/editor/get/$1',
+    
 );
