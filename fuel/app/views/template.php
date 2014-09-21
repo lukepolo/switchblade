@@ -73,7 +73,7 @@
             // FastClick: For mobile devices: you can disable this in app.js
             Casset::js('plugin/fastclick/fastclick.min.js');
             // Main APP JS
-            Casset::js('app.min.js');
+            Casset::js('app.js');
             // Voice
             Casset::js('speech/voicecommand.min.js');
             
