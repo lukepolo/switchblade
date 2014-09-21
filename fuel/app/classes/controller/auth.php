@@ -59,78 +59,85 @@ class Controller_Auth extends Controller_Template
     
     public function action_register($provider = null)
     {
-        if(\Auth::Check())
+        if(\Settings::get('registration') === false)
         {
-            if(empty($provider) === false)
+            if(\Auth::Check())
             {
-                // try to link their account
-                Controller_Auth::link_provider(uth::get_user_id()[1]);
-            }
-            else
-            {
-                Response::redirect_back(Uri::Base());
-            }
-        }
-        elseif(empty($provider) === false)
-        {
-            // load Opauth, it will load the provider strategy and redirect to the provider
-            \Auth_Opauth::forge();
-        }
-        elseif(\Input::Method() === "POST")
-        {
-            // TODO -- add in settings if registration is open!
-            if(Input::Post('terms') !== false)
-            {
-                // Check to see if they have a user!
-                $found_user = \Auth\Model\Auth_User::query()
-                    ->where('email', Input::Post('email'))
-                    ->or_where('username', Input::Post('username'))
-                    ->get_one();
-                
-                if(empty($found_user) === false)
+                if(empty($provider) === false)
                 {
-                    if($found_user->username == Input::Post('username'))
-                    {
-                        \Session::set('error', 'Username already exsists!');
-                    }
-                    else
-                    {
-                        \Session::set('error', 'Email already exsists!');
-                    }
-                    Response::Redirect_back(Uri::Create('login'));
+                    // try to link their account
+                    Controller_Auth::link_provider(uth::get_user_id()[1]);
                 }
                 else
                 {
-                    $user_id = \Auth::create_user(
-                        Input::Post('username'),
-                        Input::Post('password'), // PASSWORD
-                        Input::Post('email'),
-                        \Config::get('application.user.default_group', 3), // DEFAULT GROUP
-                        array(
-                            'first_name' => Input::Post('first_name'),
-                            'last_name' => Input::Post('last_name'),
-                            'gender' => Input::Post('gender'),
-                        )
-                    );   
-                    if(empty($user_id) == false)
+                    Response::redirect_back(Uri::Base());
+                }
+            }
+            elseif(empty($provider) === false)
+            {
+                // load Opauth, it will load the provider strategy and redirect to the provider
+                \Auth_Opauth::forge();
+            }
+            elseif(\Input::Method() === "POST")
+            {
+                // TODO -- add in settings if registration is open!
+                if(Input::Post('terms') !== false)
+                {
+                    // Check to see if they have a user!
+                    $found_user = \Auth\Model\Auth_User::query()
+                        ->where('email', Input::Post('email'))
+                        ->or_where('username', Input::Post('username'))
+                        ->get_one();
+
+                    if(empty($found_user) === false)
                     {
-                        Auth::force_login($user_id);
-                        Response::Redirect(Uri::Base());
+                        if($found_user->username == Input::Post('username'))
+                        {
+                            \Session::set('error', 'Username already exsists!');
+                        }
+                        else
+                        {
+                            \Session::set('error', 'Email already exsists!');
+                        }
+                        Response::Redirect_back(Uri::Create('login'));
                     }
                     else
                     {
-                        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                        $user_id = \Auth::create_user(
+                            Input::Post('username'),
+                            Input::Post('password'), // PASSWORD
+                            Input::Post('email'),
+                            \Config::get('application.user.default_group', 3), // DEFAULT GROUP
+                            array(
+                                'first_name' => Input::Post('first_name'),
+                                'last_name' => Input::Post('last_name'),
+                                'gender' => Input::Post('gender'),
+                            )
+                        );   
+                        if(empty($user_id) == false)
+                        {
+                            Auth::force_login($user_id);
+                            Response::Redirect(Uri::Base());
+                        }
+                        else
+                        {
+                            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                        }
                     }
                 }
+                else
+                {
+                    \Session::set('error', 'You must accept the Terms and Conditions!');
+                }
             }
-            else
-            {
-                \Session::set('error', 'You must accept the Terms and Conditions!');
-            }
+
+            // Send back an error!
+            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
         }
-        
-        // Send back an error!
-        \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+        else
+        {
+            \Session::set('error', 'Sorry Registration is Disabled!');
+        }
     }
     
     public function action_callback()

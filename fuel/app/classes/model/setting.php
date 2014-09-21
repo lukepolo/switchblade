@@ -4,6 +4,7 @@ class Model_Setting extends \Orm\Model
     protected static $_properties = array(
         'id',
         'name',
+        'type',
         'data',
         'created_at',
         'updated_at',

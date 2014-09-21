@@ -46,7 +46,15 @@ class Form extends Fuel\Core\Form
     public static function checkbox($field, $value = null, $checked = null, array $attributes = array())
     {
         // Adding <i></i> for smartadmin checkbox
-        return static::$instance->checkbox($field, $value, $checked, $attributes). '<i></i>';
+        if(isset($attributes['toggle']) === true)
+        {
+            $extra = '<i data-swchon-text="ON" data-swchoff-text="OFF"></i>';
+        }
+        else
+        {
+            $extra = '<i></i>';
+        }
+        return static::$instance->checkbox($field, $value, $checked, $attributes).$extra;
     }
     
     public static function select($field, $values = null, array $options = array(), array $attributes = array())
