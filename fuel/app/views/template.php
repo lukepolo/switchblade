@@ -100,8 +100,7 @@
                        $.smallBox({
                           title : 'Error', 
                           content : '<?php echo Session::get('error'); ?>',
-                          icon : 'fa fa-bell swing animated',
-                          timeout : 10000,
+                          icon : 'fa fa-warning swing animated',
                           color : '#C46A69'
                        });
                     });
