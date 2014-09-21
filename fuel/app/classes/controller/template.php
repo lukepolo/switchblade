@@ -37,17 +37,14 @@
                     }
                     elseif(Auth::get('fullname'))
                     {
-                        Debug::dump(Auth::get('fullname'));
-                        die;
-                        $this->template->set_global('first_name', Auth::get('first_name'));
-                        $this->template->set_global('last_name', Auth::get('last_name'));
-                        echo Auth::get('fullname');
+                        $fullname = explode(' ', preg_replace('/“(.*)” /', '', Auth::get('fullname')));
+                        $this->template->set_global('first_name', $fullname[0]);
+                        $this->template->set_global('last_name', $fullname[1]);
                     }
                     
                     // Gets the users image
                     if(Auth::get('user_image'))
                     {
-                        
                         $user_image = 'assets/img/users/'.Auth::get('user_image');
                     }
                     else
