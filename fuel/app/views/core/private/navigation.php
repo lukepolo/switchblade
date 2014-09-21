@@ -114,7 +114,10 @@
                     </li>
                     <li>
                         <a target="_blank" href="http://box.bladeswitch.io">Share Drive</a>
+                    </li>
                     <li>
+                        <a href="<?php echo Uri::Create('settings'); ?>">Settings</a>
+                    </li>
                 </ul>
             </li>
         </ul>

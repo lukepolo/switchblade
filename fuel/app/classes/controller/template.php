@@ -54,7 +54,7 @@
                 // If nothing was returned default to the template
 		if ($response === null)
 		{
-			$response = $this->template;
+                    $response = $this->template;
 		}
 
 		return parent::after($response);
