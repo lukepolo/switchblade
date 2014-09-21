@@ -115,7 +115,7 @@ class Controller_Auth extends Controller_Template
     
     public function action_register($provider = null)
     {
-        if(\Settings::get('registration') === false)
+        if(\Settings::get('registration') == false)
         {
             if(\Auth::Check())
             {
