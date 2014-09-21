@@ -64,8 +64,8 @@
                         </div>
                         <section>
                                 <label class="checkbox">
-                                    I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
                                     <?php echo \Form::checkbox('terms'); ?>
+                                    I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
                                 </label>
                         </section>
                     </fieldset>
@@ -178,6 +178,9 @@
             },
             submitHandler: function(form) {
                 form.submit();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
             }
         });
         
@@ -196,6 +199,9 @@
             },
             submitHandler: function(form) {
                 form.submit();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
             }
         });
     });
