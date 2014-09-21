@@ -6,7 +6,7 @@
             <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
                 <?php echo \Html::img($user_image); ?>
                 <span>
-                   <?php echo $first_name.' '.$last_name; ?>
+                   <?php echo ucwords(Auth::get('username')); ?>
                 </span>
                 <i class="fa fa-angle-down"></i>
             </a>
