@@ -95,7 +95,7 @@
                         <?php echo \Form::label('Username / Email', 'email'); ?>
                         <label class="input">
                             <i class="icon-append fa fa-user"></i>
-                            <?php echo \Form::input('email'); ?>
+                            <?php echo \Form::input('email', \Session::get('login_username')); ?>
                             <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter your username / email address</b>
                         </label>
                     </section>
@@ -136,26 +136,36 @@
     {
         $("#register-form").validate({
             rules: {
-                username: "required",
+                username:{
+                    required: true,
+                    remote: {
+                        url: "<?php echo Uri::Create('auth/check/username'); ?>"
+                    }
+                },
                 first_name: "required",
                 last_name: "required",
                 email: {
                     required: true,
-                        email: true
-                    },
+                    email: true,
+                    remote: {
+                        url: "<?php echo Uri::Create('auth/check/email'); ?>"
+                    }
+                },
                 password: {
                     required: true,
                     minlength: 5
                 },
                 confirm_password: {
-                required: true,
-                    minlength: 5
+                    equalTo: "#form_password",
                 },
                 gender: "required",
                 terms: "required"
             },
             messages: {
-                username: "Please enter a valid username",
+                username: {
+                    required: "Please enter a valid username",
+                    remote: "Username already in use"
+                },
                 first_name: "Please enter your firstname",
                 last_name: "Please enter your lastname",
                 password: {
@@ -164,9 +174,12 @@
                 },
                 confirm_password: {
                     required: "Please provide a password",
-                    minlength: "Your password must be at least 5 characters long"
+                    minlength: "Your password must be at least 5 characters long",
                 },
-                email: "Please enter a valid email address",
+                email: {
+                    required: "Please enter a valid email address",
+                    remote: "Email address already in use"
+                },
                 gender: "Please choose your gender",
                 terms: "<br>Please accept our policy"
             },

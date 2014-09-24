@@ -307,7 +307,8 @@ return array(
                      'crypt',
                      'db',
                      'session',
-                     'cache'
+                     'cache',
+                     'casset'
                  ),
 
 		/**

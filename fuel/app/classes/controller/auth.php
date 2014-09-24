@@ -7,7 +7,36 @@ class Controller_Auth extends Controller_Template
         'action_register',
         'action_callback',
         'action_forgot',
+        'action_check'
     );
+    
+    public function action_check($type)
+    {
+        if($type == 'email')
+        {
+            $user = Input::GET('email');
+        }
+        else
+        {
+            $user = Input::GET('username');
+        }
+        
+        $user = \Auth\Model\Auth_User::query()
+            ->where('email', $user)
+            ->or_where('username', $user)
+            ->get_one();
+            
+        if(empty($user) === false)
+        {
+            echo 'false';
+        }
+        else
+        {
+            echo 'true';
+        }
+        die;
+    }
+    
     public function action_forgot()
     {
         if(\Auth::Check() === false)
@@ -100,10 +129,12 @@ class Controller_Auth extends Controller_Template
                 
                 if(empty($user) === false)
                 {
+                    \Session::set('login_username', Input::Post('email'));
                     \Session::set('error', 'Invalid password!');
                 }
                 else
                 {
+                    \Session::set('login_username', Input::Post('email'));
                     \Session::set('error', 'This username / email does not exist!');
                 }
                 Response::Redirect(Uri::Create('login'));
@@ -155,6 +186,7 @@ class Controller_Auth extends Controller_Template
                         {
                             \Session::set('error', 'Email already exsists!');
                         }
+                        // return the post as well?
                         Response::Redirect_back(Uri::Create('login'));
                     }
                     else
