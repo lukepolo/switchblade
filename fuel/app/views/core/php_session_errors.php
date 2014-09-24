@@ -9,7 +9,8 @@
                     title : 'Error', 
                     content : '<?php echo Session::get('error'); ?>',
                     icon : 'fa fa-warning swing animated',
-                    color : '#C46A69'
+                    color : '#C46A69',
+                    sound_file : 'failure'
                 });
             });
         </script>
