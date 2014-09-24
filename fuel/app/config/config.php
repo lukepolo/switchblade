@@ -275,8 +275,8 @@ return array(
                     'orm',
                     'fuel-casset',
                     'auth',
-					'generator',
-					'email',
+                    'generator',
+                    'email',
 		 ),
 
 		/**
