@@ -276,6 +276,7 @@ return array(
                     'fuel-casset',
                     'auth',
 					'generator',
+					'email',
 		 ),
 
 		/**
