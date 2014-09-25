@@ -20,10 +20,12 @@
                <a data-toggle="tab" href="#css_tab_3"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Tab3</span></a>
             </li>
         </ul>
-        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+        <div class="drag">
+            <i class="fa fa-align-justify"></i>
+        </div>
     </header>
     <!-- widget div-->
-    <div class="no-padding" role="content">
+    <div class="no-padding" role="content" style="margin-top:-2px;">
         <!-- widget content -->
         <div class="widget-body">
             <div class="tab-content">

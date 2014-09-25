@@ -1,10 +1,22 @@
+<?php
+//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+    $url = "http://lukepolo.com";
+    $base_url = $url;
+?>
 <style>
     .iframe-edit {
         width:100%;
-        height:100%;
     }
     #jumpsplit-editor .tab-content .tab-pane {
         height:100%;
+    }
+    .note-editable * {
+        max-width: 100%;
+    }
+    
+    .jarviswidget .drag i {
+        margin-left: 10px;
+        vertical-align: text-top;
     }
 </style>
 <script>
@@ -35,6 +47,8 @@
     // Shows the HTML editor
     function jumpsplit_html_editor()
     {
+        // Add the base to our template!
+        $('head').append('<base href="<?php echo $base_url; ?>">');
         $('.widget-templates').hide();
         $('#jumpsplit-html-edit').show();
         
@@ -76,9 +90,16 @@
     function jumpsplit_widget_positions()
     {
         // TODO
-        // make dragable
-        // detect if off page
-        $('.widget-templates').css('top', $('#site-editor').offset().top + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px')
+        // detect if off page - dont allow
+        var menu_height = 120;
+        $('.widget-templates').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');
+        $('.widget-templates').draggable(
+        {
+            handle: '.drag', 
+            cursor: "move",
+            iframeFix: true,
+            containment: "parent"
+        });
     }
     
     $(document).ready(function()
@@ -91,6 +112,7 @@
         
         $(window).on('resize scroll', function()
         {
+            $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
             if (iframe_element)
             {
                 jumpsplit_widget_positions();
@@ -194,10 +216,6 @@
             <!-- content -->
             <div class="tab-content">
                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="editor">
-                    <?php
-//                        $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-                        $url = "http://lukepolo.com";
-                    ?>
                     <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
                 <!-- end s1 tab pane -->

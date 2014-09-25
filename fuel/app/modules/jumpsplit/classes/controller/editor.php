@@ -76,7 +76,7 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('hover','*', function(e)
             {
-                if(!$('#jumpsplit-element-menu', window.parent.document).is(':visible'))
+                if(!$('#jumpsplit-element-menu', window.parent.document).is(':visible') && !$('body .ui-draggable-dragging', window.parent.document).is(':visible'))
                 {
                     e.stopPropagation();
                     mouse_x = e.pageX;

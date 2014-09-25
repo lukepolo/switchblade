@@ -9,9 +9,9 @@
                 <i class="fa fa-pencil"></i>
             </span>
             <h2>Edit Classes</h2>
-        <span class="jarviswidget-loader">
-            <i class="fa fa-refresh fa-spin"></i>
-        </span>
+        <div class="drag">
+            <i class="fa fa-align-justify"></i>
+        </div>
     </header>
     <!-- widget div-->
     <div role="content">

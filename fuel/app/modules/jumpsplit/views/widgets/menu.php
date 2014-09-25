@@ -41,13 +41,13 @@
         <a href="javascript:void(0);" id="ui-id-3" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Element</a>
         <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
             <li class="ui-menu-item" role="presentation">
-                <a href="#" onclick="javascript:jumpsplit_html_editor()" data-toggle="modal" class="ui-corner-all" role="menuitem">HTML</a>
+                <a href="javascript:void(0);" onclick="javascript:jumpsplit_html_editor()" data-toggle="modal" class="ui-corner-all" role="menuitem">HTML</a>
             </li>
                 <li class="ui-menu-item" role="presentation">
-                <a href="#" onclick="javascript:jumpsplit_classes_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
+                <a href="javascript:void(0);" onclick="javascript:jumpsplit_classes_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
             </li>
             <li class="ui-menu-item" role="presentation">
-                <a href="#" onclick="javascript:jumpsplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
+                <a href="javascript:void(0);" onclick="javascript:jumpsplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
             </li>
             <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Update / Insert Link (change depending on options)</a>

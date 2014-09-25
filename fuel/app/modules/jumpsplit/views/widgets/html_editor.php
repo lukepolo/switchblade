@@ -10,11 +10,13 @@
                 <i class="fa fa-times"></i>
             </a>
         </div>
-            <span class="widget-icon">
-                <i class="fa fa-pencil"></i>
-            </span>
-            <h2>Edit HTML</h2>
-        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+        <span class="widget-icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <h2>Edit HTML</h2>
+        <div class="drag">
+            <i class="fa fa-align-justify"></i>
+        </div>
     </header>
     <!-- widget div-->
     <div role="content">
