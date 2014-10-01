@@ -62,6 +62,8 @@
             Casset::js('plugin/jquery-validate/jquery.validate.min.js');
             // JQUERY MASKED INPUT 
             Casset::js('plugin/masked-input/jquery.maskedinput.min.js');
+            // BOOTSTRAP COLORPICKER
+            Casset::js('plugin/colorpicker/bootstrap-colorpicker.min.js');
             // SELECT2
             Casset::js('select2.min.js');
             //JQUERY UI + Bootstrap Slider

@@ -44,3 +44,19 @@ html {
     /* inline-block space fix */
     margin-right:-4px;
 }
+
+.screen_center {
+    position: absolute;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+}
+
+hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.ui-widget-content {
+    border: 1px solid #eee !important;
+}

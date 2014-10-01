@@ -46,18 +46,46 @@
                 <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" onclick="javascript:jumpsplit_classes_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
             </li>
+            
             <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" onclick="javascript:jumpsplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
             </li>
+            <span>
+                <hr>
+                <li class="ui-menu-item" role="presentation">
+                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
+                </li>
+                <li class="ui-menu-item" role="presentation">
+                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
+                </li>
+            </span>
+        </ul>
+    </li>
+    <hr>
+    <li class="ui-menu-item" role="presentation">
+        <a href="javascript:void(0);" id="ui-id-4" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
+    </li>
+    <li class="ui-menu-item" role="presentation">
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>
+    </li>
+    <hr>
+    <li class="ui-menu-item" role="presentation">
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Create Goal</a>
+    </li>
+    <li class="ui-menu-item" role="presentation">
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Custom Javascript</a>
+    </li>
+    <hr>
+    <li class="ui-menu-item" role="presentation">
+        <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
+        <a href="javascript:void(0);" id="ui-id-3" class="ui-corner-all" tabindex="-1" role="menuitem">Select Container</a>
+        <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
             <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Update / Insert Link (change depending on options)</a>
+                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No Connected Items</a>
             </li>
         </ul>
     </li>
-    <li class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" id="ui-id-4" class="ui-corner-all" tabindex="-1" role="menuitem">Move</a>
-    </li>
-    <div></div>
+    <hr>
     <li>
         <a href="javascript:void(0);" id="jumpsplit-close" class="ui-corner-all" tabindex="-1" role="menuitem">Close Menu</a>
     </li>

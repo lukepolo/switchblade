@@ -11,17 +11,64 @@
         height:100%;
     }
     .note-editable * {
-        max-width: 100%;
+        max-width: 80%;
     }
     
     .jarviswidget .drag i {
         margin-left: 10px;
         vertical-align: text-top;
     }
+    
+    #jumpsplit-element-menu .ui-menu-title {
+        cursor: inherit;
+    }
 </style>
 <script>
     var iframe_doc;
     var iframe_element;
+    
+    var element_tags = {
+        p: "Paragraph",
+        div: "Divider",
+        h1: "Heading",
+        h2: "Heading",
+        h3: "Heading",
+        h4: "Heading",
+        h5: "Heading",
+        h6: "Heading",
+        a: "Link",
+        ul: "Unordered List",
+        ol: "Ordered List",
+        li: "List Item",
+        blockquote: "Blockquote",
+        hr: "Horizontal Rule",
+        img: "Image",
+        i: "Italics",
+        b: "Bold",
+        title: "Title",
+        form: "Form",
+        input: "Input",
+        select: "Selector",
+        option: "Select Option",
+        font: "Font",
+        table: "Table",
+        tr: "Table Row",
+        td: "Table Division",
+        th: "Table Heading",
+        thead: "Table Header",
+        tbody: "Table Body",
+        tfooter: "Table Footer",
+        header: "Header",
+        footer: "Footer",
+        body: "Body",
+        small: "Small Text",
+        pre: "Preformated Text",
+        strike: "Striked Text",
+        sub: "Subscript",
+        frame: "Frame",
+        iframe: "IFrame",
+        textarea: "Textarea"
+    };
     
     // ------------ WIDGETS ------------ //
     // Shows the menu 
@@ -29,12 +76,15 @@
     {
         // Store element globally
         iframe_element = element;
-        jumpsplit_widget_positions();
+        jumpsplit_widget_menu_position();
         
         // HACK -- we dont want the default menu classes
         $('#jumpsplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
         
-        var element_text = '<'+$(iframe_element).prop('tagName').toLowerCase() + get_class_list('class', ' ')+'>';
+        var element_tag = $(iframe_element).prop('tagName').toLowerCase();
+        
+        
+        var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
         
         // Set the menu title
         $('#jumpsplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
@@ -42,6 +92,19 @@
         // Hide rest of widgets
         $('.widget-templates').hide();
         $('#jumpsplit-element-menu').menu().show();
+        
+        var left_pos = $(window).width() - $('#jumpsplit-element-menu').position().left;
+        if(left_pos < 200)
+        {
+            $('#jumpsplit-element-menu').css('left', $('#jumpsplit-editor').width() - 300);
+        }
+        
+        var right_pos = $('#jumpsplit-element-menu').position().left;
+        if(right_pos < 200)
+        {
+            $('#jumpsplit-element-menu').css('left', 300);
+        }
+        
     }
     
     // Shows the HTML editor
@@ -86,24 +149,38 @@
     // ------------ END OF WIDGETS ------------ //
     
     // ------------ WIDGET INTERACTIONS ------------ //
+    // 
+    // 
     // Resets all menu / widget positions next to element
     function jumpsplit_widget_positions()
     {
         // TODO
         // detect if off page - dont allow
-        var menu_height = 120;
-        $('.widget-templates').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');
-        $('.widget-templates').draggable(
+        $('.widget-templates:not(#jumpsplit-element-menu)').addClass('screen_center').draggable(
         {
             handle: '.drag', 
             cursor: "move",
             iframeFix: true,
-            containment: "parent"
+            containment: "#content",
+            start: function()
+            {
+                $('.widget-templates').removeClass('screen_center');
+            }
         });
+    }
+    
+     function jumpsplit_widget_menu_position()
+    {
+        // TODO
+        // detect if off page - dont allow
+        var menu_height = 120;
+        $('#jumpsplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
     }
     
     $(document).ready(function()
     {
+        $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
+        
         $('#jumpsplit-close').on('click', function()
         {
             $('#jumpsplit-element-menu').hide();
