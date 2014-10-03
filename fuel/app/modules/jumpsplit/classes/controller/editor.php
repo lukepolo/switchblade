@@ -68,13 +68,21 @@ class Controller_Editor extends \Controller_Template
             }
         </style>";
 
+        // TODO - ADD JQUERY BUT NO COCONFLICT VERSION!
         // ADD JS FILE
         $html = $html."
         <script>
+        
             var selected_element;
             $('body').attr('oncontextmenu', 'return false');
             
-            $(document).on('hover','*', function(e)
+            function add_jumpsplit_border(element)
+            {
+                $('.jumpsplit-border').removeClass('jumpsplit-border');
+                $(element).addClass('jumpsplit-border');
+            }
+            
+            $(document).on('mouseover','*', function(e)
             {
                 if(!$('#jumpsplit-element-menu, body .ui-draggable-dragging, .drag', window.parent.document).is(':visible'))
                 {
@@ -86,8 +94,7 @@ class Controller_Editor extends \Controller_Template
                     
                     if(element)
                     {
-                        $('.jumpsplit-border').removeClass('jumpsplit-border');
-                        $(element).addClass('jumpsplit-border');
+                        add_jumpsplit_border(element);
                     }
                 }
             });
@@ -112,7 +119,7 @@ class Controller_Editor extends \Controller_Template
                 if(e.which == 3)
                 {
                     selected_element = this;
-                    $('.jumpsplit-border').removeClass('jumpsplit-border');
+                    $('.jumpsplit-border').removeClass('jumpsplit-border'); // this really needed?
                     $(selected_element).addClass('jumpsplit-border');
                     e.preventDefault();
                     e.stopPropagation();

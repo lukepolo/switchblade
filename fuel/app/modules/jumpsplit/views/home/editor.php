@@ -26,10 +26,13 @@
 <script>
     var iframe_doc;
     var iframe_element;
+    var element_tree = [];
+    
+    var test;
     
     var element_tags = {
         p: "Paragraph",
-        div: "Divider",
+        div: "Division",
         h1: "Heading",
         h2: "Heading",
         h3: "Heading",
@@ -86,6 +89,56 @@
         
         var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
         
+        if(element_tag == 'img')
+        {
+            $('#replace_img').show();
+        }
+        else
+        {
+            $('#replace_img').hide();
+        }
+        
+        if(element_tag == 'a' || element_tag == 'img')
+        {
+            $('#link').show();
+        }
+        else
+        {
+            $('#link').hide();
+        }
+        
+        $('#select_container').empty().html('\
+            <li id="no_connections" class="ui-menu-item" role="presentation">\
+                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No Connecting Elements</a>\
+            </li>\
+        ');
+        element_tree = [];
+        var count = 0;
+        $(iframe_element).parents().map(function() 
+        {
+            if(this.tagName != 'HTML' && this.tagName != 'BODY')
+            {
+                // remove the no connections
+                $('#no_connections').remove();
+                element_tree.push(this);
+                
+                if(this.id)
+                {
+                    var element_id = ' #'+this.id;
+                }
+                else
+                {
+                    element_id = '';
+                }
+                $('#select_container').append('\
+                    <li class="ui-menu-item" role="presentation">\
+                        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
+                    </li>\
+                ');
+                count++;
+            }
+        });
+        
         // Set the menu title
         $('#jumpsplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
         
@@ -94,15 +147,15 @@
         $('#jumpsplit-element-menu').menu().show();
         
         var left_pos = $(window).width() - $('#jumpsplit-element-menu').position().left;
-        if(left_pos < 200)
+        if(left_pos < 250)
         {
-            $('#jumpsplit-element-menu').css('left', $('#jumpsplit-editor').width() - 300);
+            $('#jumpsplit-element-menu').css('left', $('#jumpsplit-editor').width() - 350);
         }
         
         var right_pos = $('#jumpsplit-element-menu').position().left;
-        if(right_pos < 200)
+        if(right_pos < 250)
         {
-            $('#jumpsplit-element-menu').css('left', 300);
+            $('#jumpsplit-element-menu').css('left', 350);
         }
         
     }
@@ -216,7 +269,27 @@
             {
                 alert('Your browser is incompatiable, features may not work as inteneded');
             }
+            iframe_window = $('#site-editor')[0].contentWindow;
             iframe_doc = $('#site-editor').contents()[0];
+        });
+        
+        $(document).on('click', '#remove_element', function()
+        {
+            // Remove Element
+            // TODO - Add to THEIR JS file
+            $(iframe_element).remove();
+            // Close menu
+            $('#jumpsplit-close').click();
+        });
+        
+        $(document).on('mouseover', '#select_container li a', function()
+        {
+            iframe_window.add_jumpsplit_border(element_tree[$(this).data('id')]);
+        });
+        
+        $(document).on('click', '#select_container li a', function()
+        {
+           jumpsplit_menu(element_tree[$(this).data('id')]); 
         });
     });
         

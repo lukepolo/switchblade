@@ -20,7 +20,7 @@
     <li class="ui-menu-title"><li>
     <li class="ui-menu-item" role="presentation">
         <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
-        <a href="javascript:void(0);" id="ui-id-3" class="ui-corner-all" tabindex="-1" role="menuitem">Trigger State</a>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Trigger State</a>
         <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
             <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Active</a>
@@ -38,7 +38,7 @@
     </li>
     <li class="ui-menu-item" role="presentation">
         <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
-        <a href="javascript:void(0);" id="ui-id-3" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Element</a>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Element</a>
         <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
             <li class="ui-menu-item" role="presentation">
                 <a href="javascript:void(0);" onclick="javascript:jumpsplit_html_editor()" data-toggle="modal" class="ui-corner-all" role="menuitem">HTML</a>
@@ -51,11 +51,10 @@
                 <a href="javascript:void(0);" onclick="javascript:jumpsplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
             </li>
             <span>
-                <hr>
-                <li class="ui-menu-item" role="presentation">
+                <li id="replace_img" class="ui-menu-item" role="presentation" style="display:none">
                     <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
                 </li>
-                <li class="ui-menu-item" role="presentation">
+                <li id="link" class="ui-menu-item" role="presentation" style="display:none">
                     <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
                 </li>
             </span>
@@ -63,10 +62,10 @@
     </li>
     <hr>
     <li class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" id="ui-id-4" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
     </li>
     <li class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>
+        <a id="remove_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>
     </li>
     <hr>
     <li class="ui-menu-item" role="presentation">
@@ -78,11 +77,8 @@
     <hr>
     <li class="ui-menu-item" role="presentation">
         <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
-        <a href="javascript:void(0);" id="ui-id-3" class="ui-corner-all" tabindex="-1" role="menuitem">Select Container</a>
-        <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
-            <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No Connected Items</a>
-            </li>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Select Container</a>
+        <ul id="select_container" class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
         </ul>
     </li>
     <hr>
