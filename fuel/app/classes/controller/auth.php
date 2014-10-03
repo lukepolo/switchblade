@@ -60,7 +60,7 @@ class Controller_Auth extends Controller_Template
                     $email->to($user->email);
 
                     // Set a subject
-                    $email->subject('Reset your passsword');
+                    $email->subject('Reset your password');
 
                     $data = new stdClass;
                     $data->new_password = Auth::reset_password($user->username);
@@ -69,7 +69,7 @@ class Controller_Auth extends Controller_Template
 
                     if($email->send())
                     {
-                        Session::set('success', 'We have sent you the email, please check within a couple of minuets');
+                        Session::set('success', 'We have sent you the email, please check within a couple of minutes.');
                         Response::redirect(Uri::Create('login'));
                     }
                     else
@@ -180,11 +180,11 @@ class Controller_Auth extends Controller_Template
                     {
                         if($found_user->username == Input::Post('username'))
                         {
-                            \Session::set('error', 'Username already exsists!');
+                            \Session::set('error', 'Username already exists!');
                         }
                         else
                         {
-                            \Session::set('error', 'Email already exsists!');
+                            \Session::set('error', 'Email already exists!');
                         }
                         // return the post as well?
                         Response::Redirect_back(Uri::Create('login'));
@@ -209,7 +209,7 @@ class Controller_Auth extends Controller_Template
                         }
                         else
                         {
-                            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+                            \Session::set('error', 'Internal Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
                         }
                     }
                 }
@@ -220,7 +220,7 @@ class Controller_Auth extends Controller_Template
             }
 
             // Send back an error!
-            \Session::set('error', 'Interanl Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
+            \Session::set('error', 'Internal Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
         }
         else
         {
@@ -298,7 +298,7 @@ class Controller_Auth extends Controller_Template
                         else
                         {
                             // Username already taken
-                            Session::set('error',$user_login.' , Username already taken, please register manually or try a differnt account');
+                            Session::set('error',$user_login.' , Username is already taken, please register manually or try a different account');
                             Response::Redirect(Uri::Base());
                         }
                     }
@@ -328,7 +328,7 @@ class Controller_Auth extends Controller_Template
                     // and set the redirect url for this status
                 break;
                 default:
-                    throw new \FuelException('Auth_Opauth::login_or_register() has come up with a result that we dont know how to handle.');
+                    throw new \FuelException('Auth_Opauth::login_or_register() has come up with a result that we do not know how to handle.');
             }
             // redirect to the url set
             \Response::redirect(Uri::Base());
@@ -344,7 +344,7 @@ class Controller_Auth extends Controller_Template
         // catch a user cancelling the authentication attempt (some providers allow that)
         catch (\OpauthCancelException $e)
         {
-            Session::set('error','It looks like you canceled your authorisation');
+            Session::set('error','It looks like you canceled your authorization.');
             \Response::redirect_back();
         }
     }
