@@ -46,7 +46,6 @@
             <?php echo $footer; ?>
         </footer>
 
-    
         <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
         <?php
             // JS FILES Here
