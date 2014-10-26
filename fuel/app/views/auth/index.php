@@ -156,6 +156,8 @@
                     minlength: 5
                 },
                 confirm_password: {
+                    required: true,
+                    minlength: 1,
                     equalTo: "#form_password",
                 },
                 gender: "required",
@@ -173,7 +175,7 @@
                     minlength: "Your password must be at least 5 characters long"
                 },
                 confirm_password: {
-                    required: "Please provide a password",
+                    required: "Passwords much match",
                     minlength: "Your password must be at least 5 characters long",
                 },
                 email: {
