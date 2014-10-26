@@ -42,7 +42,7 @@ class Controller_Profile extends Controller_Template
         if(Input::Method() === "POST")
         {
             $config = array(
-                'path' => DOCROOT.'assets/img/users',
+                'path' => MAINPATH.'assets/img/users',
                 'randomize' => true,
                 'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),
             );

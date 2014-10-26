@@ -45,7 +45,7 @@
                     // Gets the users image
                     if(Auth::get('user_image'))
                     {
-                        $user_image = 'assets/img/users/'.Auth::get('user_image');
+                        $user_image = 'https://switchblade.io/assets/img/users/'.Auth::get('user_image');
                     }
                     else
                     {

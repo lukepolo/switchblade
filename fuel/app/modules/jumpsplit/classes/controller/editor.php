@@ -65,6 +65,8 @@ class Controller_Editor extends \Controller_Template
             .jumpsplit-border {
                 outline: 3px solid #00CCCC !important;
                 cursor:pointer !important;
+                -webkit-box-shadow: 3px 3px 4px #999;
+                z-index: 2147483646 !important;
             }
         </style>";
 
@@ -84,7 +86,7 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover','*', function(e)
             {
-                if(!$('#jumpsplit-element-menu, body .ui-draggable-dragging, .drag', window.parent.document).is(':visible'))
+                if(!$('#jumpsplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
                 {
                     e.stopPropagation();
                     mouse_x = e.pageX;

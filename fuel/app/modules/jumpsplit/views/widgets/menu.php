@@ -61,7 +61,7 @@
         </ul>
     </li>
     <hr>
-    <li class="ui-menu-item" role="presentation">
+    <li id="resize_move" class="ui-menu-item" role="presentation">
         <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
     </li>
     <li class="ui-menu-item" role="presentation">
@@ -70,9 +70,6 @@
     <hr>
     <li class="ui-menu-item" role="presentation">
         <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Create Goal</a>
-    </li>
-    <li class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Custom Javascript</a>
     </li>
     <hr>
     <li class="ui-menu-item" role="presentation">

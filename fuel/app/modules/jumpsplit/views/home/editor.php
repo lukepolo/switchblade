@@ -291,6 +291,15 @@
         {
            jumpsplit_menu(element_tree[$(this).data('id')]); 
         });
+        
+        $(document).on('click', '#resize_move', function()
+        {
+            alert('really complicated ><');
+            // TODO - create own custom draggable function
+            $(iframe_element, iframe_window.document).resizable().draggable();
+            $('#jumpsplit-close').click();
+        });
+
     });
         
     // ------------ END OF WIDGET INTERACTIONS ------------ //
