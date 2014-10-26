@@ -23,9 +23,6 @@
             echo Casset::render_css();
         ?>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>       
-        <!--[if lt IE 9]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
     </head>
 	<!--  Add smart styles  smart-style-* -->
     <body class="menu-on-top">
@@ -45,6 +42,10 @@
         </footer>
 
         <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
+        <!--HTML 5 for incompatible browsers-->
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
         <?php
             // JS FILES Here
             // HACK
