@@ -146,26 +146,26 @@ class Controller_Auth extends Controller_Template
     
     public function action_register($provider = null)
     {
-        if(\Settings::get('registration') == false)
+        if(\Auth::Check())
         {
-            if(\Auth::Check())
+            if(empty($provider) === false)
             {
-                if(empty($provider) === false)
-                {
-                    // try to link their account
-                    Controller_Auth::link_provider(Auth::get_user_id()[1]);
-                }
-                else
-                {
-                    Response::redirect_back(Uri::Base());
-                }
+                // try to link their account
+                Controller_Auth::link_provider(Auth::get_user_id()[1]);
             }
-            elseif(empty($provider) === false)
+            else
             {
-                // load Opauth, it will load the provider strategy and redirect to the provider
-                \Auth_Opauth::forge();
+                Response::redirect_back(Uri::Base());
             }
-            elseif(\Input::Method() === "POST")
+        }
+        elseif(empty($provider) === false)
+        {
+            // load Opauth, it will load the provider strategy and redirect to the provider
+            \Auth_Opauth::forge();
+        }
+        elseif(\Input::Method() === "POST")
+        {
+            if(\Settings::get('registration') == false)
             {
                 // TODO -- add in settings if registration is open!
                 if(Input::Post('terms') !== false)
@@ -175,7 +175,7 @@ class Controller_Auth extends Controller_Template
                         ->where('email', Input::Post('email'))
                         ->or_where('username', Input::Post('username'))
                         ->get_one();
-
+                        
                     if(empty($found_user) === false)
                     {
                         if($found_user->username == Input::Post('username'))
@@ -217,15 +217,14 @@ class Controller_Auth extends Controller_Template
                 {
                     \Session::set('error', 'You must accept the Terms and Conditions!');
                 }
+                // Send back an error!
+                \Session::set('error', 'Internal Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
             }
-
-            // Send back an error!
-            \Session::set('error', 'Internal Error, please contact the helpdesk at '. Html::anchor('http://help.bladeswitch.io'));
-        }
-        else
-        {
-            \Session::set('error', 'Sorry Registration is Disabled!');
-            Response::Redirect_back(Uri::Create('login'));
+            else
+            {
+                \Session::set('error', 'Sorry Registration is Disabled!');
+                Response::Redirect_back(Uri::Create('login'));
+            }
         }
     }
     
@@ -262,64 +261,72 @@ class Controller_Auth extends Controller_Template
             
                 // we don't know this provider login, ask the user to create a local account first
                 case 'register':
-                    // inform the user the login using the provider was succesful, but we need a local account to continue
-                    // and set the redirect url for this status
-                    
-                    switch ($provider)
+                    if(\Settings::get('registration') == false)
                     {
-                        case 'Twitter' :
-                            $user_login = $opauth->get('auth.raw.screen_name');
-                            $email = $opauth->get('auth.raw.screen_name').'@twitter.com';
-                        break;
-                        case 'Google' :
-                            $user_login = str_replace('@gmail.com','',$opauth->get('auth.raw.email'));
-                            $email = $opauth->get('auth.raw.email');
-                        break;
-                        case 'Facebook' :
-                            $user_login = $opauth->get('auth.raw.username');
-                            $email = $opauth->get('auth.raw.username').'@facebook.com';
-                        break;
-                    }
-                    
-                    // call Auth to create this user
-                    $found_user = \Auth\Model\Auth_User::query()
-                        ->where('username', $user_login)
-                        ->or_where('email', $email)
-                        ->get_one();
-                    
-                    if(empty($found_user) === false)
-                    {
-                        if($found_user->email == $email)
+                        // inform the user the login using the provider was succesful, but we need a local account to continue
+                        // and set the redirect url for this status
+                        
+                        switch ($provider)
                         {
-                            // FORCE LOGIN AND REGISTER NEW AUTH
-                            Auth::force_login($found_user->id);
-                            Controller_Auth::link_provider($found_user->id);
+                            case 'Twitter' :
+                                $user_login = $opauth->get('auth.raw.screen_name');
+                                $email = $opauth->get('auth.raw.screen_name').'@twitter.com';
+                            break;
+                            case 'Google' :
+                                $user_login = str_replace('@gmail.com','',$opauth->get('auth.raw.email'));
+                                $email = $opauth->get('auth.raw.email');
+                            break;
+                            case 'Facebook' :
+                                $user_login = $opauth->get('auth.raw.username');
+                                $email = $opauth->get('auth.raw.username').'@facebook.com';
+                            break;
+                        }
+                        
+                        // call Auth to create this user
+                        $found_user = \Auth\Model\Auth_User::query()
+                            ->where('username', $user_login)
+                            ->or_where('email', $email)
+                            ->get_one();
+                        
+                        if(empty($found_user) === false)
+                        {
+                            if($found_user->email == $email)
+                            {
+                                // FORCE LOGIN AND REGISTER NEW AUTH
+                                Auth::force_login($found_user->id);
+                                Controller_Auth::link_provider($found_user->id);
+                            }
+                            else
+                            {
+                                // Username already taken
+                                Session::set('error',$user_login.' , Username is already taken, please register manually or try a different account');
+                                Response::Redirect(Uri::Base());
+                            }
                         }
                         else
                         {
-                            // Username already taken
-                            Session::set('error',$user_login.' , Username is already taken, please register manually or try a different account');
-                            Response::Redirect(Uri::Base());
+                            $user_id = \Auth::create_user(
+                                $user_login,
+                                md5($opauth->get('auth.credentials.token')), // PASSWORD
+                                $email,
+                                \Config::get('application.user.default_group', 3), // DEFAULT GROUP
+                                array(
+                                    'fullname' =>   $opauth->get('auth.info.name'),
+                                )
+                            );
+                            
+                            Auth::force_login($user_id);
                         }
+                        
+                        $opauth->login_or_register();
+                        
+                        Session::set('success','You have connected your '.$provider.' account!');
                     }
                     else
                     {
-                        $user_id = \Auth::create_user(
-                            $user_login,
-                            md5($opauth->get('auth.credentials.token')), // PASSWORD
-                            $email,
-                            \Config::get('application.user.default_group', 3), // DEFAULT GROUP
-                            array(
-                                'fullname' =>   $opauth->get('auth.info.name'),
-                            )
-                        );
-                        
-                        Auth::force_login($user_id);
+                        \Session::set('error', 'Sorry Registration is Disabled!');
+                        Response::Redirect_back(Uri::Create('login'));
                     }
-                    
-                    $opauth->login_or_register();
-                    
-                    Session::set('success','You have connected your '.$provider.' account!');
                 break;
             
                 // we didn't know this provider login, but enough info was returned to auto-register the user

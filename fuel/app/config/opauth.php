@@ -50,6 +50,7 @@ return array(
 	 * Uncomment if you would like to view debug messages
 	 */
          // TURN TO FALSE LATER
+        // TODO
 	'debug' => true,
 
 	/**
@@ -77,7 +78,9 @@ return array(
 	'Strategy' => array(
             'Google' => array(
                 'client_id' => Settings::get('google_client_id'),
-                'client_secret' => Settings::get('google_client_secret_id')
+                'client_secret' => Settings::get('google_client_secret_id'),
+                'state' => Uri::Base(),
+                'redirect_uri' => 'https://oauth.switchblade.io/auth/register/google/oauth2callback'
             ),
             'Twitter' => array(
                 'key' => Settings::get('twitter_key'),

@@ -18,12 +18,27 @@ class Controller_Settings extends Controller_Template
                     $setting->save();
                 }
             }
+            // Refresh the settings cache
+            Cache::delete('settings');
         }
         
         $data = new stdClass;
         
-        $data->settings = Model_Setting::query()->get();
-
+        $data->settings = \Settings::get_all();
+       
         $this->template->content = View::forge('settings', $data);
+    }
+    
+    public function action_profiler()
+    {
+        if(Session::Get('profiler'))
+        {
+            Session::Delete('profiler');
+        }
+        else
+        {
+            Session::Set('profiler', true);
+        }
+        Response::Redirect_Back(Uri::Base());
     }
 }
