@@ -89,6 +89,16 @@
 	<script>
 	    $(document).ready(function()
 	    {
+		<?php
+		    if(Session::get('profiler'))
+		    {
+		    ?>
+		    	openProfiler();
+			toggleHeight();
+		    <?php
+		    }
+		?>
+
 		// Generate all selects as select2
 		$('select:not(.no_select2)').each(function()
                 {

@@ -27,12 +27,12 @@
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">
-                <button class="btn btn-sm btn-primary" type="button">
+                <button class="btn btn-sm btn-primary cancel" type="button">
                     <i class="fa fa-times"></i> Cancel
                 </button>	
             </div>
             <div class="btn-group">
-                <button class="btn btn-sm btn-success" type="button">
+                <button class="btn btn-sm btn-success save" type="button">
                     <i class="fa fa-check"></i> Save
                 </button>	
             </div>

@@ -27,6 +27,7 @@
     var iframe_doc;
     var iframe_element;
     var element_tree = [];
+    var pending_changes = {};
     
     var test;
     
@@ -89,6 +90,7 @@
         
         var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
         
+        // Shows or hides the replace link in the menu
         if(element_tag == 'img')
         {
             $('#replace_img').show();
@@ -98,6 +100,7 @@
             $('#replace_img').hide();
         }
         
+        // Shows or hides the "link" link in the menu
         if(element_tag == 'a' || element_tag == 'img')
         {
             $('#link').show();
@@ -107,11 +110,15 @@
             $('#link').hide();
         }
         
+        // This emptys and places a default placeholder for showing all connected elements
         $('#select_container').empty().html('\
             <li id="no_connections" class="ui-menu-item" role="presentation">\
                 <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No Connecting Elements</a>\
             </li>\
         ');
+        
+        // Builds the element tree 
+        // TODO - PUT INTO ITS OWN FUNCTION
         element_tree = [];
         var count = 0;
         $(iframe_element).parents().map(function() 
@@ -146,18 +153,20 @@
         $('.widget-templates').hide();
         $('#jumpsplit-element-menu').menu().show();
         
+        // TODO - check bottom - top
+        // Checks to see if the menu is outside of the view
         var left_pos = $(window).width() - $('#jumpsplit-element-menu').position().left;
         if(left_pos < 250)
         {
             $('#jumpsplit-element-menu').css('left', $('#jumpsplit-editor').width() - 350);
         }
         
+        // Checks to see if the menu is outside of the view
         var right_pos = $('#jumpsplit-element-menu').position().left;
         if(right_pos < 250)
         {
             $('#jumpsplit-element-menu').css('left', 350);
         }
-        
     }
     
     // Shows the HTML editor
@@ -194,6 +203,12 @@
     {
         $('.widget-templates').hide();
         $('#jumpsplit-css').show();
+        
+        // Build the CSS Values
+        $('#css_widget input').each(function()
+        {
+            $(this).val($(iframe_element).css($(this).data('get')));
+        });
         
         // Reset positions
         jumpsplit_widget_positions();
@@ -294,16 +309,50 @@
         
         $(document).on('click', '#resize_move', function()
         {
-            alert('really complicated ><');
+//            alert('really complicated ><');
             // TODO - create own custom draggable function
             $(iframe_element, iframe_window.document).resizable().draggable();
             $('#jumpsplit-close').click();
         });
 
+        $('.cancel').click(function()
+        {
+            $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
+        });
+
+        $('.save').click(function()
+        {
+            // Save All pending changes!
+            path = $(iframe_element).getPath();
+            $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
+        });
+        
+        // Live Preview Changes
+        $(document).on('keyup change blur focusout select', '.jarviswidget input:visible', function(e)
+        {
+            // TODO - store in pending changes
+            switch($(this).closest('.jarviswidget').attr('id'))
+            {
+                case 'jumpsplit-classes':
+                    if(e.type != 'keyup')
+                    {
+                        console.log('Chnaged Classes');
+                        $($(iframe_element).getPath(), iframe_doc).removeClass().addClass($(this).val().replace(',',' ')).addClass('jumpsplit-border');
+                    }
+                break;
+                case 'jumpsplit-css':
+                    if($($(iframe_element).getPath(), iframe_doc).css($(this).data('get')) != $(this).val())
+                    {
+                        console.log('Changed CSS');
+                        $($(iframe_element).getPath(), iframe_doc).css($(this).data('get'), $(this).val());
+                    }
+                break;
+            }       
+        });
     });
         
     // ------------ END OF WIDGET INTERACTIONS ------------ //
-     
+      
     // Gets the class list of the current element
     function get_class_list(wrap, seperator)
     {
@@ -396,3 +445,8 @@
 <?php echo \View::Forge('widgets/html_editor');?>
 <?php echo \View::Forge('widgets/classes_editor');?>
 <?php echo \View::Forge('widgets/css_editor');?>
+
+<?php
+
+    echo Asset::js('css_path.js')
+?>

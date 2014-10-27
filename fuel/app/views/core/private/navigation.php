@@ -109,6 +109,9 @@
                     <li>
                         <a href="<?php echo Uri::Create('settings'); ?>">Settings</a>
                     </li>
+                    <li>
+                        <a href="<?php echo Uri::Create('settings/profiler'); ?>"><?php echo Session::Get('profiler') ? 'Disable' : 'Enable';?> Profiler</a>
+                    </li>
                 </ul>
             </li>
         </ul>

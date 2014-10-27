@@ -9,38 +9,47 @@ class Settings
         if(empty(static::$settings) === true)
         {
             Settings::get_all();
-            
-            if (empty(static::$settings) === false && key_exists($option, static::$settings))
-            {
-                return static::$settings[$option];
-            }
         }
         
         if (key_exists($option, static::$settings))
         {
-            return static::$settings[$option];
+            return static::$settings[$option]->data;
         }
     }
     
-    
-    // TODO
-    // STASH IN A CACHE 
     static function get_all($refresh = false)
     {
         if(empty(static::$settings) === true || $refresh === true)
         {
-            $settings =  Model_Setting::query()
-                ->get();
-                
-            $get_settings = array();
-            if(empty($settings) === false)
+            if($refresh || Fuel::$env == 'development')
             {
-                foreach($settings as $setting)
-                {
-                    $get_settings[$setting->name] = $setting->data;
-                }
+                Cache::delete('settings');
             }
-            static::$settings = $get_settings;
+            
+            // try to retrieve the cache and save to $content var
+            try
+            {
+                static::$settings = Cache::get('settings');
+            }
+            catch (\CacheNotFoundException $e)
+            {
+                $settings =  Model_Setting::query()
+                    ->get();
+                    
+                $get_settings = array();
+                
+                if(empty($settings) === false)
+                {
+                    foreach($settings as $setting)
+                    {
+                        $get_settings[$setting->name] = $setting;
+                    }
+                }
+                
+                static::$settings = $get_settings;
+                
+                Cache::set('settings', static::$settings);
+            }
         }
         
         return static::$settings;

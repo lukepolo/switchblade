@@ -44,7 +44,7 @@ return array(
 	 */
 	 'index_file' => false,
 
-	 'profiling'  => false,
+	 'profiling'  => Session::Get('profiler'),
 
 	/**
 	 * Default location for the file cache
@@ -196,7 +196,7 @@ return array(
 		// Only transmit cookies over secure connections
 		 'secure'      => true,
 		// Only transmit cookies over HTTP, disabling Javascript access
-		 'http_only'   => false,
+		 'http_only'   => true,
 	// ),
 
 	/**
