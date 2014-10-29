@@ -15,11 +15,10 @@
 	<link rel="stylesheet" href=//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
         <?php
             // CSS FILES
-            Casset::css('bootstrap.min.css');
+            Casset::css('bootstrap.css');
             Casset::css('base.css');
-            Casset::css('font-awesome.min.css');
+            //Casset::css('font-awesome.min.css');
             Casset::css('smartadmin-production.min.css');
-            Casset::css('smartadmin-skins.min.css');
             echo Casset::render_css();
         ?>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>       
