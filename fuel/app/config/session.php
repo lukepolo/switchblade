@@ -33,7 +33,7 @@ return array(
 	'driver'			=> 'memcached',
 
 	// check for an IP address match after loading the cookie (optional, default = false)
-	'match_ip'			=> false,
+	'match_ip'			=> true,
 
 	// check for a user agent match after loading the cookie (optional, default = true)
 	'match_ua'			=> true,
@@ -48,7 +48,9 @@ return array(
 	'cookie_http_only'	=> null,
 
 	// whether or not to encrypt the session cookie (optional, default is true)
-	'encrypt_cookie'	=> true,
+        // TODO - build a decrypter based on Crypt!
+        // THE REASON IS SO WE CAN CHECK WITH NODE JS - Shoulnd't matter anyways
+	'encrypt_cookie'	=> false,
 
 	// if true, the session expires when the browser is closed (optional, default = false)
 	'expire_on_close'	=> false,
