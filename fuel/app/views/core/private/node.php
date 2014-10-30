@@ -4,6 +4,19 @@
     ?>
     	<script type="text/javascript" src="<?php echo rtrim(Uri::Base(),'/'); ?>:7777/socket.io/socket.io.js"></script>
         <script type="text/javascript">
+            <?php
+                if(Fuel::$env == 'development')
+                {
+                ?>
+                    if (localStorage.debug != 'socket.io-client:socket')
+                    {
+                        console.log('You must reload to see socket.io messages!');
+                        localStorage.debug='socket.io-client:socket';
+                    }
+                    
+                <?php
+                }
+            ?>
             try {
                 var socket = io.connect('<?php echo rtrim(Uri::Base(),'/'); ?>:7777');
                 var user_data = {
@@ -15,7 +28,7 @@
     
                 socket.on('pull', function(data)
                 {
-                    console.log('PULLED');
+                    console.log('PULLING');
                     console.log(data);
     
                     $('div[data-id="' + data.element + '"]').prepend(data.html);

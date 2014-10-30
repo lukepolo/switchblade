@@ -18,7 +18,8 @@
 	"opauth/paypal": "dev-master",
         "opauth/twitter": "dev-master",
         "psr/log": "1.0.*@dev",
-	"opauth/paypal": "dev-master"
+	"opauth/paypal": "dev-master",
+        "wisembly/elephant.io": "~3.0"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",

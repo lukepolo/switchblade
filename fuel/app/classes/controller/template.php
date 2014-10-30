@@ -7,7 +7,7 @@
         {
             // Lets render the template
             parent::before();
-            
+	    
             $data = new stdClass;
             $controller = str_replace('controller_', '', strtolower($this->request->route->controller));
             $data->controller = $controller;
