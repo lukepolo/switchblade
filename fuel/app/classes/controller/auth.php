@@ -10,6 +10,14 @@ class Controller_Auth extends Controller_Template
         'action_check'
     );
     
+    // TODO - remove once fixed issue
+    // Leave here for testing for now!
+    public function action_test()
+    {
+        // $.get('auth/test')
+        Node::php_to_node('append', 16, 'activity', '<p>NODE TEST</p>', 'mentioned');
+        die;
+    }
     public function action_check($type)
     {
         if($type == 'email')

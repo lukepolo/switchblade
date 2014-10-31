@@ -1,18 +1,19 @@
 <?php
     abstract class Controller_Template extends \Fuel\Core\Controller_Template {
         
-        public $template = 'template';
+	// We want the template to be the foundation so we speificy the default template of private!
+        public $template = 'private';
         public function before()
         {
             // Lets render the template
             parent::before();
-            
+	    
             $data = new stdClass;
             $controller = str_replace('controller_', '', strtolower($this->request->route->controller));
             $data->controller = $controller;
             
             $this->template->set = false;
-			
+	    
             // Check if public classes is an array then if the requested function is allowed.
             if (!isset($this->public_classes) or (!in_array(Request::active()->action, $this->public_classes) and !in_array('action_' . Request::active()->action, $this->public_classes)))
             {
@@ -24,6 +25,7 @@
                     $this->template->navigation = View::forge('core/private/navigation');
                     $this->template->ribbon = View::forge('core/private/ribbon');
                     $this->template->footer = View::forge('core/private/footer');
+		    $this->template->node = View::forge('core/private/node');
                     
                     // Grab the auth user and store it in a global field
                     
