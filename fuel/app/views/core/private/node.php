@@ -2,7 +2,7 @@
     if(Auth::Check())
     {
     ?>
-    	<script type="text/javascript" src="<?php echo rtrim(Uri::Base(),'/'); ?>:7777/socket.io/socket.io.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
         <script type="text/javascript">
             <?php
                 if(Fuel::$env == 'development')

@@ -17,7 +17,7 @@
             // CSS FILES
             Casset::css('bootstrap.css');
             Casset::css('base.css');
-            //Casset::css('font-awesome.min.css');
+            Casset::css('font-awesome.min.css');
             Casset::css('smartadmin-production.min.css');
             echo Casset::render_css();
         ?>
@@ -44,6 +44,10 @@
         <!--HTML 5 for incompatible browsers-->
         <!--[if lt IE 9]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <?php
+                // Browser msie issue fix
+                echo Asset::js('plugin/msie-fix/jquery.mb.browser.min.js');
+            ?>
         <![endif]-->
         <?php
 	    echo $node;
@@ -51,8 +55,12 @@
             // HACK
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
+            // Main APP JS
+            Casset::js('app.js');
             Casset::js('app.config.js');
-	    // JS TOUCH : include this plugin for mobile drag / drop touch events
+	    // SELECT2
+            Casset::js('select2.min.js');
+            // JS TOUCH : include this plugin for mobile drag / drop touch events
             Casset::js('plugin/jquery-touch/jquery.ui.touch-punch.min.js');
             Casset::js('bootstrap.min.js');
             // CUSTOM NOTIFICATION
@@ -69,18 +77,12 @@
             Casset::js('plugin/masked-input/jquery.maskedinput.min.js');
             // BOOTSTRAP COLORPICKER
             Casset::js('plugin/colorpicker/bootstrap-colorpicker.min.js');
-            // SELECT2
-            Casset::js('select2.min.js');
             //JQUERY UI + Bootstrap Slider
             Casset::js('plugin/bootstrap-slider/bootstrap-slider.min.js');
 	    // SUMMER NOTE
 	    Casset::js('plugin/summernote/summernote.min.js');
-            // browser msie issue fix
-            Casset::js('plugin/msie-fix/jquery.mb.browser.min.js');
-            // FastClick: For mobile devices: you can disable this in app.js
+            // FastClick
             Casset::js('plugin/fastclick/fastclick.min.js');
-            // Main APP JS
-            Casset::js('app.js');
             // Voice
             Casset::js('speech/voicecommand.min.js');
             
