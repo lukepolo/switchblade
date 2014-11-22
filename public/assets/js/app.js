@@ -69,9 +69,6 @@
  * GLOBAL: interval array (to be used with jarviswidget in ajax and 
  * angular mode) to clear auto fetch interval
  */
-	$.intervalArr = [];
-	
-	root = $.root_ = $('body');
 /*
  * Calculate nav height
  */
