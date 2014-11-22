@@ -41,4 +41,17 @@ class Controller_Settings extends Controller_Template
         }
         Response::Redirect_Back(Uri::Base());
     }
+    
+    public function action_minify()
+    {
+        if(Session::Get('minify'))
+        {
+            Session::Delete('minify');
+        }
+        else
+        {
+            Session::Set('minify', false);
+        }
+        Response::Redirect_Back(Uri::Base());
+    }
 }

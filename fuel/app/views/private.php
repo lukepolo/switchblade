@@ -17,18 +17,19 @@
             // CSS FILES
             Casset::css('bootstrap.css');
             Casset::css('base.css');
-            Casset::css('font-awesome.min.css');
-            Casset::css('smartadmin-production.min.css');
+            Casset::css('font-awesome.css');
+	    Casset::css('smartadmin-production-plugins.css');
+            Casset::css('smartadmin-production.css');
+	    Casset::css('smartadmin-skins.css');
             echo Casset::render_css();
         ?>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>       
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>       
     </head>
-	<!--  Add smart styles  smart-style-* -->
     <body class="menu-on-top">
         <?php echo $header; ?>
         <?php echo $navigation; ?>
         <div id="main" role="main">
-            <?php //echo $ribbon; ?>
+            <?php echo $ribbon; ?>
             <!--[if IE 8]>
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
@@ -40,51 +41,56 @@
             <?php echo $footer; ?>
         </footer>
 
-        <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
+        <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.js"></script>-->
         <!--HTML 5 for incompatible browsers-->
         <!--[if lt IE 9]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
             <?php
                 // Browser msie issue fix
-                echo Asset::js('plugin/msie-fix/jquery.mb.browser.min.js');
+                echo Asset::js('plugin/msie-fix/jquery.mb.browser.js');
             ?>
         <![endif]-->
         <?php
 	    echo $node;
-            // JS FILES Here
+	    Casset::js('bootstrap.js');
+	    
+            // JS FILES HERE
             // HACK
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
-            // Main APP JS
-            Casset::js('app.js');
+	    
+	    // Main APP JS
             Casset::js('app.config.js');
+            Casset::js('app.js');
+	    
 	    // SELECT2
             Casset::js('select2.min.js');
+	    
             // JS TOUCH : include this plugin for mobile drag / drop touch events
-            Casset::js('plugin/jquery-touch/jquery.ui.touch-punch.min.js');
-            Casset::js('bootstrap.min.js');
+            Casset::js('plugin/jquery-touch/jquery.ui.touch-punch.js');
+            
             // CUSTOM NOTIFICATION
-            Casset::js('notification/SmartNotification.min.js');
+            Casset::js('notification/SmartNotification.js');
             // JARVIS WIDGETS
-            Casset::js('smartwidgets/jarvis.widget.min.js');
+            Casset::js('smartwidgets/jarvis.widget.js');
             // EASY PIE CHARTS
-            Casset::js('plugin/easy-pie-chart/jquery.easy-pie-chart.min.js');
+            Casset::js('plugin/easy-pie-chart/jquery.easy-pie-chart.js');
             // SPARKLINES
-            Casset::js('plugin/sparkline/jquery.sparkline.min.js');
+            Casset::js('plugin/sparkline/jquery.sparkline.js');
             // JQUERY VALIDATE
-            Casset::js('plugin/jquery-validate/jquery.validate.min.js');
+            Casset::js('plugin/jquery-validate/jquery.validate.js');
             // JQUERY MASKED INPUT 
-            Casset::js('plugin/masked-input/jquery.maskedinput.min.js');
+            Casset::js('plugin/masked-input/jquery.maskedinput.js');
             // BOOTSTRAP COLORPICKER
-            Casset::js('plugin/colorpicker/bootstrap-colorpicker.min.js');
+            Casset::js('plugin/colorpicker/bootstrap-colorpicker.js');
             //JQUERY UI + Bootstrap Slider
-            Casset::js('plugin/bootstrap-slider/bootstrap-slider.min.js');
+            Casset::js('plugin/bootstrap-slider/bootstrap-slider.js');
 	    // SUMMER NOTE
-	    Casset::js('plugin/summernote/summernote.min.js');
-            // FastClick
-            Casset::js('plugin/fastclick/fastclick.min.js');
-            // Voice
-            Casset::js('speech/voicecommand.min.js');
+	    Casset::js('plugin/summernote/summernote.js');
+            // FASTCLICK
+            Casset::js('plugin/fastclick/fastclick.js');
+            // VOICE
+            Casset::js('speech/voicecommand.js');
             
             echo Casset::render_js();
         ?>
