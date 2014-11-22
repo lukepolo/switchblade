@@ -1,17 +1,12 @@
-/*         ______________________________________
-  ________|                                      |_______
-  \       |           SmartAdmin WebApp          |      /
-   \      |      Copyright © 2014 MyOrange       |     /
-   /      |______________________________________|     \
-  /__________)                                (_________\
+/*                  ______________________________________
+           ________|                                      |_______
+           \       |           SmartAdmin WebApp          |      /
+            \      |      Copyright © 2015 MyOrange       |     /
+            /      |______________________________________|     \
+           /__________)                                (_________\
 
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * =======================================================================
- * SmartAdmin is FULLY owned and LICENSED by MYORANGE INC.
- * This script may NOT be RESOLD or REDISTRUBUTED under any
- * circumstances, and is only to be used with this purchased
- * copy of SmartAdmin Template.
  * =======================================================================
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -20,12 +15,15 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * =======================================================================
- * original filename: app.js
- * filesize: 50,499 bytes
- * author: Sunny (@bootstraphunt)
- * email: info@myorange.ca
+ * original filename  : app.js
+ * filesize           : 62,499~ bytes
+ * author             : Sunny (@bootstraphunt)
+ * email              : info@myorange.ca
+ * legal notice       : This script is part of a theme sold by
+ *                      https://wrapbootstrap.com/?ref=myorange 
+ *    
  * =======================================================================
- * INDEX:
+ * INDEX (Note: line numbers for index items may not be up to date):
  * 
  * 1. APP CONFIGURATION..................................[ app.config.js ]
  * 2. APP DOM REFERENCES.................................[ app.config.js ]
@@ -60,19 +58,17 @@
  * 11.UPDATE BREADCRUMB.......................................[line: 1775]
  * 12.PAGE SETUP..............................................[line: 1798]
  * 13.POP OVER THEORY.........................................[line: 1852]
+ * 14.DELETE MODEL DATA ON HIDDEN.............................[line: 1991]
+ * 15.HELPFUL FUNCTIONS.......................................[line: 2027]
  * 
  * =======================================================================
- *         IMPORTANT: ALL CONFIG VARS WERE MOVED TO APP.CONFIG.JS
+ *       IMPORTANT: ALL CONFIG VARS IS NOW MOVED TO APP.CONFIG.JS
  * =======================================================================
  * 
- *
- * GLOBAL: Reference DOM
+ * 
+ * GLOBAL: interval array (to be used with jarviswidget in ajax and 
+ * angular mode) to clear auto fetch interval
  */
-	$.root_ = $('body');
-/*
- * GLOBAL: interval array (to be used with jarviswidget in ajax and angular mode) to clear auto fetch interval
- */
-	$.intervalArr = [];
 /*
  * Calculate nav height
  */
@@ -109,9 +105,9 @@ var calc_navbar_height = function() {
 	thisDevice = null,
 /*
  * DETECT MOBILE DEVICES
- * Description: Detects mobile device - if any of the listed device is detected
- * a class is inserted to $.root_ and the variable thisDevice is decleard. 
- * (so far this is covering most hand held devices)
+ * Description: Detects mobile device - if any of the listed device is 
+ * detected a class is inserted to $.root_ and the variable thisDevice 
+ * is decleard. (so far this is covering most hand held devices)
  */	
 	ismobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase())),
 /*
@@ -186,9 +182,8 @@ var calc_navbar_height = function() {
 			
 					}, function(ButtonPressed) {
 						if (ButtonPressed == "Yes") {
-//							$.root_.addClass('animated fadeOutUp');
-//							setTimeout(logout, 1000);
-                                                        logout();
+							$.root_.addClass('animated fadeOutUp');
+							setTimeout(logout, 1000);
 						}
 					});
 					function logout() {
@@ -199,11 +194,10 @@ var calc_navbar_height = function() {
 		
 				// RESET WIDGETS
 			    resetWidgets: function($this){
-					$.widresetMSG = $this.data('reset-msg');
 					
 					$.SmartMessageBox({
 						title : "<i class='fa fa-refresh' style='color:green'></i> Clear Local Storage",
-						content : $.widresetMSG || "Would you like to RESET all your saved widgets and clear LocalStorage?",
+						content : $this.data('reset-msg') || "Would you like to RESET all your saved widgets and clear LocalStorage?1",
 						buttons : '[No][Yes]'
 					}, function(ButtonPressed) {
 						if (ButtonPressed == "Yes" && localStorage) {
@@ -263,7 +257,9 @@ var calc_navbar_height = function() {
 						$('html').toggleClass("hidden-menu-mobile-lock");
 						$.root_.toggleClass("hidden-menu");
 						$.root_.removeClass("minified");
-			    	} else if ( $.root_.hasClass("menu-on-top") && $.root_.hasClass("mobile-view-activated") ) {
+			    	//} else if ( $.root_.hasClass("menu-on-top") && $.root_.hasClass("mobile-view-activated") ) {
+			    	// suggested fix from Christian Jäger	
+			    	} else if ( $.root_.hasClass("menu-on-top") && $(window).width() < 979 ) {	
 			    		$('html').toggleClass("hidden-menu-mobile-lock");
 						$.root_.toggleClass("hidden-menu");
 						$.root_.removeClass("minified");
@@ -374,8 +370,8 @@ var calc_navbar_height = function() {
 			if (!topmenu) {
 				if (!null) {
 					$('nav ul').jarvismenu({
-						accordion : true,
-						speed : menu_speed,
+						accordion : menu_accordion || true,
+						speed : menu_speed || true,
 						closedSign : '<em class="fa fa-plus-square-o"></em>',
 						openedSign : '<em class="fa fa-minus-square-o"></em>'
 					});
@@ -417,7 +413,6 @@ var calc_navbar_height = function() {
 				if ($this.find('.badge').hasClass('bg-color-red')) {
 					$this.find('.badge').removeClassPrefix('bg-color-');
 					$this.find('.badge').text("0");
-					// console.log("Ajax call for activity")
 				}
 		
 				if (!$this.next('.ajax-dropdown').is(':visible')) {
@@ -428,18 +423,16 @@ var calc_navbar_height = function() {
 					$this.removeClass('active');
 				}
 		
-				var mytest = $this.next('.ajax-dropdown').find('.btn-group > .active > input').attr('id');
-				//console.log(mytest)
+				var theUrlVal = $this.next('.ajax-dropdown').find('.btn-group > .active > input').attr('id');
 				
 				//clear memory reference
 				$this = null;
-				mytest = null;
+				theUrlVal = null;
 						
 				e.preventDefault();
 			});
 		
 			$('input[name="activity"]').change(function() {
-				//alert($(this).val())
 				var $this = $(this);
 		
 				url = $this.attr('id');
@@ -466,9 +459,6 @@ var calc_navbar_height = function() {
 				setTimeout(function() {
 					btn.button('reset');
 				}, 3000);
-				
-				//clear memory reference
-				$this = null;
 			});
 		
 			// NOTIFICATION IS PRESENT
@@ -486,7 +476,27 @@ var calc_navbar_height = function() {
 			
 		};
 		/* ~ END: MISCELANEOUS DOM */
-		
+	
+		/*
+		 * MISCELANEOUS DOM READY FUNCTIONS
+		 * Description: fire with jQuery(document).ready...
+		 */
+		app.mobileCheckActivation = function(){
+			
+			if ($(window).width() < 979) {
+				$.root_.addClass('mobile-view-activated');
+				$.root_.removeClass('minified');
+			} else if ($.root_.hasClass('mobile-view-activated')) {
+				$.root_.removeClass('mobile-view-activated');
+			}
+
+			if (debugState){
+				console.log("mobileCheckActivation");
+			}
+			
+		} 
+		/* ~ END: MISCELANEOUS DOM */
+
 		return app;
 		
 	})({});
@@ -622,20 +632,16 @@ var calc_navbar_height = function() {
 	})(jQuery, this);
 /*
 * ADD CLASS WHEN BELOW CERTAIN WIDTH (MOBILE MENU)
-* Description: changes the page min-width of #CONTENT and NAV when navigation is resized.
+* Description: tracks the page min-width of #CONTENT and NAV when navigation is resized.
 * This is to counter bugs for minimum page width on many desktop and mobile devices.
-* Note: This script uses JSthrottle technique so don't worry about memory/CPU usage
+* Note: This script utilizes JSthrottle script so don't worry about memory/CPU usage
 */
 	$('#main').resize(function() {
 		
-		if ($(window).width() < 979) {
-			$.root_.addClass('mobile-view-activated');
-			$.root_.removeClass('minified');
-		} else if ($.root_.hasClass('mobile-view-activated')) {
-			$.root_.removeClass('mobile-view-activated');
-		}
+		initApp.mobileCheckActivation();
 		
 	});
+
 /* ~ END: NAV OR #LEFT-BAR RESIZE DETECT */
 
 /*
@@ -790,7 +796,7 @@ var calc_navbar_height = function() {
 		 * Dependency: js/plugin/select2/
 		 */
 		if ($.fn.select2) {
-			$('.select2').each(function() {
+			$('select.select2').each(function() {
 				var $this = $(this),
 					width = $this.attr('data-select-width') || '100%';
 				//, _showSearchInput = $this.attr('data-select-search') === 'true';
@@ -874,10 +880,10 @@ var calc_navbar_height = function() {
 			btn.button('loading');
 			setTimeout(function() {
 				btn.button('reset');
+				//clear memory reference
+				btn = null;
 			}, 3000);
-				
-			//clear memory reference
-			btn = null;
+
 		});
 	
 	}
@@ -977,9 +983,8 @@ var calc_navbar_height = function() {
 			    thishighlightSpotColor2,
 			    thisFillColor1,
 			    thisFillColor2;
-					    				    
-	
-			$('.sparkline').each(function() {
+					    				    	
+			$('.sparkline:not(:has(>canvas))').each(function() {
 				var $this = $(this),
 					sparklineType = $this.data('sparkline-type') || 'bar';
 	
@@ -1212,8 +1217,8 @@ var calc_navbar_height = function() {
 				    sparklineWidth = $this.data('sparkline-width') || '100%';
 				    sparklineBarWidth = $this.data('sparkline-barwidth') || 3;
 				    thisLineWidth = $this.data('sparkline-line-width') || 1;
-				    thisLineColor = $this.data('sparkline-color-top') || '#ed1c24';
-				    thisBarColor = $this.data('sparkline-color-bottom') || '#333333';
+				    thisLineColor = $this.data('data-sparkline-linecolor') || '#ed1c24';
+				    thisBarColor = $this.data('data-sparkline-barcolor') || '#333333';
 					    
 					$this.sparkline($this.data('sparkline-bar-val'), {
 	
@@ -1333,7 +1338,7 @@ var calc_navbar_height = function() {
 			$('.easy-pie-chart').each(function() {
 				var $this = $(this),
 					barColor = $this.css('color') || $this.data('pie-color'),
-				    trackColor = $this.data('pie-track-color') || '#eeeeee',
+				    trackColor = $this.data('pie-track-color') || 'rgba(0,0,0,0.04)',
 				    size = parseInt($this.data('pie-size')) || 25;
 				    
 				$this.easyPieChart({
@@ -1346,9 +1351,9 @@ var calc_navbar_height = function() {
 					animate : 1500,
 					rotate : -90,
 					size : size,
-					onStep : function(value) {
-						this.$el.find('span').text(~~value);
-					}
+					onStep: function(from, to, percent) {
+            			$(this.el).find('.percent').text(Math.round(percent));
+        			}
 					
 				});
 				
@@ -1372,12 +1377,12 @@ var calc_navbar_height = function() {
 	
 				grid : 'article',
 				widgets : '.jarviswidget',
-				localStorage : true,
+				localStorage : localStorageJarvisWidgets,
 				deleteSettingsKey : '#deletesettingskey-options',
 				settingsKeyLabel : 'Reset settings?',
 				deletePositionKey : '#deletepositionkey-options',
 				positionKeyLabel : 'Reset position?',
-				sortable : true,
+				sortable : sortableJarvisWidgets,
 				buttonsHidden : false,
 				// toggle button
 				toggleButton : true,
@@ -1387,6 +1392,7 @@ var calc_navbar_height = function() {
 				},
 				// delete btn
 				deleteButton : true,
+				deleteMsg:'Warning: This action cannot be undone!',
 				deleteClass : 'fa fa-times',
 				deleteSpeed : 200,
 				onDelete : function() {
@@ -1440,7 +1446,7 @@ var calc_navbar_height = function() {
 				onSave : function() {
 					
 				},
-				ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
+				ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX Version)
 	
 			});
 	
@@ -1511,7 +1517,9 @@ var calc_navbar_height = function() {
 	
 		} else if (callback) {
 			// changed else to else if(callback)
-			//console.log("JS file already added!");
+			if (debugState){
+				root.root.console.log("This script was already loaded %c: " + scriptName, debugStyle_warning);
+			}
 			//execute function
 			callback();
 		}
@@ -1631,8 +1639,12 @@ var calc_navbar_height = function() {
 	
 			// change page title from global var
 			document.title = (title || document.title);
-			//console.log("page title: " + document.title);
-	
+			
+			// debugState
+			if (debugState){
+				root.console.log("Page title: %c " + document.title, debugStyle_green);
+			}
+			
 			// parse url to jquery
 			loadURL(url + location.search, container);
 
@@ -1654,8 +1666,12 @@ var calc_navbar_height = function() {
  * LOAD AJAX PAGES
  */ 
 	function loadURL(url, container) {
-		//console.log(container)
-	
+
+		// debugState
+		if (debugState){
+			root.root.console.log("Loading URL: %c" + url, debugStyle);
+		}
+
 		$.ajax({
 			type : "GET",
 			url : url,
@@ -1678,15 +1694,21 @@ var calc_navbar_height = function() {
 					    
 					    if(i == collection.length + 1) {
 						    // "callback"
-						    //console.log("all maps destroyed");
 						} else {
 							// destroy every map found
 							if (divDealerMap) divDealerMap.parentNode.removeChild(divDealerMap);
-							//console.log(this.id + " destroying maps...");
+
+							// debugState
+							if (debugState){
+								root.console.log("Destroying maps.........%c" + this.id, debugStyle_warning);
+							}
 						}
 					});
-					
-					//console.log("google maps nuked!!!");
+
+					// debugState
+					if (debugState){
+						root.console.log("✔ Google map instances nuked!!!");
+					}
 					
 				} //end fix
 				
@@ -1695,9 +1717,20 @@ var calc_navbar_height = function() {
 					
 					var tables = $.fn.dataTable.fnTables(true);				
 					$(tables).each(function () {
-					    $(this).dataTable().fnDestroy();
+						
+						if($(this).find('.details-control').length != 0) {
+							$(this).find('*').addBack().off().remove();
+							$(this).dataTable().fnDestroy();
+						} else {
+							$(this).dataTable().fnDestroy();
+						}
+					    
 					});
-					//console.log("datatable nuked!!!");
+					
+					// debugState
+					if (debugState){
+						root.console.log("✔ Datatable instances nuked!!!");
+					}
 				}
 				// end destroy
 				
@@ -1706,10 +1739,135 @@ var calc_navbar_height = function() {
 					
 					while($.intervalArr.length > 0)
 	        			clearInterval($.intervalArr.pop());
-	        			//console.log("all intervals cleared..")
+	        			// debugState
+						if (debugState){
+							root.console.log("✔ All JarvisWidget intervals cleared");
+						}
 	        			
 				}
 				// end pop intervals
+				
+				// destroy all widget instances
+				if ( $.navAsAjax && (container[0] == $("#content")[0]) && enableJarvisWidgets && $("#widget-grid")[0] ) {
+					
+					$("#widget-grid").jarvisWidgets('destroy');
+					// debugState
+					if (debugState){
+						root.console.log("✔ JarvisWidgets destroyed");
+					} 
+					
+				}
+				// end destroy all widgets 
+				
+				// cluster destroy: destroy other instances that could be on the page 
+				// this runs a script in the current loaded page before fetching the new page
+				if ( $.navAsAjax && (container[0] == $("#content")[0]) ) {
+
+					/*
+					 * The following elements should be removed, if they have been created:
+					 *
+					 *	colorList
+					 *	icon
+					 *	picker
+					 *	inline
+					 *	And unbind events from elements:
+					 *	
+					 *	icon
+					 *	picker
+					 *	inline
+					 *	especially $(document).on('mousedown')
+					 *	It will be much easier to add namespace to plugin events and then unbind using selected namespace.
+					 *	
+					 *	See also:
+					 *	
+					 *	http://f6design.com/journal/2012/05/06/a-jquery-plugin-boilerplate/
+					 *	http://keith-wood.name/pluginFramework.html
+					 */
+					
+					// this function is below the pagefunction for all pages that has instances
+
+					if (typeof pagedestroy == 'function') { 
+
+					  try {
+						    pagedestroy(); 
+
+						    if (debugState){
+								root.console.log("✔ Pagedestroy()");
+						   } 
+						}
+						catch(err) {
+						   pagedestroy = undefined; 
+
+						   if (debugState){
+								root.console.log("! Pagedestroy() Catch Error");
+						   } 
+					  }
+
+					} 
+
+					// destroy all inline charts
+					
+					if ( $.fn.sparkline && $("#content .sparkline")[0] ) {
+						$("#content .sparkline").sparkline( 'destroy' );
+						
+						if (debugState){
+							root.console.log("✔ Sparkline Charts destroyed!");
+						} 
+					}
+					
+					if ( $.fn.easyPieChart && $("#content .easy-pie-chart")[0] ) {
+						$("#content .easy-pie-chart").easyPieChart( 'destroy' );
+						
+						if (debugState){
+							root.console.log("✔ EasyPieChart Charts destroyed!");
+						} 
+					}
+
+					
+
+					// end destory all inline charts
+					
+					// destroy form controls: Datepicker, select2, autocomplete, mask, bootstrap slider
+					
+					if ( $.fn.select2 && $("#content select.select2")[0] ) {
+						$("#content select.select2").select2('destroy');
+						
+						if (debugState){
+							root.console.log("✔ Select2 destroyed!");
+						}
+					}
+					
+					if ( $.fn.mask && $('#content [data-mask]')[0] ) {
+						$('#content [data-mask]').unmask();
+						
+						if (debugState){
+							root.console.log("✔ Input Mask destroyed!");
+						}
+					}
+					
+					if ( $.fn.datepicker && $('#content .datepicker')[0] ) {
+						$('#content .datepicker').off();
+						$('#content .datepicker').remove();
+						
+						if (debugState){
+							root.console.log("✔ Datepicker destroyed!");
+						}
+					}
+					
+					if ( $.fn.slider && $('#content .slider')[0] ) {
+						$('#content .slider').off();
+						$('#content .slider').remove();
+						
+						if (debugState){
+							root.console.log("✔ Bootstrap Slider destroyed!");
+						}
+					}
+								
+					// end destroy form controls
+					
+					
+				}
+				// end cluster destroy
 				
 				// empty container and var to start garbage collection (frees memory)
 				pagefunction = null;
@@ -1748,34 +1906,33 @@ var calc_navbar_height = function() {
 				data = null;
 				container = null;
 			},
-			error : function(xhr, ajaxOptions, thrownError) {
-				container.html('<h4 class="ajax-loading-error"><i class="fa fa-warning txt-color-orangeDark"></i> Error 404! Page not found.</h4>');
+			error : function(xhr, status, thrownError, error) {
+				container.html('<h4 class="ajax-loading-error"><i class="fa fa-warning txt-color-orangeDark"></i> Error requesting <span class="txt-color-red">' + url + '</span>: ' + xhr.status + ' <span style="text-transform: capitalize;">'  + thrownError + '</span></h4>');
 			},
 			async : true 
 		});
 	
-		//console.log("ajax request sent");
 	}
 /*
  * UPDATE BREADCRUMB
  */ 
-	function drawBreadCrumb() {
-		var nav_elems = $('nav li.active > a'), 
-			count = nav_elems.length;
-		
-		//console.log("breadcrumb")
-		bread_crumb.empty();
-		bread_crumb.append($("<li>Home</li>"));
-		nav_elems.each(function() {
-			bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
-			// update title when breadcrumb is finished...
-			if (!--count) document.title = bread_crumb.find("li:last-child").text();
-			//nav_elems = null;
+	function drawBreadCrumb(opt_breadCrumbs) {
+		var a = $("nav li.active > a"),
+			b = a.length;
+	
+		bread_crumb.empty(), 
+		bread_crumb.append($("<li>Home</li>")), a.each(function() {
+			bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text()))), --b || (document.title = bread_crumb.find("li:last-child").text())
 		});
 		
-		// clear dom reference
-		nav_elems = null;
-
+		// Push breadcrumb manually -> drawBreadCrumb(["Users", "John Doe"]);
+		// Credits: Philip Whitt | philip.whitt@sbcglobal.net
+		if (opt_breadCrumbs != undefined) {
+			$.each(opt_breadCrumbs, function(index, value) {
+				bread_crumb.append($("<li></li>").html(value)); 
+				document.title = bread_crumb.find("li:last-child").text();
+			});
+		}
 	}
 /* ~ END: APP AJAX REQUEST SETUP */
 
@@ -1790,13 +1947,13 @@ var calc_navbar_height = function() {
 			// is desktop
 			
 			// activate tooltips
-			$("[rel=tooltip]").tooltip();
+			$("[rel=tooltip], [data-rel=tooltip]").tooltip();
 		
 			// activate popovers
-			$("[rel=popover]").popover();
+			$("[rel=popover], [data-rel=popover]").popover();
 		
 			// activate popovers with hover states
-			$("[rel=popover-hover]").popover({
+			$("[rel=popover-hover], [data-rel=popover-hover]").popover({
 				trigger : "hover"
 			});
 	
@@ -1814,10 +1971,10 @@ var calc_navbar_height = function() {
 			// is mobile
 			
 			// activate popovers
-			$("[rel=popover]").popover();
+			$("[rel=popover], [data-rel=popover]").popover();
 		
 			// activate popovers with hover states
-			$("[rel=popover-hover]").popover({
+			$("[rel=popover-hover], [data-rel=popover-hover]").popover({
 				trigger : "hover"
 			});
 		
@@ -1833,12 +1990,14 @@ var calc_navbar_height = function() {
 		}
 	
 	}
+/* ~ END: PAGE SETUP */
+
 /*
- * 1 POP OVER THEORY
+ * ONE POP OVER THEORY
  * Keep only 1 active popover per trigger - also check and hide active popover if user clicks on document
  */
 	$('body').on('click', function(e) {
-		$('[rel="popover"]').each(function() {
+		$('[rel="popover"], [data-rel="popover"]').each(function() {
 			//the 'is' for buttons that trigger popups
 			//the 'has' for icons within a button that triggers a popup
 			if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
@@ -1846,3 +2005,32 @@ var calc_navbar_height = function() {
 			}
 		});
 	}); 
+/* ~ END: ONE POP OVER THEORY */
+
+/*
+ * DELETE MODEL DATA ON HIDDEN
+ * Clears the model data once it is hidden, this way you do not create duplicated data on multiple modals
+ */
+	$('body').on('hidden.bs.modal', '.modal', function () {
+	  $(this).removeData('bs.modal');
+	});
+/* ~ END: DELETE MODEL DATA ON HIDDEN */
+
+/*
+ * HELPFUL FUNCTIONS
+ * We have included some functions below that can be resued on various occasions
+ * 
+ * Get param value
+ * example: alert( getParam( 'param' ) );
+ */
+	function getParam(name) {
+	    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+	    var regexS = "[\\?&]" + name + "=([^&#]*)";
+	    var regex = new RegExp(regexS);
+	    var results = regex.exec(window.location.href);
+	    if (results == null)
+	        return "";
+	    else
+	        return results[1];
+	}
+/* ~ END: HELPFUL FUNCTIONS */

@@ -96,12 +96,12 @@ return array(
 	/**
 	 * Whether to minify files.
 	 */
-	'min' => true,
+	'min' => Session::Get('minify', true),
 
 	/**
 	 * Whether to combine files
 	 */
-	'combine' => true,
+	'combine' => Session::Get('minify', true),
 
 	/**
 	 * When minifying, whether to show the files names in each combined

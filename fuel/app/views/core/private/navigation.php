@@ -112,6 +112,9 @@
                     <li>
                         <a href="<?php echo Uri::Create('settings/profiler'); ?>"><?php echo Session::Get('profiler') ? 'Disable' : 'Enable';?> Profiler</a>
                     </li>
+                    <li>
+                        <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
+                    </li>
                 </ul>
             </li>
         </ul>
