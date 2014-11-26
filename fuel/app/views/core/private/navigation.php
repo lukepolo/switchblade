@@ -31,25 +31,25 @@
                 </ul>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-bar-chart txt-color-blue"></i> <span class="menu-item-parent">Analytics</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-bar-chart txt-color-blue"></i> <span class="menu-item-parent">Analytics</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-fire txt-color-blue"></i> <span class="menu-item-parent">Heat Happing</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-fire txt-color-blue"></i> <span class="menu-item-parent">Heat Happing</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">Review System</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">Review System</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-dashboard txt-color-blue"></i> <span class="menu-item-parent">Pinger</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-dashboard txt-color-blue"></i> <span class="menu-item-parent">Pinger</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-exclamation txt-color-blue"></i> <span class="menu-item-parent">Error Reports</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-exclamation txt-color-blue"></i> <span class="menu-item-parent">Error Reports</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-money txt-color-blue"></i> <span class="menu-item-parent">Bonus Program</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-money txt-color-blue"></i> <span class="menu-item-parent">Bonus Program</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">Shortener</span></a>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">Shortener</span></a>
             </li>
             <li class="top-menu-hidden">
                 <a href="#"><i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
