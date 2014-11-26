@@ -4,6 +4,7 @@
     $base_url = $url;
 ?>
 <style>
+/*    TODO*/
     .iframe-edit {
         width:100%;
     }
@@ -22,12 +23,38 @@
     #jumpsplit-element-menu .ui-menu-title {
         cursor: inherit;
     }
+    
+    .code_holder .jarviswidget {
+        display: none;
+    }
+    .code_holder {
+        position: fixed;
+        bottom: -55px;
+        right: 60px;
+        left: 60px;
+        z-index : 1000000;
+    }
+    
+    .code_holder_open .active,
+    .code_holder_open {
+        position: absolute !important;
+        top: inherit !important;
+        left: inherit !important;
+        bottom: -1px !important;
+        right:60px !important;
+        height:25px;
+        width:100px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        /*        YAH FIND WHAT THIS SHOULD BE*/
+        z-index : 1000000;
+    }
 </style>
 <script>
     var iframe_doc;
     var iframe_element;
     var element_tree = [];
-    var pending_changes = {};
+    var pending_changes = new Array();
     
     var test;
     
@@ -324,30 +351,51 @@
         {
             // Save All pending changes!
             path = $(iframe_element).getPath();
+            
+            
+            console.log('SAVE CHANGES!');
+            
+            
+            
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
         
         // Live Preview Changes
-        $(document).on('keyup change blur focusout select', '.jarviswidget input:visible', function(e)
+        $(document).on('keyup change', '.jarviswidget input:visible', function(e)
         {
-            // TODO - store in pending changes
+            var path = $(iframe_element).getPath();
             switch($(this).closest('.jarviswidget').attr('id'))
             {
                 case 'jumpsplit-classes':
+                    // We dont want keyup for this , we want on change!
                     if(e.type != 'keyup')
                     {
-                        console.log('Chnaged Classes');
-                        $($(iframe_element).getPath(), iframe_doc).removeClass().addClass($(this).val().replace(',',' ')).addClass('jumpsplit-border');
+                        $(path, iframe_doc).removeClass('jumpsplit-border');
+                        
+                        pending_changes.push({
+                            path : path,
+                            apply_function: "$('" + path + "').attr('class', '" + $(this).val().replace(',',' ') + "');",
+                            revert_function: "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');",
+                        });
+                        
+                        // re-apply the jumpsplit-border
+                        $(path, iframe_doc).addClass('jumpsplit-border');
                     }
                 break;
                 case 'jumpsplit-css':
                     if($($(iframe_element).getPath(), iframe_doc).css($(this).data('get')) != $(this).val())
                     {
-                        console.log('Changed CSS');
-                        $($(iframe_element).getPath(), iframe_doc).css($(this).data('get'), $(this).val());
+                        pending_changes.push({
+                            path : path,
+                            apply_function: "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');",
+                            revert_function: "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');"
+                        });
                     }
                 break;
-            }       
+            }
+            iframe_window.eval($(pending_changes).last()[0].apply_function);
+            
+            $('.code_holder .note-editable').html($(pending_changes).last()[0].apply_function);
         });
     });
         
@@ -437,10 +485,56 @@
                 <!-- end s3 tab pane -->
             </div>
             <!-- end content -->
+            <div class="code_holder_open btn bg-color-blueDark txt-color-white">
+                Edit Code
+            </div>
         </div>
     </div>
     <!-- end widget div -->
 </div>
+<div class="code_holder">
+    <div class="jarviswidget jarviswidget-color-blue widget-templates">
+        <header role="heading">
+            <div class="jarviswidget-ctrls" role="menu">
+                <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+            <span class="widget-icon">
+                <i class="fa fa-pencil"></i>
+            </span>
+            <h2>Edit Javascript / JQuery</h2>
+        </header>
+        <!-- widget div-->
+        <div role="content">
+            <!-- end widget edit box -->
+            <!-- widget content -->
+            <div class="widget-body no-padding">
+                <div class="summernote-no-tools"></div>
+            </div>
+        </div>
+      <!-- end widget content -->
+    </div>
+  <!-- end widget div -->
+</div>
+
+<script>
+    $(document).ready(function()
+    {
+        $('.summernote-no-tools').summernote({
+            toolbar: [
+            ],
+            height: 400,
+            minHeight: 200,
+            maxHeight: 500
+        });
+        
+        $(document).on('click', '.code_holder_open', function()
+        {
+            $('.code_holder .jarviswidget').show();
+        });
+    });
+</script>
 <?php echo \View::Forge('widgets/menu');?>
 <?php echo \View::Forge('widgets/html_editor');?>
 <?php echo \View::Forge('widgets/classes_editor');?>

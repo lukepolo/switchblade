@@ -115,6 +115,9 @@
                     <li>
                         <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
                     </li>
+                    <li>
+                        <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/" target="_blank">SmartAdmin CSS</a>
+                    </li>
                 </ul>
             </li>
         </ul>
