@@ -15,6 +15,10 @@
         max-width: 80%;
     }
     
+    #code_holder .note-editable {
+        white-space: pre-wrap;
+    }
+    
     .jarviswidget .drag i {
         margin-left: 10px;
         vertical-align: text-top;
@@ -24,10 +28,10 @@
         cursor: inherit;
     }
     
-    .code_holder .jarviswidget {
+    #code_holder {
         display: none;
     }
-    .code_holder {
+    #code_holder {
         position: fixed;
         bottom: -55px;
         right: 60px;
@@ -54,7 +58,8 @@
     var iframe_doc;
     var iframe_element;
     var element_tree = [];
-    var pending_changes = new Array();
+    var pending_changes = {};
+    var pending_changes_history = new Array();
     
     var test;
     
@@ -109,11 +114,11 @@
         iframe_element = element;
         jumpsplit_widget_menu_position();
         
+        // TODO
         // HACK -- we dont want the default menu classes
         $('#jumpsplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
         
         var element_tag = $(iframe_element).prop('tagName').toLowerCase();
-        
         
         var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
         
@@ -251,7 +256,7 @@
     {
         // TODO
         // detect if off page - dont allow
-        $('.widget-templates:not(#jumpsplit-element-menu)').addClass('screen_center').draggable(
+        $('.widget-templates:not(#jumpsplit-element-menu, #code_holder)').addClass('screen_center').draggable(
         {
             handle: '.drag', 
             cursor: "move",
@@ -347,21 +352,14 @@
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
 
+        // TODO - these need to be "OK" buttons rather than save
         $('.save').click(function()
         {
-            // Save All pending changes!
-            path = $(iframe_element).getPath();
-            
-            
-            console.log('SAVE CHANGES!');
-            
-            
-            
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
         
         // Live Preview Changes
-        $(document).on('keyup change', '.jarviswidget input:visible', function(e)
+        $(document).on('keyup change', '.jarviswidget input:visible, #jumpsplit-html-edit .note-editor', function(e)
         {
             var path = $(iframe_element).getPath();
             switch($(this).closest('.jarviswidget').attr('id'))
@@ -370,37 +368,64 @@
                     // We dont want keyup for this , we want on change!
                     if(e.type != 'keyup')
                     {
+                        // removing jumpsplit-border
                         $(path, iframe_doc).removeClass('jumpsplit-border');
-                        
-                        pending_changes.push({
-                            path : path,
-                            apply_function: "$('" + path + "').attr('class', '" + $(this).val().replace(',',' ') + "');",
-                            revert_function: "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');",
-                        });
-                        
+                        add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');");
+                      
                         // re-apply the jumpsplit-border
                         $(path, iframe_doc).addClass('jumpsplit-border');
                     }
                 break;
                 case 'jumpsplit-css':
-                    if($($(iframe_element).getPath(), iframe_doc).css($(this).data('get')) != $(this).val())
-                    {
-                        pending_changes.push({
-                            path : path,
-                            apply_function: "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');",
-                            revert_function: "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');"
-                        });
-                    }
+                    add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
+                break;
+                case 'jumpsplit-html-edit':
+                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", null);
+                break;
+                default:
+                    console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
                 break;
             }
-            iframe_window.eval($(pending_changes).last()[0].apply_function);
             
-            $('.code_holder .note-editable').html($(pending_changes).last()[0].apply_function);
+            // Re-append all changes
+            $('#code_holder .note-editable').html('');
+            $(pending_changes).each(function(index, path_object)
+            {
+                $.each(path_object, function(path, type_object)
+                {
+                    $.each(type_object, function(index, data)
+                    {
+                        $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        iframe_window.eval(data.apply_function);
+                    });
+                });
+            });
         });
     });
+    
         
     // ------------ END OF WIDGET INTERACTIONS ------------ //
-      
+    
+    // Adds Changes to our list of changes 
+    function add_changes(path, type, apply_function, revert_function)
+    {
+        if (!pending_changes[path])
+        {
+            pending_changes[path] = {};
+        }
+        
+        pending_changes[path][type] = {
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function 
+        }
+        
+        pending_changes_history.push({
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function,
+        });
+    }
     // Gets the class list of the current element
     function get_class_list(wrap, seperator)
     {
@@ -492,31 +517,29 @@
     </div>
     <!-- end widget div -->
 </div>
-<div class="code_holder">
-    <div class="jarviswidget jarviswidget-color-blue widget-templates">
-        <header role="heading">
-            <div class="jarviswidget-ctrls" role="menu">
-                <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
-                    <i class="fa fa-times"></i>
-                </a>
-            </div>
-            <span class="widget-icon">
-                <i class="fa fa-pencil"></i>
-            </span>
-            <h2>Edit Javascript / JQuery</h2>
-        </header>
-        <!-- widget div-->
-        <div role="content">
-            <!-- end widget edit box -->
-            <!-- widget content -->
-            <div class="widget-body no-padding">
-                <div class="summernote-no-tools"></div>
-            </div>
+<div id="code_holder" class="jarviswidget jarviswidget-color-blue widget-templates">
+    <header role="heading">
+        <div class="jarviswidget-ctrls" role="menu">
+            <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
+                <i class="fa fa-times"></i>
+            </a>
         </div>
-      <!-- end widget content -->
+        <span class="widget-icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <h2>Edit Javascript / JQuery</h2>
+    </header>
+    <!-- widget div-->
+    <div role="content">
+        <!-- end widget edit box -->
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="summernote-no-tools"></div>
+        </div>
     </div>
-  <!-- end widget div -->
+  <!-- end widget content -->
 </div>
+<!-- end widget div -->
 
 <script>
     $(document).ready(function()
@@ -526,12 +549,16 @@
             ],
             height: 400,
             minHeight: 200,
-            maxHeight: 500
+            maxHeight: 500,
         });
+        
+        // HACK - to remove all default hidden html tags
+        // TODO 
+        $('#code_holder .note-editable').html('');
         
         $(document).on('click', '.code_holder_open', function()
         {
-            $('.code_holder .jarviswidget').show();
+            $('#code_holder').show();
         });
     });
 </script>
