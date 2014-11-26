@@ -23,7 +23,7 @@
                 <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">Jump/Split</span></a>
+                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
                 <ul>
                     <li>
                         <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
@@ -31,71 +31,28 @@
                 </ul>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpDetail</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-bar-chart txt-color-blue"></i> <span class="menu-item-parent">Analytics</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpHeat</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-fire txt-color-blue"></i> <span class="menu-item-parent">Heat Happing</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpRate</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">Review System</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpPing</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-dashboard txt-color-blue"></i> <span class="menu-item-parent">Pinger</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpCrash</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-exclamation txt-color-blue"></i> <span class="menu-item-parent">Error Reports</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpHook</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-money txt-color-blue"></i> <span class="menu-item-parent">Bonus Program</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpBonus</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
+                <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">Shortener</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span class="menu-item-parent">JumpShare</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="top-menu-hidden">
-                <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
                  <ul>
                     <li>
                         <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
@@ -114,6 +71,9 @@
                     </li>
                     <li>
                         <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
+                    </li>
+                    <li>
+                        <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/" target="_blank">SmartAdmin CSS</a>
                     </li>
                 </ul>
             </li>

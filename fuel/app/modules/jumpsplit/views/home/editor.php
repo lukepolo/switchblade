@@ -4,6 +4,7 @@
     $base_url = $url;
 ?>
 <style>
+/*    TODO*/
     .iframe-edit {
         width:100%;
     }
@@ -14,6 +15,10 @@
         max-width: 80%;
     }
     
+    #code_holder .note-editable {
+        white-space: pre-wrap;
+    }
+    
     .jarviswidget .drag i {
         margin-left: 10px;
         vertical-align: text-top;
@@ -22,12 +27,39 @@
     #jumpsplit-element-menu .ui-menu-title {
         cursor: inherit;
     }
+    
+    #code_holder {
+        display: none;
+    }
+    #code_holder {
+        position: fixed;
+        bottom: -55px;
+        right: 60px;
+        left: 60px;
+        z-index : 1000000;
+    }
+    
+    .code_holder_open .active,
+    .code_holder_open {
+        position: absolute !important;
+        top: inherit !important;
+        left: inherit !important;
+        bottom: -1px !important;
+        right:60px !important;
+        height:25px;
+        width:100px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        /*        YAH FIND WHAT THIS SHOULD BE*/
+        z-index : 1000000;
+    }
 </style>
 <script>
     var iframe_doc;
     var iframe_element;
     var element_tree = [];
     var pending_changes = {};
+    var pending_changes_history = new Array();
     
     var test;
     
@@ -82,11 +114,11 @@
         iframe_element = element;
         jumpsplit_widget_menu_position();
         
+        // TODO
         // HACK -- we dont want the default menu classes
         $('#jumpsplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
         
         var element_tag = $(iframe_element).prop('tagName').toLowerCase();
-        
         
         var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
         
@@ -224,7 +256,7 @@
     {
         // TODO
         // detect if off page - dont allow
-        $('.widget-templates:not(#jumpsplit-element-menu)').addClass('screen_center').draggable(
+        $('.widget-templates:not(#jumpsplit-element-menu, #code_holder)').addClass('screen_center').draggable(
         {
             handle: '.drag', 
             cursor: "move",
@@ -320,39 +352,80 @@
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
 
+        // TODO - these need to be "OK" buttons rather than save
         $('.save').click(function()
         {
-            // Save All pending changes!
-            path = $(iframe_element).getPath();
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
         
         // Live Preview Changes
-        $(document).on('keyup change blur focusout select', '.jarviswidget input:visible', function(e)
+        $(document).on('keyup change', '.jarviswidget input:visible, #jumpsplit-html-edit .note-editor', function(e)
         {
-            // TODO - store in pending changes
+            var path = $(iframe_element).getPath();
             switch($(this).closest('.jarviswidget').attr('id'))
             {
                 case 'jumpsplit-classes':
+                    // We dont want keyup for this , we want on change!
                     if(e.type != 'keyup')
                     {
-                        console.log('Chnaged Classes');
-                        $($(iframe_element).getPath(), iframe_doc).removeClass().addClass($(this).val().replace(',',' ')).addClass('jumpsplit-border');
+                        // removing jumpsplit-border
+                        $(path, iframe_doc).removeClass('jumpsplit-border');
+                        add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');");
+                      
+                        // re-apply the jumpsplit-border
+                        $(path, iframe_doc).addClass('jumpsplit-border');
                     }
                 break;
                 case 'jumpsplit-css':
-                    if($($(iframe_element).getPath(), iframe_doc).css($(this).data('get')) != $(this).val())
-                    {
-                        console.log('Changed CSS');
-                        $($(iframe_element).getPath(), iframe_doc).css($(this).data('get'), $(this).val());
-                    }
+                    add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
                 break;
-            }       
+                case 'jumpsplit-html-edit':
+                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", null);
+                break;
+                default:
+                    console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
+                break;
+            }
+            
+            // Re-append all changes
+            $('#code_holder .note-editable').html('');
+            $(pending_changes).each(function(index, path_object)
+            {
+                $.each(path_object, function(path, type_object)
+                {
+                    $.each(type_object, function(index, data)
+                    {
+                        $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        iframe_window.eval(data.apply_function);
+                    });
+                });
+            });
         });
     });
+    
         
     // ------------ END OF WIDGET INTERACTIONS ------------ //
-      
+    
+    // Adds Changes to our list of changes 
+    function add_changes(path, type, apply_function, revert_function)
+    {
+        if (!pending_changes[path])
+        {
+            pending_changes[path] = {};
+        }
+        
+        pending_changes[path][type] = {
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function 
+        }
+        
+        pending_changes_history.push({
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function,
+        });
+    }
     // Gets the class list of the current element
     function get_class_list(wrap, seperator)
     {
@@ -403,17 +476,19 @@
 
 <div class="jarviswidget jarviswidget-sortable" id="jumpsplit-editor" role="widget" style="">
     <header role="heading">
-        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-        <h2> </h2>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2></h2>
         <ul class="nav nav-tabs pull-right in">
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-plus"></i> Add Variation
+                </a>
+            </li>
             <li class="active">
-                <a data-toggle="tab" href="#editor"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Editor</span></a>
+                <a data-toggle="tab" href="#variant-1"><i class="fa fa-desktop"></i> <span class="hidden-mobile hidden-tablet">Variation 1</span></a>
             </li>
             <li>
-                <a data-toggle="tab" href="#tab_2"><i class="fa fa-facebook"></i> <span class="hidden-mobile hidden-tablet">Tab2</span></a>
-            </li>
-            <li>
-               <a data-toggle="tab" href="#tab_3"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Tab3</span></a>
+               <a data-toggle="tab" href="#original"><i class="fa fa-ellipsis-h"></i> <span class="hidden-mobile hidden-tablet">Original</span></a>
             </li>
         </ul>
         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
@@ -423,24 +498,68 @@
         <div class="widget-body">
             <!-- content -->
             <div class="tab-content">
-                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="editor">
+                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="variant-1">
                     <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
-                <!-- end s1 tab pane -->
-                <div class="tab-pane fade" id="tab_2">
-                    2
-                </div>
                 <!-- end s2 tab pane -->
-                <div class="tab-pane fade" id="tab_3">
-                    3
+                <div class="tab-pane fade" id="original">
+                    <iframe src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
                 <!-- end s3 tab pane -->
             </div>
             <!-- end content -->
+            <div class="code_holder_open btn bg-color-blueDark txt-color-white">
+                Edit Code
+            </div>
         </div>
     </div>
     <!-- end widget div -->
 </div>
+<div id="code_holder" class="jarviswidget jarviswidget-color-blue widget-templates">
+    <header role="heading">
+        <div class="jarviswidget-ctrls" role="menu">
+            <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+        <span class="widget-icon">
+            <i class="fa fa-pencil"></i>
+        </span>
+        <h2>Edit Javascript / JQuery</h2>
+    </header>
+    <!-- widget div-->
+    <div role="content">
+        <!-- end widget edit box -->
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="summernote-no-tools"></div>
+        </div>
+    </div>
+  <!-- end widget content -->
+</div>
+<!-- end widget div -->
+
+<script>
+    $(document).ready(function()
+    {
+        $('.summernote-no-tools').summernote({
+            toolbar: [
+            ],
+            height: 400,
+            minHeight: 200,
+            maxHeight: 500,
+        });
+        
+        // HACK - to remove all default hidden html tags
+        // TODO 
+        $('#code_holder .note-editable').html('');
+        
+        $(document).on('click', '.code_holder_open', function()
+        {
+            $('#code_holder').show();
+        });
+    });
+</script>
 <?php echo \View::Forge('widgets/menu');?>
 <?php echo \View::Forge('widgets/html_editor');?>
 <?php echo \View::Forge('widgets/classes_editor');?>
