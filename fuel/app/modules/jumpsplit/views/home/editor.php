@@ -476,17 +476,19 @@
 
 <div class="jarviswidget jarviswidget-sortable" id="jumpsplit-editor" role="widget" style="">
     <header role="heading">
-        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-        <h2> </h2>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2></h2>
         <ul class="nav nav-tabs pull-right in">
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-plus"></i> Add Variation
+                </a>
+            </li>
             <li class="active">
-                <a data-toggle="tab" href="#editor"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Editor</span></a>
+                <a data-toggle="tab" href="#variant-1"><i class="fa fa-desktop"></i> <span class="hidden-mobile hidden-tablet">Variation 1</span></a>
             </li>
             <li>
-                <a data-toggle="tab" href="#tab_2"><i class="fa fa-facebook"></i> <span class="hidden-mobile hidden-tablet">Tab2</span></a>
-            </li>
-            <li>
-               <a data-toggle="tab" href="#tab_3"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Tab3</span></a>
+               <a data-toggle="tab" href="#original"><i class="fa fa-ellipsis-h"></i> <span class="hidden-mobile hidden-tablet">Original</span></a>
             </li>
         </ul>
         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
@@ -496,16 +498,12 @@
         <div class="widget-body">
             <!-- content -->
             <div class="tab-content">
-                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="editor">
+                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="variant-1">
                     <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
-                <!-- end s1 tab pane -->
-                <div class="tab-pane fade" id="tab_2">
-                    2
-                </div>
                 <!-- end s2 tab pane -->
-                <div class="tab-pane fade" id="tab_3">
-                    3
+                <div class="tab-pane fade" id="original">
+                    <iframe src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
                 <!-- end s3 tab pane -->
             </div>
