@@ -165,30 +165,19 @@ class Controller_Editor extends \Controller_Template
         
         $file = curl_exec($cURL);
         
+        $http_status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+        $contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
         curl_close($cURL);
-        
-        switch($extension)
+      
+        if($http_status == 200)
         {
-            case 'css' : 
-                header("Content-type: text/css", true);
-            break;
-            case 'js':
-                header('Content-Type: application/javascript', true);
-            break;
-            case 'atom':
-                header('Content-Type: application/atom+xml');
-            break;
-            case 'pdf':
-                header('Content-Type: application/pdf');
-            break;
-            case 'rss':
-                header('Content-Type: application/rss+xml; charset=ISO-8859-1');
-            break;
-            case 'xml':
-                header('Content-Type: text/xml');
-            break;
+            header('Content-Type: '.$contentType);
+            echo $file;
         }
-        echo $file;
-        die;
+        else
+        {
+            header("HTTP/1.1 404 Not Found");
+        }
+        exit();
     }
 }

@@ -15,23 +15,19 @@
     </header>
     <!-- widget div-->
     <div role="content">
-        <!-- widget edit box -->
-        <div class="jarviswidget-editbox">
-            <!-- This area used as dropdown edit box -->
-        </div>
-        <!-- end widget edit box -->
         <!-- widget content -->
         <div class="widget-body">
+            <h3>Enter Classes Into the Editor</h3>
             <form class="form-horizontal">
                 <fieldset>
                     <div class="form-group">
                         <label class="col-md-3 control-label">HREF</label>
-                        <div class="col-md-3">
-                            <input class="form-control" placeholder="HREF" type="text">
+                        <div class="col-md-9">
+                            <input id="link" class="form-control" placeholder="HREF" type="text">
                         </div>
                         <label class="col-md-3 control-label">Alt Text</label>
-                        <div class="col-md-3">
-                            <input class="form-control" placeholder="Alt Text" type="text"ss>
+                        <div class="col-md-9">
+                            <input id="alt" class="form-control" placeholder="Alt Text" type="text"ss>
                         </div>
                     </div>
                 </fieldset>

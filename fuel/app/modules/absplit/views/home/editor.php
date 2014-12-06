@@ -53,6 +53,15 @@
         /*        YAH FIND WHAT THIS SHOULD BE*/
         z-index : 1000000;
     }
+    .form-horizontal {
+        margin-left:-50px;
+    }
+    
+    // Needs to be GLOBAL
+    div[role="content"]:not(.no-padding) .widget-footer {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
 </style>
 <script type="text/javascript">
     var iframe_doc;
@@ -221,8 +230,19 @@
         $('.widget-templates').hide();
         $('#absplit-link-editor').show();
         
-        $('#absplit-link-editor .href').val();
-        $('#absplit-link-editor .alt').val();
+        if(iframe_element.src != null)
+        {
+            var link = iframe_element.src;
+        }
+        else
+        {
+            var link = iframe_element.href;
+        }
+        
+        $('#absplit-link-editor #link').val(link);
+        
+        $('#absplit-link-editor #alt').val(iframe_element.alt);
+        
         // Reset positions
         absplit_widget_positions();
     }
@@ -281,7 +301,7 @@
         });
     }
     
-     function absplit_widget_menu_position()
+    function absplit_widget_menu_position()
     {
         // TODO
         // detect if off page - dont allow
@@ -392,7 +412,10 @@
                     add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
                 break;
                 case 'absplit-html-edit':
-                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", null);
+                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", $(iframe_element).html());
+                break;
+                case 'absplit-link-editor':
+                    add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
                 break;
                 default:
                     console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
