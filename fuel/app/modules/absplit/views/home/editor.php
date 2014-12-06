@@ -163,7 +163,7 @@
         
         // Builds the element tree 
         // TODO - PUT INTO ITS OWN FUNCTION
-        element_tree = [];
+        element_tree = new Array();
         var count = 0;
         $(iframe_element).parents().map(function() 
         {
@@ -342,8 +342,13 @@
         // Pressing the close button on the widgets will close current element
         $('.jarviswidget-delete-btn').on('click', function()
         {
-            $('#absplit-element-menu').show();
-            $(this).closest('.jarviswidget').hide()
+            console.log($(this).closest('.jarviswidget').attr('id'));
+            if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
+            {
+                $('#absplit-element-menu').show();
+            }
+            $(this).closest('.jarviswidget').hide();
+            
         });
         
         // This can go to the template
@@ -373,21 +378,22 @@
             $('#absplit-close').click();
         });
         
-        $(document).on('mouseover', '#select_container li a', function()
+        $(document).on('mouseenter', '#select_container li a', function()
         {
             iframe_window.add_absplit_border(element_tree[$(this).data('id')]);
         });
         
         $(document).on('click', '#select_container li a', function()
         {
-           absplit_menu(element_tree[$(this).data('id')]); 
+            iframe_window.add_absplit_border(element_tree[$(this).data('id')])
+            absplit_menu(element_tree[$(this).data('id')]); 
         });
         
         $(document).on('click', '#resize_move', function()
         {
-//            alert('really complicated ><');
+            // Resizing is a bitch.....so is draggging.......
             // TODO - create own custom draggable function
-            $(iframe_element, iframe_window.document).resizable().draggable();
+            $(iframe_element, iframe_doc).resizable().draggable();
             $('#absplit-close').click();
         });
 
