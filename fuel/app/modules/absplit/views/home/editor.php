@@ -73,7 +73,7 @@
     var element_tree = [];
     var pending_changes = {};
     var pending_changes_history = new Array();
-    var pending_changes_history_index;
+    var pending_changes_history_index = null;
     
     var element_tags = {
         p: "Paragraph",
@@ -442,6 +442,20 @@
     // Adds Changes to our list of changes 
     function add_changes(path, type, apply_function, revert_function)
     {
+        // We need to modify our code if we have a diff history index
+        if(pending_changes_history_index)
+        {
+            $(pending_changes_history).slice(pending_changes_history_index).each(function(index, data)
+            {
+                // remove from pending_changes array
+                delete pending_changes[data.path][data.type];
+            });
+            
+            // remove all history beyond the index
+            pending_changes_history = pending_changes_history.splice(0, pending_changes_history_index);
+            pending_changes_history_index = null;
+        }
+        
         if (!pending_changes[path])
         {
             pending_changes[path] = {};
@@ -450,15 +464,22 @@
         pending_changes[path][type] = {
             path : path,
             apply_function: apply_function,
-            revert_function: revert_function 
+            revert_function: revert_function,
+            temp_removed: false
         }
         
         pending_changes_history.push({
             path : path,
+            type: type,
             apply_function: apply_function,
             revert_function: revert_function,
         });
         
+       apply_changes();
+    }
+    
+    function apply_changes()
+    {
         // Re-append all changes
         $('#code_holder .note-editable').html('');
         $(pending_changes).each(function(index, path_object)
@@ -467,8 +488,11 @@
             {
                 $.each(type_object, function(index, data)
                 {
-                    $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
-                    iframe_window.eval(data.apply_function);
+                    if(data.temp_removed == false)
+                    {
+                        $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        iframe_window.eval(data.apply_function);
+                    }
                 });
             });
         });
@@ -520,24 +544,36 @@
         return iframe_doc.elementFromPoint(mouse_x, mouse_y);
     }
     
-    pending_changes_history_index = 2;
+    function set_history_index()
+    {
+        if(pending_changes_history_index == null)
+        {
+            pending_changes_history_index = pending_changes_history.length;
+        }
+    }
     
     $(document).on('click', '#redo-change', function()
     {
+        set_history_index();
         if(pending_changes_history_index != pending_changes_history.length)
         {
-            iframe_window.eval($(pending_changes_history)[pending_changes_history_index++].apply_function);
+            var history = $(pending_changes_history)[pending_changes_history_index++];
+            pending_changes[history.path][history.type].temp_removed = false;
+            iframe_window.eval(history.apply_function);
+            apply_changes();
         }
-        console.log(pending_changes_history_index);
     });
     
     $(document).on('click', '#undo-change', function()
     {
+        set_history_index();
         if(pending_changes_history_index != 0)
         {
-            iframe_window.eval($(pending_changes_history)[--pending_changes_history_index].revert_function);
+            var history = $(pending_changes_history)[--pending_changes_history_index]
+            pending_changes[history.path][history.type].temp_removed = true;
+            iframe_window.eval(history.revert_function);
+            apply_changes();
         }
-        console.log(pending_changes_history_index); 
     });
 </script>
 
