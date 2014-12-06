@@ -224,9 +224,17 @@
         absplit_widget_positions();
     }
     
+    function absplit_img_editor()
+    {
+        $('.widget-templates').hide();
+        $('#absplit-img-editor').show();
+      
+        // Reset positions
+        absplit_widget_positions();
+    }
+    
     function absplit_link_editor()
     {
-        
         $('.widget-templates').hide();
         $('#absplit-link-editor').show();
         
@@ -239,9 +247,9 @@
             var link = iframe_element.href;
         }
         
-        $('#absplit-link-editor #link').val(link);
-        
-        $('#absplit-link-editor #alt').val(iframe_element.alt);
+        $('#absplit-link-editor .link').val(link);
+
+        $('#absplit-link-editor .alt').val(iframe_element.alt);
         
         // Reset positions
         absplit_widget_positions();
@@ -354,9 +362,10 @@
         
         $(document).on('click', '#remove_element', function()
         {
-            // Remove Element
-            // TODO - Add to THEIR JS file
-            $(iframe_element).remove();
+            var path = $(iframe_element).getPath();
+            
+            add_changes(path, 'visibility', "$('" + path + "').css('visibility', 'hidden');", "$('" + path + "').css('visibility', 'visible');");
+            
             // Close menu
             $('#absplit-close').click();
         });
@@ -421,20 +430,6 @@
                     console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
                 break;
             }
-            
-            // Re-append all changes
-            $('#code_holder .note-editable').html('');
-            $(pending_changes).each(function(index, path_object)
-            {
-                $.each(path_object, function(path, type_object)
-                {
-                    $.each(type_object, function(index, data)
-                    {
-                        $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
-                        iframe_window.eval(data.apply_function);
-                    });
-                });
-            });
         });
     });
     
@@ -459,6 +454,20 @@
             path : path,
             apply_function: apply_function,
             revert_function: revert_function,
+        });
+        
+        // Re-append all changes
+        $('#code_holder .note-editable').html('');
+        $(pending_changes).each(function(index, path_object)
+        {
+            $.each(path_object, function(path, type_object)
+            {
+                $.each(type_object, function(index, data)
+                {
+                    $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                    iframe_window.eval(data.apply_function);
+                });
+            });
         });
     }
     // Gets the class list of the current element
@@ -597,13 +606,14 @@
         });
     });
 </script>
-<?php echo \View::Forge('widgets/menu');?>
-<?php echo \View::Forge('widgets/html_editor');?>
-<?php echo \View::Forge('widgets/link_editor');?>
-<?php echo \View::Forge('widgets/class_editor');?>
-<?php echo \View::Forge('widgets/css_editor');?>
-
-<?php
-
-    echo Asset::js('css_path.js')
+<?php 
+    // Including all the widgets
+    echo \View::Forge('widgets/menu');
+    echo \View::Forge('widgets/html_editor');
+    echo \View::Forge('widgets/link_editor');
+    echo \View::Forge('widgets/img_editor');
+    echo \View::Forge('widgets/class_editor');
+    echo \View::Forge('widgets/css_editor');
+    echo \View::Forge('widgets/goal_creator');
+    echo Asset::js('css_path.js');
 ?>

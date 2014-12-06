@@ -64,8 +64,8 @@ class Controller_Editor extends \Controller_Template
         <style>
             .absplit-border {
                 outline: 3px solid #00CCCC !important;
+                outline-offset: -3px !important;
                 cursor:pointer !important;
-                -webkit-box-shadow: 3px 3px 4px #999;
                 z-index: 2147483646 !important;
             }
         </style>";

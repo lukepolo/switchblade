@@ -41,18 +41,18 @@
         <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Element</a>
         <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
             <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" onclick="javascript:absplit_html_editor()" data-toggle="modal" class="ui-corner-all" role="menuitem">HTML</a>
+                <a href="javascript:void(0);" onclick="javascript:absplit_html_editor();" data-toggle="modal" class="ui-corner-all" role="menuitem">HTML</a>
             </li>
                 <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" onclick="javascript:absplit_classes_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
+                <a href="javascript:void(0);" onclick="javascript:absplit_classes_editor();" class="ui-corner-all" tabindex="-1" role="menuitem">Classes</a>
             </li>
             
             <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" onclick="javascript:absplit_css_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
+                <a href="javascript:void(0);" onclick="javascript:absplit_css_editor();" class="ui-corner-all" tabindex="-1" role="menuitem">Styles</a>
             </li>
             <span>
                 <li id="replace_img" class="ui-menu-item" role="presentation" style="display:none">
-                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
+                    <a href="javascript:void(0);" onclick="javascript:absplit_img_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
                 </li>
                 <li id="link" class="ui-menu-item" role="presentation" style="display:none">
                     <a href="javascript:void(0);" onclick="javascript:absplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
