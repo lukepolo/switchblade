@@ -54,7 +54,7 @@
         z-index : 1000000;
     }
 </style>
-<script>
+<script type="text/javascript">
     var iframe_doc;
     var iframe_element;
     var element_tree = [];
@@ -211,6 +211,18 @@
         
         $('#jumpsplit-html-edit .note-editable').html(iframe_element.outerHTML.replace('jumpsplit-border',''));
         
+        // Reset positions
+        jumpsplit_widget_positions();
+    }
+    
+    function jumpsplit_link_editor()
+    {
+        
+        $('.widget-templates').hide();
+        $('#jumpsplit-link-editor').show();
+        
+        $('#jumpsplit-link-editor .href').val();
+        $('#jumpsplit-link-editor .alt').val();
         // Reset positions
         jumpsplit_widget_positions();
     }
@@ -476,7 +488,9 @@
 
 <div class="jarviswidget jarviswidget-sortable" id="jumpsplit-editor" role="widget" style="">
     <header role="heading">
-        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <span class="widget-icon"> <i class="fa fa-mail-reply"></i> </span>
+
+        <span class="widget-icon"> <i class="fa fa-mail-forward"></i> </span>
         <h2></h2>
         <ul class="nav nav-tabs pull-right in">
             <li>
@@ -562,7 +576,8 @@
 </script>
 <?php echo \View::Forge('widgets/menu');?>
 <?php echo \View::Forge('widgets/html_editor');?>
-<?php echo \View::Forge('widgets/classes_editor');?>
+<?php echo \View::Forge('widgets/link_editor');?>
+<?php echo \View::Forge('widgets/class_editor');?>
 <?php echo \View::Forge('widgets/css_editor');?>
 
 <?php

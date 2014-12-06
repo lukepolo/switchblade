@@ -55,7 +55,7 @@
                     <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
                 </li>
                 <li id="link" class="ui-menu-item" role="presentation" style="display:none">
-                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
+                    <a href="javascript:void(0);" onclick="javascript:jumpsplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
                 </li>
             </span>
         </ul>
