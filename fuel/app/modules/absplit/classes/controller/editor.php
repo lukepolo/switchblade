@@ -1,6 +1,6 @@
 <?php
 
-namespace Jumpsplit;
+namespace ABSplit;
 
 class Controller_Editor extends \Controller_Template
 {
@@ -14,7 +14,7 @@ class Controller_Editor extends \Controller_Template
     public function action_url()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/jumpsplit/editor/url/','', $_SERVER['REQUEST_URI']));
+        $url = urldecode(str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI']));
 
         $cURL = curl_init($url);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
@@ -55,14 +55,14 @@ class Controller_Editor extends \Controller_Template
             // Fix relative links first
             $html = preg_replace('/<(link|script)(href|src)=(\'|")(?!http)(?!\/\/)(.*)/', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
             // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-            $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('jumpsplit/get').'/$5"', $html);
+            $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
         }
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
         
         $html = $html."
         <style>
-            .jumpsplit-border {
+            .absplit-border {
                 outline: 3px solid #00CCCC !important;
                 cursor:pointer !important;
                 -webkit-box-shadow: 3px 3px 4px #999;
@@ -78,25 +78,25 @@ class Controller_Editor extends \Controller_Template
             var selected_element;
             $('body').attr('oncontextmenu', 'return false');
             
-            function add_jumpsplit_border(element)
+            function add_absplit_border(element)
             {
-                $('.jumpsplit-border').removeClass('jumpsplit-border');
-                $(element).addClass('jumpsplit-border');
+                $('.absplit-border').removeClass('absplit-border');
+                $(element).addClass('absplit-border');
             }
             
             $(document).on('mouseover','*', function(e)
             {
-                if(!$('#jumpsplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
+                if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
                 {
                     e.stopPropagation();
                     mouse_x = e.pageX;
                     mouse_y = e.pageY;
                     
-                    element = window.top.jumpsplit_get_element(mouse_x, mouse_y)
+                    element = window.top.absplit_get_element(mouse_x, mouse_y)
                     
                     if(element)
                     {
-                        add_jumpsplit_border(element);
+                        add_absplit_border(element);
                     }
                 }
             });
@@ -104,12 +104,12 @@ class Controller_Editor extends \Controller_Template
             // Prevent all links from loading
             $(document).on('click', '*', function(e)
             {
-                if($('#jumpsplit-element-menu', window.parent.document).is(':visible'))
+                if($('#absplit-element-menu', window.parent.document).is(':visible'))
                 {
                     // Clear out the elements
                     selected_element = null;
                     window.parent.iframe_element = null;
-                    $('#jumpsplit-element-menu', window.parent.document).hide();
+                    $('#absplit-element-menu', window.parent.document).hide();
                 }
                 e.preventDefault();
                 e.stopPropagation();
@@ -121,11 +121,11 @@ class Controller_Editor extends \Controller_Template
                 if(e.which == 3)
                 {
                     selected_element = this;
-                    $('.jumpsplit-border').removeClass('jumpsplit-border'); // this really needed?
-                    $(selected_element).addClass('jumpsplit-border');
+                    $('.absplit-border').removeClass('absplit-border'); // this really needed?
+                    $(selected_element).addClass('absplit-border');
                     e.preventDefault();
                     e.stopPropagation();
-                    window.top.jumpsplit_menu(this);
+                    window.top.absplit_menu(this);
                     return false; 
                 } 
                 return true; 
@@ -135,7 +135,7 @@ class Controller_Editor extends \Controller_Template
             {
                 if(selected_element)
                 {
-                    window.top.jumpsplit_widget_menu_position(element);
+                    window.top.absplit_widget_menu_position(element);
                 }
             });
         
@@ -153,7 +153,7 @@ class Controller_Editor extends \Controller_Template
     {
         echo false;
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/jumpsplit/get/','', $_SERVER['REQUEST_URI']));
+        $url = urldecode(str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']));
         
         $extension = pathinfo($url)['extension'];
         

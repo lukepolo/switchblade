@@ -8,7 +8,7 @@
     .iframe-edit {
         width:100%;
     }
-    #jumpsplit-editor .tab-content .tab-pane {
+    #absplit-editor .tab-content .tab-pane {
         height:100%;
     }
     .note-editable * {
@@ -24,7 +24,7 @@
         vertical-align: text-top;
     }
     
-    #jumpsplit-element-menu .ui-menu-title {
+    #absplit-element-menu .ui-menu-title {
         cursor: inherit;
     }
     
@@ -108,15 +108,15 @@
     
     // ------------ WIDGETS ------------ //
     // Shows the menu 
-    function jumpsplit_menu(element)
+    function absplit_menu(element)
     {
         // Store element globally
         iframe_element = element;
-        jumpsplit_widget_menu_position();
+        absplit_widget_menu_position();
         
         // TODO
         // HACK -- we dont want the default menu classes
-        $('#jumpsplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
+        $('#absplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
         
         var element_tag = $(iframe_element).prop('tagName').toLowerCase();
         
@@ -179,59 +179,59 @@
         });
         
         // Set the menu title
-        $('#jumpsplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
+        $('#absplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
         
         // Hide rest of widgets
         $('.widget-templates').hide();
-        $('#jumpsplit-element-menu').menu().show();
+        $('#absplit-element-menu').menu().show();
         
         // TODO - check bottom - top
         // Checks to see if the menu is outside of the view
-        var left_pos = $(window).width() - $('#jumpsplit-element-menu').position().left;
+        var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
         if(left_pos < 250)
         {
-            $('#jumpsplit-element-menu').css('left', $('#jumpsplit-editor').width() - 350);
+            $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
         }
         
         // Checks to see if the menu is outside of the view
-        var right_pos = $('#jumpsplit-element-menu').position().left;
+        var right_pos = $('#absplit-element-menu').position().left;
         if(right_pos < 250)
         {
-            $('#jumpsplit-element-menu').css('left', 350);
+            $('#absplit-element-menu').css('left', 350);
         }
     }
     
     // Shows the HTML editor
-    function jumpsplit_html_editor()
+    function absplit_html_editor()
     {
         // Add the base to our template!
         $('head').append('<base href="<?php echo $base_url; ?>">');
         $('.widget-templates').hide();
-        $('#jumpsplit-html-edit').show();
+        $('#absplit-html-edit').show();
         
-        $('#jumpsplit-html-edit .note-editable').html(iframe_element.outerHTML.replace('jumpsplit-border',''));
+        $('#absplit-html-edit .note-editable').html(iframe_element.outerHTML.replace('absplit-border',''));
         
         // Reset positions
-        jumpsplit_widget_positions();
+        absplit_widget_positions();
     }
     
-    function jumpsplit_link_editor()
+    function absplit_link_editor()
     {
         
         $('.widget-templates').hide();
-        $('#jumpsplit-link-editor').show();
+        $('#absplit-link-editor').show();
         
-        $('#jumpsplit-link-editor .href').val();
-        $('#jumpsplit-link-editor .alt').val();
+        $('#absplit-link-editor .href').val();
+        $('#absplit-link-editor .alt').val();
         // Reset positions
-        jumpsplit_widget_positions();
+        absplit_widget_positions();
     }
     
     // Shows the Classes editor
-    function jumpsplit_classes_editor()
+    function absplit_classes_editor()
     {
         $('.widget-templates').hide();
-        $('#jumpsplit-classes').show();
+        $('#absplit-classes').show();
         
         default_classes = get_class_list(null, ',');
         
@@ -239,14 +239,14 @@
         $("#class_selector").select2({placeholder: 'Select or Enter a Class', tags:default_classes.split(',')});
         
         // Reset positions
-        jumpsplit_widget_positions();
+        absplit_widget_positions();
     }
     
     // Shows the CSS editor
-    function jumpsplit_css_editor()
+    function absplit_css_editor()
     {
         $('.widget-templates').hide();
-        $('#jumpsplit-css').show();
+        $('#absplit-css').show();
         
         // Build the CSS Values
         $('#css_widget input').each(function()
@@ -255,7 +255,7 @@
         });
         
         // Reset positions
-        jumpsplit_widget_positions();
+        absplit_widget_positions();
     }
     
     // ------------ END OF WIDGETS ------------ //
@@ -264,11 +264,11 @@
     // 
     // 
     // Resets all menu / widget positions next to element
-    function jumpsplit_widget_positions()
+    function absplit_widget_positions()
     {
         // TODO
         // detect if off page - dont allow
-        $('.widget-templates:not(#jumpsplit-element-menu, #code_holder)').addClass('screen_center').draggable(
+        $('.widget-templates:not(#absplit-element-menu, #code_holder)').addClass('screen_center').draggable(
         {
             handle: '.drag', 
             cursor: "move",
@@ -281,21 +281,21 @@
         });
     }
     
-     function jumpsplit_widget_menu_position()
+     function absplit_widget_menu_position()
     {
         // TODO
         // detect if off page - dont allow
         var menu_height = 120;
-        $('#jumpsplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+        $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
     }
     
     $(document).ready(function()
     {
         $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
         
-        $('#jumpsplit-close').on('click', function()
+        $('#absplit-close').on('click', function()
         {
-            $('#jumpsplit-element-menu').hide();
+            $('#absplit-element-menu').hide();
             iframe_element = null;
         });
         
@@ -304,14 +304,14 @@
             $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
             if (iframe_element)
             {
-                jumpsplit_widget_positions();
+                absplit_widget_positions();
             }
         });
          
         // Pressing the close button on the widgets will close current element
         $('.jarviswidget-delete-btn').on('click', function()
         {
-            $('#jumpsplit-element-menu').show();
+            $('#absplit-element-menu').show();
             $(this).closest('.jarviswidget').hide()
         });
         
@@ -338,17 +338,17 @@
             // TODO - Add to THEIR JS file
             $(iframe_element).remove();
             // Close menu
-            $('#jumpsplit-close').click();
+            $('#absplit-close').click();
         });
         
         $(document).on('mouseover', '#select_container li a', function()
         {
-            iframe_window.add_jumpsplit_border(element_tree[$(this).data('id')]);
+            iframe_window.add_absplit_border(element_tree[$(this).data('id')]);
         });
         
         $(document).on('click', '#select_container li a', function()
         {
-           jumpsplit_menu(element_tree[$(this).data('id')]); 
+           absplit_menu(element_tree[$(this).data('id')]); 
         });
         
         $(document).on('click', '#resize_move', function()
@@ -356,7 +356,7 @@
 //            alert('really complicated ><');
             // TODO - create own custom draggable function
             $(iframe_element, iframe_window.document).resizable().draggable();
-            $('#jumpsplit-close').click();
+            $('#absplit-close').click();
         });
 
         $('.cancel').click(function()
@@ -371,27 +371,27 @@
         });
         
         // Live Preview Changes
-        $(document).on('keyup change', '.jarviswidget input:visible, #jumpsplit-html-edit .note-editor', function(e)
+        $(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit .note-editor', function(e)
         {
             var path = $(iframe_element).getPath();
             switch($(this).closest('.jarviswidget').attr('id'))
             {
-                case 'jumpsplit-classes':
+                case 'absplit-classes':
                     // We dont want keyup for this , we want on change!
                     if(e.type != 'keyup')
                     {
-                        // removing jumpsplit-border
-                        $(path, iframe_doc).removeClass('jumpsplit-border');
+                        // removing absplit-border
+                        $(path, iframe_doc).removeClass('absplit-border');
                         add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');");
                       
-                        // re-apply the jumpsplit-border
-                        $(path, iframe_doc).addClass('jumpsplit-border');
+                        // re-apply the absplit-border
+                        $(path, iframe_doc).addClass('absplit-border');
                     }
                 break;
-                case 'jumpsplit-css':
+                case 'absplit-css':
                     add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
                 break;
-                case 'jumpsplit-html-edit':
+                case 'absplit-html-edit':
                     add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", null);
                 break;
                 default:
@@ -442,12 +442,12 @@
     function get_class_list(wrap, seperator)
     {
         var class_list = '';
-        if ($(iframe_element).attr('class') != 'jumpsplit-border')
+        if ($(iframe_element).attr('class') != 'absplit-border')
         {
             var classes = $(iframe_element).attr('class').split(/\s+/);
             $.each(classes, function(index, item)
             {
-                if (item != 'jumpsplit-border')
+                if (item != 'absplit-border')
                 {
                     class_list = class_list + item + seperator; 
                 }
@@ -468,7 +468,7 @@
     }
     
     // Get an element respect to the iframe based on current x / y coords
-    function jumpsplit_get_element(mouse_x, mouse_y)
+    function absplit_get_element(mouse_x, mouse_y)
     {
         if($(iframe_doc).scrollTop() > 0)
         {
@@ -486,7 +486,7 @@
     }
 </script>
 
-<div class="jarviswidget jarviswidget-sortable" id="jumpsplit-editor" role="widget" style="">
+<div class="jarviswidget jarviswidget-sortable" id="absplit-editor" role="widget" style="">
     <header role="heading">
         <span class="widget-icon"> <i class="fa fa-mail-reply"></i> </span>
 
@@ -513,11 +513,11 @@
             <!-- content -->
             <div class="tab-content">
                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="variant-1">
-                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
+                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
                 <!-- end s2 tab pane -->
                 <div class="tab-pane fade" id="original">
-                    <iframe src="<?php echo Uri::Create('jumpsplit/editor/url/').rawurlencode($url); ?>"></iframe>
+                    <iframe src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
                 <!-- end s3 tab pane -->
             </div>

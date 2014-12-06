@@ -23,10 +23,10 @@
                 <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
+                <a href="<?php echo Uri::Create('absplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
                 <ul>
                     <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
+                        <a href="<?php echo Uri::Create('absplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
                 </ul>
             </li>
@@ -73,7 +73,7 @@
                         <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
                     </li>
                     <li>
-                        <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/" target="_blank">SmartAdmin CSS</a>
+                        <a href="http://192.241.236.31/themes/preview/smartadmin/1.5/ajaxversion/#ajax/dashboard.html" target="_blank">SmartAdmin CSS</a>
                     </li>
                 </ul>
             </li>

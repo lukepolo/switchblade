@@ -1,6 +1,6 @@
 <?php
 
-namespace Jumpsplit;
+namespace ABSplit;
 
 class Controller_Home extends \Controller_Template
 {

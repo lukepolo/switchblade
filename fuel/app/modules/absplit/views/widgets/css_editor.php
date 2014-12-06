@@ -1,9 +1,9 @@
 <style>
-    #jumpsplit-css .form-group {
+    #absplit-css .form-group {
         margin-right: 0;
     }
     
-    #jumpsplit-css {
+    #absplit-css {
         min-width: 800px !important;
     }
     
@@ -11,7 +11,7 @@
         background-color: red;
     }
     
-    #jumpsplit-css .form-horizontal {
+    #absplit-css .form-horizontal {
         margin-top: 30px;
     }
     
@@ -19,7 +19,7 @@
         padding-left: 10px;
     }
 </style>
-<div id="jumpsplit-css" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
+<div id="absplit-css" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">
             <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">

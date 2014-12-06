@@ -1,4 +1,4 @@
-<div id="jumpsplit-link-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
+<div id="absplit-link-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">
             <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
