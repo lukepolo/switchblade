@@ -21,19 +21,19 @@
     <li class="ui-menu-item" role="presentation">
         <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
         <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Trigger State</a>
-        <ul class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
+        <ul id="trigger_states" class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
+<!--            <li class="ui-menu-item" role="presentation">
+                <a data-type="active" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Active</a>
+            </li>-->
             <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Active</a>
-            </li>
-            <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Hover</a>
+                <a data-type="hover" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Hover</a>
             </li>    
-            <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Focus</a>
-            </li>
-            <li class="ui-menu-item" role="presentation">
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Visited</a>
-            </li>
+<!--            <li class="ui-menu-item" role="presentation">
+                <a data-type="focus" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Focus</a>
+            </li>-->
+<!--            <li class="ui-menu-item" role="presentation">
+                <a data-type="visited" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Visited</a>
+            </li>-->
         </ul>
     </li>
     <li class="ui-menu-item" role="presentation">

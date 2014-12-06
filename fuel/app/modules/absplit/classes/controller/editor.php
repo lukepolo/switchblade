@@ -115,6 +115,19 @@ class Controller_Editor extends \Controller_Template
                 e.stopPropagation();
             });
             
+            $(document).on('mouseover', '*', function(e)
+            {
+                $(this).addClass('absplit_hover');
+            });
+            
+            $(document).on('mouseleave', '*', function(e)
+            {
+                if($(this).hasClass('absplit_locked') === false)
+                {
+                    $(this).removeClass('absplit_hover');
+                }
+            });
+            
             // Bind new context menu
             $(document).on('mousedown', '*', function(e)
             {
@@ -171,6 +184,10 @@ class Controller_Editor extends \Controller_Template
       
         if($http_status == 200)
         {
+            if($contentType == 'text/css')
+            {
+                $file = preg_replace('/:hover/','.absplit_hover', $file);
+            }
             header('Content-Type: '.$contentType);
             echo $file;
         }

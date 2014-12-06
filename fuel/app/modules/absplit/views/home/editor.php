@@ -213,6 +213,11 @@
         }
     }
     
+    function close_menu()
+    {
+        $('#absplit-close').click();
+    }
+    
     // Shows the HTML editor
     function absplit_html_editor()
     {
@@ -375,7 +380,7 @@
             add_changes(path, 'visibility', "$('" + path + "').css('visibility', 'hidden');", "$('" + path + "').css('visibility', 'visible');");
             
             // Close menu
-            $('#absplit-close').click();
+            close_menu();
         });
         
         $(document).on('mouseenter', '#select_container li a', function()
@@ -394,7 +399,7 @@
             // Resizing is a bitch.....so is draggging.......
             // TODO - create own custom draggable function
             $(iframe_element, iframe_doc).resizable().draggable();
-            $('#absplit-close').click();
+            close_menu();
         });
 
         $('.cancel').click(function()
@@ -580,6 +585,12 @@
             iframe_window.eval(history.revert_function);
             apply_changes();
         }
+    });
+    
+    $(document).on('click', '#trigger_states a', function()
+    {
+        $(iframe_element, iframe_doc).addClass('absplit_'+ $(this).data('type'));
+        $(iframe_element, iframe_doc).toggleClass('absplit_locked');
     });
 </script>
 
