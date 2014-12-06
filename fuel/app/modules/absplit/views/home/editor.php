@@ -4,7 +4,11 @@
     $base_url = $url;
 ?>
 <style>
-/*    TODO*/
+    /*    TODO - Put into proper CSS files need to ask Janice how she wants it done     */
+    #redo-undo .widget-icon {
+        padding-right: 10px;
+        cursor: pointer;
+    }
     .iframe-edit {
         width:100%;
     }
@@ -69,8 +73,7 @@
     var element_tree = [];
     var pending_changes = {};
     var pending_changes_history = new Array();
-    
-    var test;
+    var pending_changes_history_index;
     
     var element_tags = {
         p: "Paragraph",
@@ -516,13 +519,34 @@
         
         return iframe_doc.elementFromPoint(mouse_x, mouse_y);
     }
+    
+    pending_changes_history_index = 2;
+    
+    $(document).on('click', '#redo-change', function()
+    {
+        if(pending_changes_history_index != pending_changes_history.length)
+        {
+            iframe_window.eval($(pending_changes_history)[pending_changes_history_index++].apply_function);
+        }
+        console.log(pending_changes_history_index);
+    });
+    
+    $(document).on('click', '#undo-change', function()
+    {
+        if(pending_changes_history_index != 0)
+        {
+            iframe_window.eval($(pending_changes_history)[--pending_changes_history_index].revert_function);
+        }
+        console.log(pending_changes_history_index); 
+    });
 </script>
 
 <div class="jarviswidget jarviswidget-sortable" id="absplit-editor" role="widget" style="">
     <header role="heading">
-        <span class="widget-icon"> <i class="fa fa-mail-reply"></i> </span>
-
-        <span class="widget-icon"> <i class="fa fa-mail-forward"></i> </span>
+        <span id="redo-undo">
+            <span id="undo-change" class="widget-icon"> <i class="fa fa-mail-reply"></i> </span>
+            <span id="redo-change" class="widget-icon"> <i class="fa fa-mail-forward"></i> </span>
+        </span>
         <h2></h2>
         <ul class="nav nav-tabs pull-right in">
             <li>
