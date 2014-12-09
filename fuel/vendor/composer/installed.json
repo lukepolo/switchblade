@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "22208fc1360014587cfbc95d78d7aab8f25a6889"
+            "reference": "89d77bfbee79e16653f7162c86e602cc188471db"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/22208fc1360014587cfbc95d78d7aab8f25a6889",
-            "reference": "22208fc1360014587cfbc95d78d7aab8f25a6889",
+            "url": "https://api.github.com/repos/composer/installers/zipball/89d77bfbee79e16653f7162c86e602cc188471db",
+            "reference": "89d77bfbee79e16653f7162c86e602cc188471db",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-11-27 19:24:51",
+        "time": "2014-11-29 01:29:17",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
