@@ -46,6 +46,9 @@
             <li>
                <a data-toggle="tab" href="#css_tab_5"><i class="fa fa-columns"></i> <span>Layout</span></a>
             </li>
+                <li>
+               <a data-toggle="tab" href="#css_tab_6"><i class="fa fa-cubes"></i> <span>Advanced</span></a>
+            </li>
         </ul>
         <div class="drag">
             <i class="fa fa-align-justify"></i>
@@ -298,6 +301,16 @@
                                 <div class="col-md-3">
                                     <input class="form-control" placeholder="Clear" type="text" data-get="clear">
                                 </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="css_tab_6">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="form-group">
+                                TODO  - Dynamically Generated Options
+                                TODO - Add search bar into jarvis widget, allow them to find things quickly = amazing
                             </div>
                         </fieldset>
                     </form>

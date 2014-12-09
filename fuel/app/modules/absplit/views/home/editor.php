@@ -2,12 +2,27 @@
 //    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
     $url = "http://lukepolo.com";
     $base_url = $url;
+    echo Asset::css('loading.css'); 
 ?>
-<style>
+<style>   
     /*    TODO - Put into proper CSS files need to ask Janice how she wants it done     */
     #redo-undo .widget-icon {
         padding-right: 10px;
         cursor: pointer;
+    }
+    
+    .fa  {
+        cursor: pointer;
+    }
+    
+    #site-editor {
+        display: none;
+    }
+    
+    .ui-menu-item {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
     .iframe-edit {
         width:100%;
@@ -232,11 +247,23 @@
         absplit_widget_positions();
     }
     
+    function absplit_goal_creator()
+    {
+        $('.widget-templates').hide();
+        $('#absplit-goal-creator').show();
+        
+        // Reset positions
+        absplit_widget_positions();
+    }
+    
     function absplit_img_editor()
     {
         $('.widget-templates').hide();
         $('#absplit-img-editor').show();
       
+        $('#absplit-img-editor input').val('');
+        $('#absplit-img-editor #img_preview').attr('src', '');
+        
         // Reset positions
         absplit_widget_positions();
     }
@@ -337,6 +364,7 @@
         
         $(window).on('resize scroll', function()
         {
+            $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
             $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
             if (iframe_element)
             {
@@ -364,6 +392,8 @@
         // Getting the iframe_document
         $('#site-editor').load(function()
         {
+            $(this).show();
+            $('.tetrominos').hide();
             // Check to see if we can determine elements by elementFromPoint
             if (!document.elementFromPoint)
             {
@@ -404,12 +434,57 @@
 
         $('.cancel').click(function()
         {
+            // Remove all pending 
+            $(pending_changes).each(function(index, path_object)
+            {
+                $.each(path_object, function(path, type_object)
+                {
+                    $.each(type_object, function(type, data)
+                    {
+                        if(data.pending == true)
+                        {
+                            // find oldest pending history
+                            $(pending_changes_history).each(function(index, data_history)
+                            {
+                                if(data_history.path == path && data_history.type == type && data_history.pending == true)
+                                {
+                                    iframe_window.eval(data_history.revert_function);
+                                    return false;
+                                }
+                            });
+                            delete pending_changes[path][type];
+                        }
+                    });
+                });
+            });
+            
+            // Set all histroy pending to false
+            $(pending_changes_history).each(function(index, data_history)
+            {
+                if(data_history.pending == true)
+                {
+                    data_history.pending = false;
+                }
+            });
+                            
+            apply_changes();
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
 
         // TODO - these need to be "OK" buttons rather than save
         $('.save').click(function()
         {
+            // Remove all pending 
+            $(pending_changes).each(function(index, path_object)
+            {
+                $.each(path_object, function(path, type_object)
+                {
+                    $.each(type_object, function(type, data)
+                    {
+                        data.pending = false;
+                    });
+                });
+            });
             $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
         });
         
@@ -423,22 +498,37 @@
                     // We dont want keyup for this , we want on change!
                     if(e.type != 'keyup')
                     {
-                        // removing absplit-border
-                        $(path, iframe_doc).removeClass('absplit-border');
-                        add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + $(path, iframe_doc).attr('class') + "');");
-                      
-                        // re-apply the absplit-border
-                        $(path, iframe_doc).addClass('absplit-border');
+                        add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + get_class_list(null, ' ') + "');");
                     }
                 break;
                 case 'absplit-css':
                     add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
                 break;
                 case 'absplit-html-edit':
-                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", $(iframe_element).html());
+                    add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", "$('" + path + "').html('" + $(iframe_element).html() +"');");
                 break;
                 case 'absplit-link-editor':
+                    //TODO
+                    // need to say if its  a link or a src
                     add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
+                break;
+                case 'absplit-img-editor':
+                    // wait for the upload to complete
+                    $.each(event.target.files, function(index, file) 
+                    {
+                        var reader = new FileReader();
+
+                        reader.onload = function(event)
+                        {  
+                            data = event.target.result;
+                            $('#img_preview').attr('src', data);
+                            file_data = data;
+                            add_changes(path, 'src', "$('" + path + "').attr('src', '" + file_data +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');")
+                        };  
+
+                        reader.readAsDataURL(file);
+                    });
+                    
                 break;
                 default:
                     console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
@@ -453,6 +543,11 @@
     // Adds Changes to our list of changes 
     function add_changes(path, type, apply_function, revert_function)
     {
+        // It can happen if they move quickly and the JS cannot keep up with the user
+        if(apply_function == revert_function)
+        {
+            return;
+        }
         // We need to modify our code if we have a diff history index
         if(pending_changes_history_index)
         {
@@ -476,7 +571,8 @@
             path : path,
             apply_function: apply_function,
             revert_function: revert_function,
-            temp_removed: false
+            temp_removed: false,
+            pending : true
         }
         
         pending_changes_history.push({
@@ -484,6 +580,7 @@
             type: type,
             apply_function: apply_function,
             revert_function: revert_function,
+            pending: true
         });
         
        apply_changes();
@@ -492,16 +589,16 @@
     function apply_changes()
     {
         // Re-append all changes
-        $('#code_holder .note-editable').html('');
+        $('#code_holder .note-editable').html('<generated_code></genderated_code>');
         $(pending_changes).each(function(index, path_object)
         {
             $.each(path_object, function(path, type_object)
             {
-                $.each(type_object, function(index, data)
+                $.each(type_object, function(type, data)
                 {
                     if(data.temp_removed == false)
                     {
-                        $('#code_holder .note-editable').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
                         iframe_window.eval(data.apply_function);
                     }
                 });
@@ -512,17 +609,17 @@
     function get_class_list(wrap, seperator)
     {
         var class_list = '';
-        if ($(iframe_element).attr('class') != 'absplit-border')
+        var classes = $(iframe_element).attr('class').split(/\s+/);
+        $.each(classes, function(index, item)
         {
-            var classes = $(iframe_element).attr('class').split(/\s+/);
-            $.each(classes, function(index, item)
+            if (!item.match(/absplit-/))
             {
-                if (item != 'absplit-border')
-                {
-                    class_list = class_list + item + seperator; 
-                }
-            });
+                class_list = class_list + item + seperator; 
+            }
+        });
             
+        if (class_list)
+        {
             // trim the seperator
             class_list = class_list.replace(new RegExp('('+seperator+'$)',"g"), "");
             if (wrap)
@@ -530,10 +627,7 @@
                 class_list = " " + wrap + '="' + class_list + '"';
             }
         }
-        else
-        {
-            class_list = "";
-        }
+       
         return class_list;
     }
     
@@ -573,6 +667,9 @@
             iframe_window.eval(history.apply_function);
             apply_changes();
         }
+        
+        // TODO
+        // Need to reload their current WINDOWS content
     });
     
     $(document).on('click', '#undo-change', function()
@@ -585,12 +682,53 @@
             iframe_window.eval(history.revert_function);
             apply_changes();
         }
+        
+        // TODO
+        // Need to reload their current WINDOWS content
     });
     
     $(document).on('click', '#trigger_states a', function()
     {
-        $(iframe_element, iframe_doc).addClass('absplit_'+ $(this).data('type'));
-        $(iframe_element, iframe_doc).toggleClass('absplit_locked');
+        $(iframe_element, iframe_doc).addClass('absplit-'+ $(this).data('type'));
+        $(iframe_element, iframe_doc).toggleClass('absplit-locked');
+    });
+    
+    
+    $(document).on('keydown blur', '.variation-title', function(e)
+    {
+        if(e.which == 13 || e.type == 'focusout')
+        {
+            e.preventDefault();
+            $(this).attr('contenteditable', false);
+            window.getSelection().removeAllRanges();
+        }
+    });
+    
+    $(document).on('click', '.variation-title-edit', function()
+    {
+        $(this).prev().attr('contenteditable', true).focus();
+        $(this).prev().selectText();
+    });
+    
+        
+    $(document).on('click', '#add_variation', function()
+    {
+        variation_count = $('#variation_list li').length - 1;
+
+        // TODO - Generate a new variation ID
+        variation_id = variation_count; // TEMP
+        
+        $('#variation_list .active').removeClass('active');
+        
+        $('#variation_list li:eq(1)').before(
+            '<li class="active">\
+                <a data-toggle="tab" href="#">\
+                    <i class="fa fa-desktop"></i> \
+                    <span class="variation-title">Variation '+ variation_count +'</span> \
+                    <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>\
+                </a>\
+            </li>'
+        );
     });
 </script>
 
@@ -601,34 +739,44 @@
             <span id="redo-change" class="widget-icon"> <i class="fa fa-mail-forward"></i> </span>
         </span>
         <h2></h2>
-        <ul class="nav nav-tabs pull-right in">
+        <ul id="variation_list" class="nav nav-tabs pull-right in">
             <li>
-                <a href="javascript:void(0);">
+                <a id="add_variation" href="javascript:void(0);">
                     <i class="fa fa-plus"></i> Add Variation
                 </a>
             </li>
             <li class="active">
-                <a data-toggle="tab" href="#variant-1"><i class="fa fa-desktop"></i> <span class="hidden-mobile hidden-tablet">Variation 1</span></a>
+                <a data-toggle="tab" href="site-viewer">
+                    <i class="fa fa-desktop"></i> 
+                    <span class="variation-title">Variation 1</span> 
+                    <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>
+                </a>
             </li>
             <li>
-               <a data-toggle="tab" href="#original"><i class="fa fa-ellipsis-h"></i> <span class="hidden-mobile hidden-tablet">Original</span></a>
+               <a data-toggle="tab" href="#">
+                   <i class="fa fa-ellipsis-h"></i> 
+                   Original
+               </a>
             </li>
         </ul>
-        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
     </header>
     <!-- widget div-->
     <div class="no-padding" role="content">
         <div class="widget-body">
             <!-- content -->
             <div class="tab-content">
-                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="variant-1">
+                <span class='tetrominos'>
+                    <div class='tetromino box1'></div>
+                    <div class='tetromino box2'></div>
+                    <div class='tetromino box3'></div>
+                    <div class='tetromino box4'></div>
+                </span>
+                <div class="tab-pane active" id="site-viewer">
                     <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
                 </div>
-                <!-- end s2 tab pane -->
-                <div class="tab-pane fade" id="original">
-                    <iframe src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
-                </div>
-                <!-- end s3 tab pane -->
             </div>
             <!-- end content -->
             <div class="code_holder_open btn bg-color-blueDark txt-color-white">
@@ -682,6 +830,7 @@
             $('#code_holder').show();
         });
     });
+    $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - 250);
 </script>
 <?php 
     // Including all the widgets
@@ -694,3 +843,22 @@
     echo \View::Forge('widgets/goal_creator');
     echo Asset::js('css_path.js');
 ?>
+
+<script>
+    jQuery.fn.selectText = function(){
+        var doc = document;
+        var element = this[0];
+        console.log(this, element);
+        if (doc.body.createTextRange) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            var selection = window.getSelection();        
+            var range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+     };
+</script>

@@ -69,7 +69,7 @@
     </li>
     <hr>
     <li class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Create Goal</a>
+        <a href="javascript:void(0);" onclick="javascript:absplit_goal_creator()" class="ui-corner-all" tabindex="-1" role="menuitem">Create Goal</a>
     </li>
     <hr>
     <li class="ui-menu-item" role="presentation">

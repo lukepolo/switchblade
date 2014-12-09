@@ -117,14 +117,14 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover', '*', function(e)
             {
-                $(this).addClass('absplit_hover');
+                $(this).addClass('absplit-hover');
             });
             
             $(document).on('mouseleave', '*', function(e)
             {
-                if($(this).hasClass('absplit_locked') === false)
+                if($(this).hasClass('absplit-locked') === false)
                 {
-                    $(this).removeClass('absplit_hover');
+                    $(this).removeClass('absplit-hover');
                 }
             });
             
@@ -186,7 +186,7 @@ class Controller_Editor extends \Controller_Template
         {
             if($contentType == 'text/css')
             {
-                $file = preg_replace('/:hover/','.absplit_hover', $file);
+                $file = preg_replace('/:hover/','.absplit-hover', $file);
             }
             header('Content-Type: '.$contentType);
             echo $file;

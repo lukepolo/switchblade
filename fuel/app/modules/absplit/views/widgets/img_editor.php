@@ -18,7 +18,12 @@
         <!-- widget content -->
         <div class="widget-body">
             <h3>Replacing Image</h3>
-            TODO - Need to make a jQuery GUI for images, there may already be plugin that I can use ? Or Can just do the normal drag and drop ?
+            <div class="row col-sm-offset-1 col-sm-11">
+                <input type="file">    
+            </div>
+            <div class="row col-sm-12">
+                <img id="img_preview" src="">
+            </div>
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">
@@ -36,3 +41,4 @@
     <!-- end widget content -->
 </div>
 <!-- end widget div -->
+    
