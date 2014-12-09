@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "27697a73b7a68b4a834e45fe560bea23ec3b3435"
+            "reference": "22208fc1360014587cfbc95d78d7aab8f25a6889"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/27697a73b7a68b4a834e45fe560bea23ec3b3435",
-            "reference": "27697a73b7a68b4a834e45fe560bea23ec3b3435",
+            "url": "https://api.github.com/repos/composer/installers/zipball/22208fc1360014587cfbc95d78d7aab8f25a6889",
+            "reference": "22208fc1360014587cfbc95d78d7aab8f25a6889",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-10-25 22:13:47",
+        "time": "2014-11-27 19:24:51",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -65,6 +65,7 @@
             "codeigniter",
             "concrete5",
             "croogo",
+            "dokuwiki",
             "drupal",
             "elgg",
             "fuelphp",
@@ -504,7 +505,7 @@
         },
         "time": "2014-09-08 10:52:10",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "ElephantIO\\": [

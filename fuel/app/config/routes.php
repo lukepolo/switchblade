@@ -9,7 +9,7 @@ return array(
     'my_profile' => 'profile',
     
     // Modules default path
-    'jumpsplit' => 'jumpsplit/home',
-    'jumpsplit/get/(:any)' => 'jumpsplit/editor/get/$1',
+    'absplit' => 'absplit/home',
+    'absplit/get/(:any)' => 'absplit/editor/get/$1',
     
 );

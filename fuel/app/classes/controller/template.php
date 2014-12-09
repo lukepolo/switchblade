@@ -83,7 +83,7 @@
             
             $this->template->php_session_errors = View::forge('core/php_session_errors');
             
-            $this->template->title = 'Switch Blade | '.ucwords($controller);
+            $this->template->title = 'Switch Blade | '.ucwords(str_replace('\\',' ',$controller));
             
             // Somtimes we dont want to have the content in a container, in which we can override this in the controller
             $this->template->container = 'container';

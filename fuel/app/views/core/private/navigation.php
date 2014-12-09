@@ -23,10 +23,10 @@
                 <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="<?php echo Uri::Create('jumpsplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
+                <a href="<?php echo Uri::Create('absplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
                 <ul>
                     <li>
-                        <a href="<?php echo Uri::Create('jumpsplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
+                        <a href="<?php echo Uri::Create('absplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
                     </li>
                 </ul>
             </li>
@@ -55,13 +55,16 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
                  <ul>
                     <li>
-                        <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-stack-overflow"></i>Slack</a>
+                        <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-slack"></i>Slack</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://bitbucket.org/swBlade/switch-blade-core"><i class="fa fa-bitbucket"></i>BitBucket</a>
                     </li>
                     <li>
                         <a target="_blank" href="http://bladeswitch.io">JIRA</a>
                     </li>
                     <li>
-                        <a target="_blank" href="http://box.bladeswitch.io">Share Drive</a>
+                        <a target="_blank" href="http://box.bladeswitch.io"><i class="fa fa-dropbox"></i>Share Drive</a>
                     </li>
                     <li>
                         <a href="<?php echo Uri::Create('settings'); ?>">Settings</a>
@@ -73,7 +76,7 @@
                         <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
                     </li>
                     <li>
-                        <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/" target="_blank">SmartAdmin CSS</a>
+                        <a href="http://192.241.236.31/themes/preview/smartadmin/1.5/ajaxversion/#ajax/dashboard.html" target="_blank"><i class="fa fa-css3"></i>SmartAdmin CSS</a>
                     </li>
                 </ul>
             </li>
