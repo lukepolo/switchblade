@@ -74,8 +74,14 @@
     <hr>
     <li class="ui-menu-item" role="presentation">
         <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Select Container</a>
-        <ul id="select_container" class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Select Parent</a>
+        <ul id="select_parent" class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
+        </ul>
+    </li>
+    <li>
+        <span class="ui-menu-icon ui-icon ui-icon-carat-1-e"></span>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Select Child</a>
+        <ul id="select_child" class="ui-menu ui-widget ui-widget-content ui-corner-all" role="menu" aria-hidden="true" aria-expanded="false" style="display: none;">
         </ul>
     </li>
     <hr>
