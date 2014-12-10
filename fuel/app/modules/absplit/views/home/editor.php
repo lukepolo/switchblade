@@ -11,6 +11,11 @@
         cursor: pointer;
     }
     
+    #variation_list .fa.fa-close{ 
+        position: absolute;
+        top: -10px;
+        left: -5px 
+   }
     .fa  {
         cursor: pointer;
     }
@@ -724,11 +729,17 @@
             '<li class="active">\
                 <a data-toggle="tab" href="#">\
                     <i class="fa fa-desktop"></i> \
+                    <i class="fa fa-close"></i>\
                     <span class="variation-title">Variation '+ variation_count +'</span> \
                     <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>\
                 </a>\
             </li>'
         );
+    });
+    
+    $(document).on('click', '#variation_list .fa.fa-close', function()
+    {
+        $(this).closest('li').remove();
     });
 </script>
 
@@ -748,6 +759,7 @@
             <li class="active">
                 <a data-toggle="tab" href="site-viewer">
                     <i class="fa fa-desktop"></i> 
+                    <i class="fa fa-close"></i>
                     <span class="variation-title">Variation 1</span> 
                     <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>
                 </a>
@@ -830,7 +842,7 @@
             $('#code_holder').show();
         });
     });
-    $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - 250);
+    $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - 215);
 </script>
 <?php 
     // Including all the widgets
