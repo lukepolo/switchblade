@@ -25,3 +25,5 @@ desktop.ini
 
 /public/assets/cache/*
 /public/assets/img/users/*
+
+/public/assets/.sass-cache/*

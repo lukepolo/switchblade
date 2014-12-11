@@ -1,6 +1,6 @@
 <?php
-//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-    $url = "http://lukepolo.com";
+    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+//    $url = "http://lukepolo.com";
     $base_url = $url;
     echo Asset::css('loading.css'); 
 ?>
@@ -94,6 +94,7 @@
     var pending_changes = {};
     var pending_changes_history = new Array();
     var pending_changes_history_index = null;
+    var variation_count;
     
     var element_tags = {
         p: "Paragraph",
@@ -174,41 +175,8 @@
             $('#link').hide();
         }
         
-        // This emptys and places a default placeholder for showing all connected elements
-        $('#select_container').empty().html('\
-            <li id="no_connections" class="ui-menu-item" role="presentation">\
-                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No Connecting Elements</a>\
-            </li>\
-        ');
-        
-        // Builds the element tree 
-        // TODO - PUT INTO ITS OWN FUNCTION
-        element_tree = new Array();
-        var count = 0;
-        $(iframe_element).parents().map(function() 
-        {
-            if(this.tagName != 'HTML' && this.tagName != 'BODY')
-            {
-                // remove the no connections
-                $('#no_connections').remove();
-                element_tree.push(this);
-                
-                if(this.id)
-                {
-                    var element_id = ' #'+this.id;
-                }
-                else
-                {
-                    element_id = '';
-                }
-                $('#select_container').append('\
-                    <li class="ui-menu-item" role="presentation">\
-                        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
-                    </li>\
-                ');
-                count++;
-            }
-        });
+        build_tree('parent');
+        build_tree('child');
         
         // Set the menu title
         $('#absplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
@@ -231,6 +199,61 @@
         {
             $('#absplit-element-menu').css('left', 350);
         }
+    }
+    function ucwords(str)
+    {
+        str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
+        
+        return str;
+    }
+    function build_tree(type)
+    {
+        // This emptys and places a default placeholder for showing all connected elements
+        $('#select_'+type).empty().html('\
+            <li id="no_'+type+'" class="ui-menu-item" role="presentation">\
+                <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No '+ ucwords(type) +' Elements</a>\
+            </li>\
+        ');
+        
+        // Builds the element tree 
+        element_tree = new Array();
+        var count = 0;
+        
+        if(type == 'parent')
+        {
+            var map_func = "$(iframe_element).parents()";
+        }
+        else
+        {
+            var map_func = "$(iframe_element).children()";
+        }
+        
+        eval(map_func).map(function() 
+        {
+            if(this.tagName != 'HTML' && this.tagName != 'BODY')
+            {
+                // remove the no connections
+                $('#no_'+type).remove();
+                element_tree.push(this);
+                
+                if(this.id)
+                {
+                    var element_id = ' #'+this.id;
+                }
+                else
+                {
+                    element_id = '';
+                }
+                $('#select_'+type).append('\
+                    <li class="ui-menu-item" role="presentation">\
+                        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
+                    </li>\
+                ');
+                count++;
+            }
+        });
     }
     
     function close_menu()
@@ -418,12 +441,12 @@
             close_menu();
         });
         
-        $(document).on('mouseenter', '#select_container li a', function()
+        $(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
         {
             iframe_window.add_absplit_border(element_tree[$(this).data('id')]);
         });
         
-        $(document).on('click', '#select_container li a', function()
+        $(document).on('click', '#select_parent li a, #select_child li a', function()
         {
             iframe_window.add_absplit_border(element_tree[$(this).data('id')])
             absplit_menu(element_tree[$(this).data('id')]); 
@@ -701,7 +724,7 @@
     
     $(document).on('keydown blur', '.variation-title', function(e)
     {
-        if(e.which == 13 || e.type == 'focusout')
+        if(e.which == 27 || e.which == 13 || e.type == 'focusout')
         {
             e.preventDefault();
             $(this).attr('contenteditable', false);
@@ -718,7 +741,14 @@
         
     $(document).on('click', '#add_variation', function()
     {
-        variation_count = $('#variation_list li').length - 1;
+        if(!variation_count)
+        {
+            variation_count = $('#variation_list li').length - 1;
+        }
+        else
+        {
+            variation_count++;
+        }
 
         // TODO - Generate a new variation ID
         variation_id = variation_count; // TEMP
@@ -728,13 +758,18 @@
         $('#variation_list li:eq(1)').before(
             '<li class="active">\
                 <a data-toggle="tab" href="#">\
-                    <i class="fa fa-desktop"></i> \
+                    <i class="variation-type fa fa-desktop"></i> \
                     <i class="fa fa-close"></i>\
                     <span class="variation-title">Variation '+ variation_count +'</span> \
                     <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>\
                 </a>\
             </li>'
         );
+    });
+    
+    $(document).on('click', '#variation_list .active .variation-type', function()
+    {
+        $(this).toggleClass('fa-desktop fa-mobile');
     });
     
     $(document).on('click', '#variation_list .fa.fa-close', function()
@@ -758,7 +793,7 @@
             </li>
             <li class="active">
                 <a data-toggle="tab" href="site-viewer">
-                    <i class="fa fa-desktop"></i> 
+                    <i class="variation-type fa fa-desktop"></i> 
                     <i class="fa fa-close"></i>
                     <span class="variation-title">Variation 1</span> 
                     <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>
