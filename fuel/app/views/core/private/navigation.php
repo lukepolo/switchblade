@@ -73,7 +73,7 @@
                         <a href="<?php echo Uri::Create('settings/profiler'); ?>"><?php echo Session::Get('profiler') ? 'Disable' : 'Enable';?> Profiler</a>
                     </li>
                     <li>
-                        <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') ? 'Enable' : 'Disable';?> Minify</a>
+                        <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') === false ? 'Enable' : 'Disable';?> Minify</a>
                     </li>
                     <li>
                         <a href="http://192.241.236.31/themes/preview/smartadmin/1.5/ajaxversion/#ajax/dashboard.html" target="_blank"><i class="fa fa-css3"></i>SmartAdmin CSS</a>

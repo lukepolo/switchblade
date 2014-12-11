@@ -91,7 +91,6 @@ class Controller_Editor extends \Controller_Template
             {
                 if(!$('#original', window.parent.document).hasClass('active'))
                 {
-                    // TODO IS THERE A BETTER WAY
                     $(this).addClass('absplit-hover');
 
                     // Alot of times its the actual parent that needs the hovering
@@ -169,9 +168,8 @@ class Controller_Editor extends \Controller_Template
         curl_close($cURL);
 
         echo $html;
-        // Required to not use the template
-        // TODO - Should i remove not a huge deal to me
-        die;
+        
+        exit();
     }
     
     public function action_get()
