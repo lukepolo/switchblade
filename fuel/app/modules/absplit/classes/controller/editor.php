@@ -89,6 +89,11 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover','*', function(e)
             {
+                // TODO IS THERE A BETTER WAY
+                $(this).addClass('absplit-hover');
+                
+                // Alot of times its the actual parent that needs the hovering
+                $(this).parent().addClass('absplit-hover');
                 if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
                 {
                     e.stopPropagation();
@@ -116,11 +121,6 @@ class Controller_Editor extends \Controller_Template
                 }
                 e.preventDefault();
                 e.stopPropagation();
-            });
-            
-            $(document).on('mouseover', '*', function(e)
-            {
-                $(this).addClass('absplit-hover');
             });
             
             $(document).on('mouseleave', '*', function(e)

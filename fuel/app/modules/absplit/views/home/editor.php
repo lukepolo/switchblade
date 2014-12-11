@@ -717,8 +717,13 @@
     
     $(document).on('click', '#trigger_states a', function()
     {
+        // TODO a better way than just doing the parent?
+        // TODO - allow for JS hovers? 
+//        iframe_window.$(iframe_element).trigger('mouseover').off();
         $(iframe_element, iframe_doc).addClass('absplit-'+ $(this).data('type'));
+        $(iframe_element, iframe_doc).parent().addClass('absplit-'+ $(this).data('type'));
         $(iframe_element, iframe_doc).toggleClass('absplit-locked');
+        $(iframe_element, iframe_doc).parent().toggleClass('absplit-locked');
     });
     
     
@@ -733,9 +738,7 @@
     });
     
     $(document).on('click', '.variation-title-edit', function()
-    {
-        iframe_window.$(iframe_element).trigger('mouseover').off();
-        
+    {       
         $(this).prev().attr('contenteditable', true).focus();
         $(this).prev().selectText();
     });
