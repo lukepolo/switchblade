@@ -1,3 +1,4 @@
+
 <?php
     $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
 //    $url = "http://lukepolo.com";
@@ -92,9 +93,10 @@
     var iframe_element;
     var element_tree = [];
     var pending_changes = {};
-    var pending_changes_history = new Array();
-    var pending_changes_history_index = null;
+    var pending_changes_history = {};
+    var pending_changes_history_index = {};
     var variation_count;
+    var variation_id = 1;
     
     var element_tags = {
         p: "Paragraph",
@@ -463,7 +465,7 @@
         $('.cancel').click(function()
         {
             // Remove all pending 
-            $(pending_changes).each(function(index, path_object)
+            $(pending_changes[variation_id]).each(function(index, path_object)
             {
                 $.each(path_object, function(path, type_object)
                 {
@@ -472,7 +474,7 @@
                         if(data.pending == true)
                         {
                             // find oldest pending history
-                            $(pending_changes_history).each(function(index, data_history)
+                            $(pending_changes_history[variation_id]).each(function(index, data_history)
                             {
                                 if(data_history.path == path && data_history.type == type && data_history.pending == true)
                                 {
@@ -480,14 +482,14 @@
                                     return false;
                                 }
                             });
-                            delete pending_changes[path][type];
+                            delete pending_changes[$('#variation_list .active').data('variation-id')][path][type];
                         }
                     });
                 });
             });
             
             // Set all histroy pending to false
-            $(pending_changes_history).each(function(index, data_history)
+            $(pending_changes_history[variation_id]).each(function(index, data_history)
             {
                 if(data_history.pending == true)
                 {
@@ -503,7 +505,7 @@
         $('.save').click(function()
         {
             // Remove all pending 
-            $(pending_changes).each(function(index, path_object)
+            $(pending_changes[$('#variation_list .active').data('variation-id')]).each(function(index, path_object)
             {
                 $.each(path_object, function(path, type_object)
                 {
@@ -577,25 +579,32 @@
             return;
         }
         // We need to modify our code if we have a diff history index
-        if(pending_changes_history_index)
+        if(pending_changes_history_index[variation_id])
         {
-            $(pending_changes_history).slice(pending_changes_history_index).each(function(index, data)
+            
+            $(pending_changes_history[variation_id]).slice(pending_changes_history_index[variation_id]).each(function(index, data)
             {
                 // remove from pending_changes array
                 delete pending_changes[data.path][data.type];
             });
             
             // remove all history beyond the index
-            pending_changes_history = pending_changes_history.splice(0, pending_changes_history_index);
-            pending_changes_history_index = null;
+            pending_changes_history = pending_changes_history[variation_id].splice(0, pending_changes_history_index[variation_id]);
+            pending_changes_history_index[variation_id] = null;
         }
-        
-        if (!pending_changes[path])
+                
+        // name space created? 
+        if (!pending_changes[variation_id])
         {
-            pending_changes[path] = {};
+            pending_changes[variation_id] = {};
         }
         
-        pending_changes[path][type] = {
+        if (!pending_changes[variation_id][path])
+        {
+            pending_changes[variation_id][path] = {};
+        }
+        
+        pending_changes[variation_id][path][type] = {
             path : path,
             apply_function: apply_function,
             revert_function: revert_function,
@@ -603,7 +612,12 @@
             pending : true
         }
         
-        pending_changes_history.push({
+        // TODO - by variation_id
+        if(!pending_changes_history[variation_id])
+        {
+            pending_changes_history[variation_id] = new Array();
+        }
+        pending_changes_history[variation_id].push({
             path : path,
             type: type,
             apply_function: apply_function,
@@ -616,22 +630,44 @@
     
     function apply_changes()
     {
-        // Re-append all changes
-        $('#code_holder .note-editable').html('<generated_code></genderated_code>');
-        $(pending_changes).each(function(index, path_object)
+        // undo all changes 
+        $(pending_changes).each(function(index, variation_details)
         {
-            $.each(path_object, function(path, type_object)
+            $.each(variation_details, function(index, path_object)
             {
-                $.each(type_object, function(type, data)
+                $.each(path_object, function(path, type_object)
                 {
-                    if(data.temp_removed == false)
+                    $.each(type_object, function(type, data)
                     {
-                        $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
-                        iframe_window.eval(data.apply_function);
-                    }
+                        if(data.temp_removed == false)
+                        {
+                            $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                            iframe_window.eval(data.revert_function);
+                        }
+                    });
                 });
             });
         });
+        
+        // Re-append all changes
+        $('#code_holder .note-editable').html('<generated_code></genderated_code>');
+        if(pending_changes[$('#variation_list .active').data('variation-id')])
+        {
+            $(pending_changes[$('#variation_list .active').data('variation-id')]).each(function(index, path_object)
+            {
+                $.each(path_object, function(path, type_object)
+                {
+                    $.each(type_object, function(type, data)
+                    {
+                        if(data.temp_removed == false)
+                        {
+                            $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                            iframe_window.eval(data.apply_function);
+                        }
+                    });
+                });
+            });
+        }
     }
     // Gets the class list of the current element
     function get_class_list(wrap, seperator)
@@ -679,19 +715,19 @@
     
     function set_history_index()
     {
-        if(pending_changes_history_index == null)
+        if(pending_changes_history_index[variation_id] == null)
         {
-            pending_changes_history_index = pending_changes_history.length;
+            pending_changes_history_index[variation_id] = pending_changes_history[variation_id].length;
         }
     }
     
     $(document).on('click', '#redo-change', function()
     {
         set_history_index();
-        if(pending_changes_history_index != pending_changes_history.length)
+        if(pending_changes_history_index[variation_id] != pending_changes_history[variation_id].length)
         {
-            var history = $(pending_changes_history)[pending_changes_history_index++];
-            pending_changes[history.path][history.type].temp_removed = false;
+            var history = $(pending_changes_history[variation_id])[pending_changes_history_index[variation_id]++];
+            pending_changes[variation_id][history.path][history.type].temp_removed = false;
             iframe_window.eval(history.apply_function);
             apply_changes();
         }
@@ -703,10 +739,10 @@
     $(document).on('click', '#undo-change', function()
     {
         set_history_index();
-        if(pending_changes_history_index != 0)
+        if(pending_changes_history_index[variation_id] != 0)
         {
-            var history = $(pending_changes_history)[--pending_changes_history_index]
-            pending_changes[history.path][history.type].temp_removed = true;
+            var history = $(pending_changes_history[variation_id])[--pending_changes_history_index[variation_id]]
+            pending_changes[variation_id][history.path][history.type].temp_removed = true;
             iframe_window.eval(history.revert_function);
             apply_changes();
         }
@@ -755,13 +791,10 @@
             variation_count++;
         }
 
-        // TODO - Generate a new variation ID
-        variation_id = variation_count; // TEMP
-        
         $('#variation_list .active').removeClass('active');
         
         $('#variation_list li:eq(1)').before(
-            '<li class="active">\
+            '<li data-variation-id="' + variation_count + '" class="active">\
                 <a data-toggle="tab" href="#">\
                     <i class="variation-type fa fa-desktop"></i> \
                     <i class="fa fa-close"></i>\
@@ -770,6 +803,15 @@
                 </a>\
             </li>'
         );
+
+        $('#variation_list li.active').click();
+    });
+    
+    $(document).on('click', '#variation_list li', function()
+    {
+        variation_id = $('#variation_list li.active').data('variation-id');
+        $('.absplit-border', iframe_doc).removeClass('absplit-border');
+        apply_changes();
     });
     
     $(document).on('click', '#variation_list .active .variation-type', function()
@@ -780,6 +822,10 @@
     $(document).on('click', '#variation_list .fa.fa-close', function()
     {
         $(this).closest('li').remove();
+        if(!$('#variation_list .active'))
+        {
+            $('#variation_list li:eq(1) a').click();
+        }
     });
 </script>
 
@@ -796,7 +842,7 @@
                     <i class="fa fa-plus"></i> Add Variation
                 </a>
             </li>
-            <li class="active">
+            <li data-variation-id="1" class="active">
                 <a data-toggle="tab" href="site-viewer">
                     <i class="variation-type fa fa-desktop"></i> 
                     <i class="fa fa-close"></i>
@@ -804,7 +850,7 @@
                     <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>
                 </a>
             </li>
-            <li>
+            <li id="original">
                <a data-toggle="tab" href="#">
                    <i class="fa fa-ellipsis-h"></i> 
                    Original

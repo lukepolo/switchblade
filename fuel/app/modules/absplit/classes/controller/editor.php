@@ -89,22 +89,25 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover','*', function(e)
             {
-                // TODO IS THERE A BETTER WAY
-                $(this).addClass('absplit-hover');
-                
-                // Alot of times its the actual parent that needs the hovering
-                $(this).parent().addClass('absplit-hover');
-                if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
+                if(!$('#original', window.parent.document).hasClass('active'))
                 {
-                    e.stopPropagation();
-                    mouse_x = e.pageX;
-                    mouse_y = e.pageY;
-                    
-                    element = window.top.absplit_get_element(mouse_x, mouse_y)
-                    
-                    if(element)
+                    // TODO IS THERE A BETTER WAY
+                    $(this).addClass('absplit-hover');
+
+                    // Alot of times its the actual parent that needs the hovering
+                    $(this).parent().addClass('absplit-hover');
+                    if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
                     {
-                        add_absplit_border(element);
+                        e.stopPropagation();
+                        mouse_x = e.pageX;
+                        mouse_y = e.pageY;
+
+                        element = window.top.absplit_get_element(mouse_x, mouse_y)
+
+                        if(element)
+                        {
+                            add_absplit_border(element);
+                        }
                     }
                 }
             });
@@ -112,12 +115,15 @@ class Controller_Editor extends \Controller_Template
             // Prevent all links from loading
             $(document).on('click', '*', function(e)
             {
-                if($('#absplit-element-menu', window.parent.document).is(':visible'))
+                if(!$('#original', window.parent.document).hasClass('active'))
                 {
-                    // Clear out the elements
-                    selected_element = null;
-                    window.parent.iframe_element = null;
-                    $('#absplit-element-menu', window.parent.document).hide();
+                    if($('#absplit-element-menu', window.parent.document).is(':visible'))
+                    {
+                        // Clear out the elements
+                        selected_element = null;
+                        window.parent.iframe_element = null;
+                        $('#absplit-element-menu', window.parent.document).hide();
+                    }
                 }
                 e.preventDefault();
                 e.stopPropagation();
@@ -134,17 +140,20 @@ class Controller_Editor extends \Controller_Template
             // Bind new context menu
             $(document).on('mousedown', '*', function(e)
             {
-                if(e.which == 3)
+                if(!$('#original', window.parent.document).hasClass('active'))
                 {
-                    selected_element = this;
-                    $('.absplit-border').removeClass('absplit-border'); // this really needed?
-                    $(selected_element).addClass('absplit-border');
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.top.absplit_menu(this);
-                    return false; 
-                } 
-                return true; 
+                    if(e.which == 3)
+                    {
+                        selected_element = this;
+                        $('.absplit-border').removeClass('absplit-border'); // this really needed?
+                        $(selected_element).addClass('absplit-border');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.top.absplit_menu(this);
+                        return false; 
+                    } 
+                    return true; 
+                }
             });
             
             $(window).on('resize scroll', function()
