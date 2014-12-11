@@ -35,30 +35,32 @@ class Controller_Editor extends \Controller_Template
         
         $url = curl_getinfo($cURL, CURLINFO_EFFECTIVE_URL);        
         
+        
+        
+        
+        // Correct the URL HOST
+        if(preg_match("~\A(http|//)~", $url) == 0) 
+        {
+            $url = '//'.$url;
+        }
+               
         $url_parsed = parse_url($url);
-        if(isset($url_parsed['host']) === true && empty($url_parsed['host']) === false)
-        {
-            $url_host = '//'.$url_parsed['host'];
-        }
-        else
-        {
-            $url_parsed['scheme'] = 'https';
-            $url_host = $url_parsed['path'];
-        }
+        
+        $url_host = '//'.$url_parsed['host'];
         
         // force all relative paths to their own URL
         $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
-        $html = preg_replace('/(<head*>)(.*)(<\/head>)/s', "$1$2$body_url$3", $html); 
+        $html = preg_replace('/(<head*>)(.*)(<\/head>)/si', "$1$2$body_url$3", $html); 
         
         
         // Fix relative links first
-        $html = preg_replace('/<(link|script)(?:.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*)/', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
+        $html = preg_replace('/<(link|script)(?:.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*)/i', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
         
         // Fixing CSS fonts , its only purpose is for that
-        $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
+        $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
         
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
@@ -171,20 +173,6 @@ class Controller_Editor extends \Controller_Template
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
         $url = urldecode(str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']));
         
-        $url_parsed = parse_url($url);
-        
-        if(isset($url_parsed['host']) === true && empty($url_parsed['host']) === false)
-        {
-            $url_host = $url_parsed['host'];
-        }
-        else
-        {
-            $url_parsed['scheme'] = 'https';
-            $url_host = $url_parsed['path'];
-        }
-        
-        $url_host = preg_replace('/(.*\/).*/','$1', $url_parsed['path']);
-     
         try
         {
             $extension = pathinfo($url)['extension'];
@@ -211,7 +199,7 @@ class Controller_Editor extends \Controller_Template
         {
             if($contentType == 'text/css')
             {
-                $file = preg_replace('/:hover/','.absplit-hover', $file);
+                $file = preg_replace('/:hover/i','.absplit-hover', $file);
             
 // So fucked if we had to update this              
 //http://stackoverflow.com/questions/21392684/extracting-urls-from-font-face-by-searching-within-font-face-for-replacement
@@ -244,8 +232,21 @@ $pattern = <<<'LOD'
 ~xs
 LOD;
 
+                // Correct the URL HOST
+                if(preg_match("~\A(http|//)~", $url) == 0) 
+                {
+                    $url = '//'.$url;
+                }
+                
+                $parsed_url = parse_url($url);
+                
+                // Fix other URLS that are absoulte 
+                $absplit_get_url =
+                
+                $file = preg_replace('/url.*\((?:\'|")(\/)(.*)(?:\'|")/i', 'url("'.\Uri::create('absplit/get/').$parsed_url['host'].'/$2"' , $file);
+                
                 // Also we need to replace all font-face with a custom URL 
-                $file = preg_replace($pattern, \Uri::create('absplit/get/').$url_host.'$8' , $file);
+                $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].preg_replace('/(.*\/).*/i','$1', $parsed_url['path']).'$8' , $file);
             }
             header('Content-Type: '.$contentType);
             echo $file;
