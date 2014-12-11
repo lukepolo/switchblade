@@ -35,9 +35,6 @@ class Controller_Editor extends \Controller_Template
         
         $url = curl_getinfo($cURL, CURLINFO_EFFECTIVE_URL);        
         
-        
-        
-        
         // Correct the URL HOST
         if(preg_match("~\A(http|//)~", $url) == 0) 
         {

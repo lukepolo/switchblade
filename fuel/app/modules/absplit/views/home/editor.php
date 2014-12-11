@@ -734,6 +734,8 @@
     
     $(document).on('click', '.variation-title-edit', function()
     {
+        iframe_window.$(iframe_element).trigger('mouseover').off();
+        
         $(this).prev().attr('contenteditable', true).focus();
         $(this).prev().selectText();
     });
