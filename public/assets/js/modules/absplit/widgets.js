@@ -118,8 +118,19 @@ $(document).on('click', '#remove_element', function()
 // Drag and Resize
 $(document).on('click', '#resize_move', function()
 {
-    // Resizing is a bitch.....so is draggging.......
-    // TODO - create own custom draggable function
-    $(iframe_element, iframe_doc).resizable().draggable();
+    $('#absplit-resize-editor').show();
+    
+    $(iframe_element, iframe_doc).resizable({
+        handles: "n, e, s, w, ne, se, sw, nw"
+    }).draggable({
+        start: function() {
+            $('#absplit-resize-editor').hide();
+        },   
+        stop: function() {
+            $('#absplit-resize-editor').show();
+        }
+    });
+    
+    $('.ui-resizable', iframe_doc).append('<div class="ui-resieable-overlay"></div>');
     close_menu();
 });

@@ -111,3 +111,7 @@
 .note-editor {
     padding: 13px !important;
 }
+
+.absplit-resize-helper {
+    border: 2px dotted #00F;
+}

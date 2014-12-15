@@ -70,6 +70,23 @@ class Controller_Editor extends \Controller_Template
                 cursor:pointer !important;
                 z-index: 2147483646 !important;
             }
+            
+            .ui-draggable{cursor:move ;}
+            .ui-draggable-disabled {cursor:default;}
+            .ui-resizable-handle {border: 1px solid; opacity: 0.3; width:7px; height:7px;background-color: #FFFFFF;}
+            .ui-resizable-n, .ui-resizable-s {width:7px; height:7px;left:50%;}
+            .ui-resizable-e, .ui-resizable-w {width:7px; height:7px;top:50%; }
+            .ui-resizable-se{ background-image: none;bottom: -5px; right: -5px; z-index: 1002;}
+
+            .ui-resieable-overlay {
+                background-color: grey;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                opacity: .5;
+            }
         </style>";
 
         // TODO - ADD JQUERY BUT NO COCONFLICT VERSION!
@@ -89,7 +106,7 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover','*', function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active'))
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
                     $(this).addClass('absplit-hover');
 
@@ -114,7 +131,7 @@ class Controller_Editor extends \Controller_Template
             // Prevent all links from loading
             $(document).on('click', '*', function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active'))
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
                     if($('#absplit-element-menu', window.parent.document).is(':visible'))
                     {
@@ -139,7 +156,7 @@ class Controller_Editor extends \Controller_Template
             // Bind new context menu
             $(document).on('mousedown', '*', function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active'))
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
                     if(e.which == 3)
                     {

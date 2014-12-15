@@ -1,5 +1,6 @@
 <?php
-    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+$url = 'lukepolo.com';
     echo Asset::css('loading.css'); 
     echo Asset::css('modules/absplit/main.css'); 
 ?>
@@ -94,6 +95,7 @@
     echo \View::Forge('widgets/class_editor');
     echo \View::Forge('widgets/css_editor');
     echo \View::Forge('widgets/goal_creator');
+    echo \View::Forge('widgets/resize_editor');
     
     Casset::js('modules/absplit/*');
     
