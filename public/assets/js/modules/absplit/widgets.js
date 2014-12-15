@@ -118,6 +118,8 @@ $(document).on('click', '#remove_element', function()
 // Drag and Resize
 $(document).on('click', '#resize_move', function()
 {
+    orginal_style = $(iframe_element).attr('style');
+    
     $('#absplit-resize-editor').show();
     
     $(iframe_element, iframe_doc).resizable({
@@ -127,10 +129,77 @@ $(document).on('click', '#resize_move', function()
             $('#absplit-resize-editor').hide();
         },   
         stop: function() {
+            
+            var path = $(iframe_element).getPath();
+            
             $('#absplit-resize-editor').show();
-        }
+            
+            $('#absplit-resize-editor').removeClass('screen_center');
+            $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+            
+            // TODO - may need to check if they aren't auto, will need to verify this works
+            add_changes(path, 'offset', "$('" + path + "').css('top', '" + $(iframe_element).css('top') + "').css('left', '" + $(iframe_element).css('left') + "').css('position', '" + $(iframe_element).css('position') + "').css('width', '" + $(iframe_element).css('width') + "').css('height', '" + $(iframe_element).css('height') + "')",
+                "$('" + path + "').attr('style', '" + orginal_style + "');");
+        }   
     });
     
-    $('.ui-resizable', iframe_doc).append('<div class="ui-resieable-overlay"></div>');
+    
+    $('#absplit-resize-editor').removeClass('screen_center');
+    $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+    $('.ui-resizable', iframe_doc).append('<div class="ui-resizeable-overlay"></div>');
     close_menu();
+});
+
+$(document).on('click', '#bring-to-front', function()
+{
+    // TODO - I DONT THINK THIS IS NEEDED?
+    // find the highest z-index on the page and bring it 1 above
+    zValue = maxZIndex(iframe_window, iframe_doc) + 1;
+    $(iframe_element).css('z-index', zValue+ ' !important');
+});
+
+$(document).bind('keydown', function(event) 
+{
+    if($('.ui-resizable'))
+    {
+        switch(event.which) {
+            case 37: 
+                $(iframe_element).animate(
+                    {
+                        left: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+                break;
+            case 39:
+                $(iframe_element).animate(
+                    {
+                        left: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 38:
+                $(iframe_element).animate(
+                    {
+                        top: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 40:
+                 $(iframe_element).animate(
+                    {
+                        top: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+        }
+    }
 });

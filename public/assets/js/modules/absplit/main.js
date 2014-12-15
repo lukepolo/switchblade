@@ -6,6 +6,8 @@ var pending_changes = {};
 var pending_changes_history = {};
 var pending_changes_history_index = {};
 var variation_count;
+var menu_height = 120;
+var orginal_style;
 
 // Holds all the types of elements  
 // TODO - need a function to check if it exists because it will become undefined if we dont 

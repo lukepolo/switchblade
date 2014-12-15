@@ -18,9 +18,14 @@ $(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit 
             add_changes(path, 'html', "$('" + path + "').html(" + JSON.stringify($(this).prev().code()) +");", "$('" + path + "').html(" + JSON.stringify($(iframe_element)[0].outerHTML) +");");
         break;
         case 'absplit-link-editor':
-            //TODO
-            // need to say if its  a link or a src
-            add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
+            if($(this).attr('src'))
+            {
+                add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
+            }
+            else
+            {
+                add_changes(path, 'src', "$('" + path + "').attr('href', '" + $(this).val() +"');", "$('" + path + "').attr('href', '" + $(iframe_element).attr('href') +"');");
+            }
         break;
         case 'absplit-img-editor':
             // wait for the upload to complete
@@ -38,7 +43,6 @@ $(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit 
 
                 reader.readAsDataURL(file);
             });
-
         break;
         default:
             console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));

@@ -150,14 +150,12 @@ function absplit_widget_menu_position()
 {
     // TODO
     // detect if off page - dont allow
-    var menu_height = 120;
     $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
 }
 
- $('#absplit-close').on('click', function()
+    $('#absplit-close').on('click', function()
     {
         $('#absplit-element-menu').hide();
-        iframe_element = null;
     });
 
     $(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
@@ -181,3 +179,10 @@ $('.jarviswidget-delete-btn').on('click', function()
     }
     $(this).closest('.jarviswidget').hide();
 });
+
+function destroy_move_drag()
+{
+    $('.ui-resizeable-overlay', iframe_doc).remove();
+    $('.ui-resizable', iframe_doc).draggable("destroy");
+    $('.ui-resizable', iframe_doc).resizable("destroy");
+}

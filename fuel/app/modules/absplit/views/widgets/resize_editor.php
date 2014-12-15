@@ -17,8 +17,8 @@
     <div role="content">
         <!-- widget content -->
         <div class="widget-body">
-            <h3>Edit Your Link</h3>
-            You can also the the arrow keys to get a more exact dimension.
+            <p>You can also the the arrow keys to get a more exact dimension.</p>
+            <!--<div class="btn btn-sm btn-primary" id="bring-to-front"> Bring to Front</div>-->
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">

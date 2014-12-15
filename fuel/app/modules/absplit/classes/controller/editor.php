@@ -78,7 +78,7 @@ class Controller_Editor extends \Controller_Template
             .ui-resizable-e, .ui-resizable-w {width:7px; height:7px;top:50%; }
             .ui-resizable-se{ background-image: none;bottom: -5px; right: -5px; z-index: 1002;}
 
-            .ui-resieable-overlay {
+            .ui-resizeable-overlay {
                 background-color: grey;
                 position: absolute;
                 top: 0;

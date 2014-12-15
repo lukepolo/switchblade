@@ -1,10 +1,13 @@
 // Adds Changes to our list of changes 
 function add_changes(path, type, apply_function, revert_function)
 {
+    console.log('adding changes!');
     // It can happen if they move quickly and the JS cannot keep up with the user
     // We also don't need to repeat any of the same apply functions if they type to fast
     if(apply_function == revert_function || ($(pending_changes_history[variation_id]).last()[0] && $(pending_changes_history[variation_id]).last()[0].apply_function == apply_function))
     {
+        console.log(apply_function);
+        console.log('bad changes');
         return;
     }
     else
@@ -176,6 +179,7 @@ $(document).on('click', '.cancel', function()
         }
     });
 
+    destroy_move_drag();
     apply_changes();
     $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
 });
@@ -194,5 +198,7 @@ $(document).on('click', '.save', function()
             });
         });
     });
+    destroy_move_drag();
+    apply_changes();
     $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
 });

@@ -44,8 +44,10 @@
     </li>
     <hr>
     <li id="resize_move" class="ui-menu-item" role="presentation">
-        <!--TODO - RESIZE-->
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move</a>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
+    </li>
+    <li>
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Rearrange</a>
     </li>
     <li class="ui-menu-item" role="presentation">
         <a id="remove_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>
