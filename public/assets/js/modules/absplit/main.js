@@ -1,7 +1,10 @@
 // GLOBAL Variables
 var iframe_doc;
 var iframe_element;
-var element_tree = [];
+var element_tree = {
+    parent: null,
+    child: null
+};
 var pending_changes = {};
 var pending_changes_history = {};
 var pending_changes_history_index = {};

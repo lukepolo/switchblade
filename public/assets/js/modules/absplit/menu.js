@@ -83,9 +83,9 @@ function build_tree(type)
     }
 
     // Builds the element tree 
-    element_tree = new Array();
     var count = 0;
     
+    element_tree[type] = new Array();
     // Find all the childre of parents
     eval(map_func).map(function() 
     {
@@ -97,8 +97,7 @@ function build_tree(type)
             $('#no_'+type).remove();
             
             // Push the element into the tree array
-            // TODO - does this work , i dont think it should by the looks of it
-            element_tree.push(this);
+            element_tree[type].push(this);
 
             // If the element has an ID show it
             if(this.id)
@@ -113,7 +112,7 @@ function build_tree(type)
             // Append to the menu visually
             $('#select_'+type).append('\
                 <li class="ui-menu-item" role="presentation">\
-                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
+                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-type="' + type + '" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
                 </li>\
             ');
             count++;
@@ -153,21 +152,21 @@ function absplit_widget_menu_position()
     $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
 }
 
-    $('#absplit-close').on('click', function()
-    {
-        $('#absplit-element-menu').hide();
-    });
+$('#absplit-close').on('click', function()
+{
+    $('#absplit-element-menu').hide();
+});
 
-    $(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
-    {
-        iframe_window.add_absplit_border(element_tree[$(this).data('id')]);
-    });
+$(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')]);
+});
 
-    $(document).on('click', '#select_parent li a, #select_child li a', function()
-    {
-        iframe_window.add_absplit_border(element_tree[$(this).data('id')])
-        absplit_menu(element_tree[$(this).data('id')]); 
-    });
+$(document).on('click', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')])
+    absplit_menu(element_tree[$(this).data('type')][$(this).data('id')]); 
+});
 
 // Pressing the close button on the widgets will close current element
 $('.jarviswidget-delete-btn').on('click', function()
