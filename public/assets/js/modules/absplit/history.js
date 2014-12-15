@@ -2,58 +2,66 @@
 function add_changes(path, type, apply_function, revert_function)
 {
     // It can happen if they move quickly and the JS cannot keep up with the user
-    if(apply_function == revert_function)
+    // We also don't need to repeat any of the same apply functions if they type to fast
+    if(apply_function == revert_function || ($(pending_changes_history[variation_id]).last()[0] && $(pending_changes_history[variation_id]).last()[0].apply_function == apply_function))
     {
         return;
     }
-    // We need to modify our code if we have a diff history index
-    if(pending_changes_history_index[variation_id])
+    else
     {
-
-        $(pending_changes_history[variation_id]).slice(pending_changes_history_index[variation_id]).each(function(index, data)
+        // Remove any classes that being with absplit-
+        absplit_classes = 'absplit\-.+?\b';
+        apply_function = apply_function.replace(new RegExp('('+absplit_classes+'$)',"gi"), "");
+        revert_function = revert_function.replace(new RegExp('('+absplit_classes+'$)',"gi"), "");
+        
+        // We need to modify our code if we have a diff history index
+        if(pending_changes_history_index[variation_id])
         {
-            // remove from pending_changes array
-            delete pending_changes[variation_id][data.path][data.type];
+            $(pending_changes_history[variation_id]).slice(pending_changes_history_index[variation_id]).each(function(index, data)
+            {
+                // remove from pending_changes array
+                delete pending_changes[variation_id][data.path][data.type];
+            });
+
+            // remove all history beyond the index
+            pending_changes_history = pending_changes_history[variation_id].splice(0, pending_changes_history_index[variation_id]);
+            pending_changes_history_index[variation_id] = null;
+        }
+
+        // name space created? 
+        if (!pending_changes[variation_id])
+        {
+            pending_changes[variation_id] = {};
+        }
+
+        if (!pending_changes[variation_id][path])
+        {
+            pending_changes[variation_id][path] = {};
+        }
+
+        pending_changes[variation_id][path][type] = {
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function,
+            temp_removed: false,
+            pending : true
+        };
+
+        // TODO - by variation_id
+        if(!pending_changes_history[variation_id])
+        {
+            pending_changes_history[variation_id] = new Array();
+        }
+        pending_changes_history[variation_id].push({
+            path : path,
+            type: type,
+            apply_function: apply_function,
+            revert_function: revert_function,
+            pending: true
         });
 
-        // remove all history beyond the index
-        pending_changes_history = pending_changes_history[variation_id].splice(0, pending_changes_history_index[variation_id]);
-        pending_changes_history_index[variation_id] = null;
+       apply_changes();
     }
-
-    // name space created? 
-    if (!pending_changes[variation_id])
-    {
-        pending_changes[variation_id] = {};
-    }
-
-    if (!pending_changes[variation_id][path])
-    {
-        pending_changes[variation_id][path] = {};
-    }
-
-    pending_changes[variation_id][path][type] = {
-        path : path,
-        apply_function: apply_function,
-        revert_function: revert_function,
-        temp_removed: false,
-        pending : true
-    };
-
-    // TODO - by variation_id
-    if(!pending_changes_history[variation_id])
-    {
-        pending_changes_history[variation_id] = new Array();
-    }
-    pending_changes_history[variation_id].push({
-        path : path,
-        type: type,
-        apply_function: apply_function,
-        revert_function: revert_function,
-        pending: true
-    });
-
-   apply_changes();
 }
 
 function set_history_index()
@@ -113,9 +121,10 @@ $(document).on('click', '#redo-change', function()
     if(pending_changes_history_index[variation_id] != pending_changes_history[variation_id].length)
     {
         var history = $(pending_changes_history[variation_id])[pending_changes_history_index[variation_id]++];
+        console.log(history.apply_function);
+        
         pending_changes[variation_id][history.path][history.type].temp_removed = false;
         iframe_window.eval(history.apply_function);
-        apply_changes();
     }
 });
 
@@ -128,7 +137,6 @@ $(document).on('click', '#undo-change', function()
         var history = $(pending_changes_history[variation_id])[--pending_changes_history_index[variation_id]];
         pending_changes[variation_id][history.path][history.type].temp_removed = true;
         iframe_window.eval(history.revert_function);
-        apply_changes();
     }
 });
 

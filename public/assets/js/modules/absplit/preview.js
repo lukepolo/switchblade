@@ -15,8 +15,7 @@ $(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit 
             add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
         break;
         case 'absplit-html-edit':
-            //TODO - We need to escape this alot better 
-            add_changes(path, 'html', "$('" + path + "').html('" + $(this).prev().code() +"');", "$('" + path + "').html('" + $(iframe_element).html() +"');");
+            add_changes(path, 'html', "$('" + path + "').html(" + JSON.stringify($(this).prev().code()) +");", "$('" + path + "').html(" + JSON.stringify($(iframe_element)[0].outerHTML) +");");
         break;
         case 'absplit-link-editor':
             //TODO
