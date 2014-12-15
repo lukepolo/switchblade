@@ -1,8 +1,3 @@
-<style>
-    .note-editor {
-        padding: 13px !important;
-    }
-</style>
 <div id="absplit-html-edit" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">

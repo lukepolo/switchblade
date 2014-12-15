@@ -1,21 +1,3 @@
-<style>
-    .ui-menu-title {
-        text-decoration: none;
-        display: block;
-        padding: 2px .4em;
-        line-height: 1.5;
-        min-height: 0;
-        font-weight: 400;
-        font-size: inherit;
-        text-overflow: ellipsis;
-        white-space: nowrap; 
-        overflow: hidden;
-        cursor: all-scroll;
-    }
-    .ui-menu-icons .ui-menu-item a {
-        padding-left: 6px;
-    }
-</style>
 <ul style="display: none;position: absolute;" id="absplit-element-menu" class="ui-menu ui-widget ui-widget-content ui-corner-all widget-templates" role="menu" tabindex="0" aria-activedescendant="ui-id-8">
     <li class="ui-menu-title"><li>
     <li class="ui-menu-item" role="presentation">
@@ -62,7 +44,8 @@
     </li>
     <hr>
     <li id="resize_move" class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
+        <!--TODO - RESIZE-->
+        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move</a>
     </li>
     <li class="ui-menu-item" role="presentation">
         <a id="remove_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>

@@ -60,3 +60,8 @@ hr {
 .ui-widget-content {
     border: 1px solid #eee !important;
 }
+
+div[role="content"]:not(.no-padding) .widget-footer {
+    margin-left: -12px;
+    margin-right: -12px;
+}

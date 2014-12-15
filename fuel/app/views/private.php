@@ -91,6 +91,8 @@
             Casset::js('plugin/fastclick/fastclick.js');
             // VOICE
             Casset::js('speech/voicecommand.js');
+            // CUSTOM FUNCTIONS THAT ARE USEFUL
+            Casset::js('custom_functions.js');
             
             echo Casset::render_js();
         ?>
@@ -107,6 +109,10 @@
 		    }
 		?>
 
+                $('.colorpicker').colorpicker({
+                    flat: true,
+                });
+       
 		// Generate all selects as select2
 		$('select:not(.no_select2)').each(function()
                 {

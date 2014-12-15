@@ -44,7 +44,7 @@ class Controller_Settings extends Controller_Template
     
     public function action_minify()
     {
-        if(Session::Get('minify'))
+        if(Session::Get('minify') === false)
         {
             Session::Delete('minify');
         }

@@ -1,24 +1,3 @@
-<style>
-    #absplit-css .form-group {
-        margin-right: 0;
-    }
-    
-    #absplit-css {
-        min-width: 800px !important;
-    }
-    
-    .input:-webkit-autofill {
-        background-color: red;
-    }
-    
-    #absplit-css .form-horizontal {
-        margin-top: 30px;
-    }
-    
-    .colorpicker {
-        padding-left: 10px;
-    }
-</style>
 <div id="absplit-css" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">
@@ -333,11 +312,3 @@
     <!-- end widget content -->
 </div>
 <!-- end widget div -->
-<script>
-    $(document).ready(function()
-    {
-       $('.colorpicker').colorpicker({
-           flat: true,
-       });
-    });
-</script>

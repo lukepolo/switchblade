@@ -35,9 +35,6 @@ class Controller_Editor extends \Controller_Template
         
         $url = curl_getinfo($cURL, CURLINFO_EFFECTIVE_URL);        
         
-        
-        
-        
         // Correct the URL HOST
         if(preg_match("~\A(http|//)~", $url) == 0) 
         {
@@ -73,6 +70,23 @@ class Controller_Editor extends \Controller_Template
                 cursor:pointer !important;
                 z-index: 2147483646 !important;
             }
+            
+            .ui-draggable{cursor:move ;}
+            .ui-draggable-disabled {cursor:default;}
+            .ui-resizable-handle {border: 1px solid; opacity: 0.3; width:7px; height:7px;background-color: #FFFFFF;}
+            .ui-resizable-n, .ui-resizable-s {width:7px; height:7px;left:50%;}
+            .ui-resizable-e, .ui-resizable-w {width:7px; height:7px;top:50%; }
+            .ui-resizable-se{ background-image: none;bottom: -5px; right: -5px; z-index: 1002;}
+
+            .ui-resieable-overlay {
+                background-color: grey;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                opacity: .5;
+            }
         </style>";
 
         // TODO - ADD JQUERY BUT NO COCONFLICT VERSION!
@@ -92,17 +106,24 @@ class Controller_Editor extends \Controller_Template
             
             $(document).on('mouseover','*', function(e)
             {
-                if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
-                    e.stopPropagation();
-                    mouse_x = e.pageX;
-                    mouse_y = e.pageY;
-                    
-                    element = window.top.absplit_get_element(mouse_x, mouse_y)
-                    
-                    if(element)
+                    $(this).addClass('absplit-hover');
+
+                    // Alot of times its the actual parent that needs the hovering
+                    $(this).parent().addClass('absplit-hover');
+                    if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
                     {
-                        add_absplit_border(element);
+                        e.stopPropagation();
+                        mouse_x = e.pageX;
+                        mouse_y = e.pageY;
+
+                        element = window.top.absplit_get_element(mouse_x, mouse_y)
+
+                        if(element)
+                        {
+                            add_absplit_border(element);
+                        }
                     }
                 }
             });
@@ -110,20 +131,18 @@ class Controller_Editor extends \Controller_Template
             // Prevent all links from loading
             $(document).on('click', '*', function(e)
             {
-                if($('#absplit-element-menu', window.parent.document).is(':visible'))
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
-                    // Clear out the elements
-                    selected_element = null;
-                    window.parent.iframe_element = null;
-                    $('#absplit-element-menu', window.parent.document).hide();
+                    if($('#absplit-element-menu', window.parent.document).is(':visible'))
+                    {
+                        // Clear out the elements
+                        selected_element = null;
+                        window.parent.iframe_element = null;
+                        $('#absplit-element-menu', window.parent.document).hide();
+                    }
                 }
                 e.preventDefault();
                 e.stopPropagation();
-            });
-            
-            $(document).on('mouseover', '*', function(e)
-            {
-                $(this).addClass('absplit-hover');
             });
             
             $(document).on('mouseleave', '*', function(e)
@@ -137,17 +156,20 @@ class Controller_Editor extends \Controller_Template
             // Bind new context menu
             $(document).on('mousedown', '*', function(e)
             {
-                if(e.which == 3)
+                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
                 {
-                    selected_element = this;
-                    $('.absplit-border').removeClass('absplit-border'); // this really needed?
-                    $(selected_element).addClass('absplit-border');
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.top.absplit_menu(this);
-                    return false; 
-                } 
-                return true; 
+                    if(e.which == 3)
+                    {
+                        selected_element = this;
+                        $('.absplit-border').removeClass('absplit-border'); // this really needed?
+                        $(selected_element).addClass('absplit-border');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.top.absplit_menu(this);
+                        return false; 
+                    } 
+                    return true; 
+                }
             });
             
             $(window).on('resize scroll', function()
@@ -163,9 +185,8 @@ class Controller_Editor extends \Controller_Template
         curl_close($cURL);
 
         echo $html;
-        // Required to not use the template
-        // TODO - Should i remove not a huge deal to me
-        die;
+        
+        exit();
     }
     
     public function action_get()
