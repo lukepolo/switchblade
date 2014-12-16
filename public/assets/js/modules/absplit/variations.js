@@ -30,8 +30,11 @@ $(document).on('click', '#add_variation', function()
 // Chnages to a differnt variation and applys its changes in the pending changes
 $(document).on('click', '#variation_list li', function()
 {
+    $('.cancel').first().click();
+    close_menu();
     variation_id = $('#variation_list li.active').data('variation-id');
     $('.absplit-border', iframe_doc).removeClass('absplit-border');
+    undo_changes();
     apply_changes();
 });
 

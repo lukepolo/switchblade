@@ -1,4 +1,5 @@
 // MAIN SYSTEM MENU
+// TODO - FIX CLOSING MENUS TO USE ONE FUNCTION TO MAKE IT ALOT EASIER
 function absplit_menu(element)
 {
     // Store element globally
@@ -171,7 +172,8 @@ $(document).on('click', '#select_parent li a, #select_child li a', function()
 // Pressing the close button on the widgets will close current element
 $('.jarviswidget-delete-btn').on('click', function()
 {
-    console.log($(this).closest('.jarviswidget').attr('id'));
+    $('.cancel').first().click();
+    close_menu();
     if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
     {
         $('#absplit-element-menu').show();

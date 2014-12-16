@@ -12,6 +12,8 @@ var variation_count;
 var menu_height = 120;
 var orginal_style;
 
+var swap_item;
+
 // Holds all the types of elements  
 // TODO - need a function to check if it exists because it will become undefined if we dont 
 var element_tags = {
@@ -128,6 +130,39 @@ $('#site-editor').load(function()
     }
     iframe_window = $('#site-editor')[0].contentWindow;
     iframe_doc = $('#site-editor').contents()[0];
+    
+    $(iframe_doc).on('click', '.absplit_swap_border', function()
+    {
+        var swap_item_path = $(iframe_element).getPath();
+        
+        swap_with = $('.absplit_swap_border', iframe_doc);
+        
+        var swap_with_path = $(swap_with).getPath();
+        
+        // the apply and revert function are going to be the same cause they deal with paths
+        
+        apply_revert = new Array(
+            'var clone_1 = $("'+ swap_item_path +'").clone().attr("data-absplit-swap", "1a");',
+            'var clone_2 = $("'+ swap_with_path +'").clone().attr("data-absplit-swap", "1b");',
+            '$("'+ swap_with_path +'").after(clone_1);',
+            '$("'+ swap_item_path +'").replaceWith(clone_2);',
+            '$("'+ swap_with_path +'").remove();'
+        );
+
+        revert_function = new Array(
+            'var clone_1 = $(\'[data-absplit-swap="1a"]\').clone().attr("data-absplit-swap", "");',
+            'var clone_2 = $(\'[data-absplit-swap="1b"]\').clone().attr("data-absplit-swap", "");',
+            '$(\'[data-absplit-swap="1a"]\').after(clone_2);',
+            '$(\'[data-absplit-swap="1b"]\').replaceWith(clone_1);',
+            '$(\'[data-absplit-swap="1a"]\').remove()'
+        );
+
+        // Added // to the end of the "revert" function is they must be diff to register
+        add_changes(swap_item_path, 'swap', apply_revert, revert_function);
+        
+        $('body', iframe_doc).removeClass('absplit_swap');
+        $('.absplit_swap_border', iframe_doc).removeClass('absplit_swap_border');
+    });
 });
 
 // Shows the code editor

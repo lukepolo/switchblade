@@ -43,11 +43,14 @@
         </ul>
     </li>
     <hr>
-    <li id="resize_move" class="ui-menu-item" role="presentation">
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
+    <li>
+        <a id="move_to" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move To</a>
     </li>
     <li>
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Rearrange</a>
+        <a id="swap_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Swap</a>
+    </li>
+    <li class="ui-menu-item" role="presentation">
+        <a id="resize_move" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
     </li>
     <li class="ui-menu-item" role="presentation">
         <a id="remove_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>

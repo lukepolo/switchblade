@@ -71,6 +71,13 @@ class Controller_Editor extends \Controller_Template
                 z-index: 2147483646 !important;
             }
             
+            .absplit_swap_border {
+                outline: 3px solid red !important;
+                outline-offset: -3px !important;
+                cursor:pointer !important;
+                z-index: 2147483646 !important;
+            }
+            
             .ui-draggable{cursor:move ;}
             .ui-draggable-disabled {cursor:default;}
             .ui-resizable-handle {border: 1px solid; opacity: 0.3; width:7px; height:7px;background-color: #FFFFFF;}
@@ -104,6 +111,12 @@ class Controller_Editor extends \Controller_Template
                 $(element).addClass('absplit-border');
             }
             
+            function add_absplit_swap_border(element)
+            {
+                $('.absplit_swap_border').removeClass('absplit_swap_border');
+                $(element).addClass('absplit_swap_border');
+            }
+            
             $(document).on('mouseover','*', function(e)
             {
                 if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
@@ -125,6 +138,20 @@ class Controller_Editor extends \Controller_Template
                             add_absplit_border(element);
                         }
                     }
+                }
+            });
+            
+            $(document).on('mouseover','body.absplit_swap *', function(e)
+            {
+                e.stopPropagation();
+                mouse_x = e.pageX;
+                mouse_y = e.pageY;
+
+                element = window.top.absplit_get_element(mouse_x, mouse_y);
+                
+                if(element)
+                {
+                    add_absplit_swap_border(element);
                 }
             });
             

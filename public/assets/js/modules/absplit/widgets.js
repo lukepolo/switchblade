@@ -203,3 +203,15 @@ $(document).bind('keydown', function(event)
         }
     }
 });
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR SWAP IN THE MENU.JS
+$(document).on('click', '#swap_element', function()
+{
+    $('#absplit-swap-editor').show();
+    close_menu();
+    swap_item = iframe_element;
+    
+    $(iframe_element).getPath();
+    
+    $('body', iframe_doc).addClass('absplit_swap');
+});
