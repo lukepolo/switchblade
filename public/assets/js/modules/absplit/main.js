@@ -13,6 +13,7 @@ var menu_height = 120;
 var orginal_style;
 
 var swap_item;
+var swap_count = 0;
 
 // Holds all the types of elements  
 // TODO - need a function to check if it exists because it will become undefined if we dont 
@@ -141,9 +142,11 @@ $('#site-editor').load(function()
         
         // the apply and revert function are going to be the same cause they deal with paths
         
+        swap_count++;
+        
         apply_revert = new Array(
-            'var clone_1 = $("'+ swap_item_path +'").clone().attr("data-absplit-swap", "1a");',
-            'var clone_2 = $("'+ swap_with_path +'").clone().attr("data-absplit-swap", "1b");',
+            'var clone_1 = $("'+ swap_item_path +'").clone().attr("data-absplit-swap", "'+swap_count+'a");',
+            'var clone_2 = $("'+ swap_with_path +'").clone().attr("data-absplit-swap", "'+swap_count+'b");',
             '$("'+ swap_with_path +'").after(clone_1);',
             '$("'+ swap_item_path +'").replaceWith(clone_2);',
             '$("'+ swap_with_path +'").remove();'
