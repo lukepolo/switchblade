@@ -205,6 +205,7 @@ $(document).bind('keydown', function(event)
 });
 
 // THERE IS A ON CLICK FUNCTION REGISTERED FOR SWAP IN THE MENU.JS
+// TODO - DON't ALLOW SWAP WITH CHILDREN >>> WILL FUCK UP THE DOM
 $(document).on('click', '#swap_element', function()
 {
     $('#absplit-swap-editor').show();
@@ -215,3 +216,15 @@ $(document).on('click', '#swap_element', function()
     
     $('body', iframe_doc).addClass('absplit_swap');
 });
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR MOVE TO IN THE MENU.JS
+$(document).on('click', '#move_to', function()
+{
+    $('#absplit-moveto-editor').show();
+    close_menu();
+    
+    move_item = iframe_element;
+    
+    $('body', iframe_doc).addClass('absplit_moveto');
+});
+

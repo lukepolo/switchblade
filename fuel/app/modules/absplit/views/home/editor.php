@@ -97,6 +97,7 @@ $url = 'lukepolo.com';
     echo \View::Forge('widgets/goal_creator');
     echo \View::Forge('widgets/resize_editor');
     echo \View::Forge('widgets/swap_editor');
+    echo \View::Forge('widgets/moveto_editor');
     
     Casset::js('modules/absplit/*');
     

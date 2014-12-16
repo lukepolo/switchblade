@@ -1,4 +1,4 @@
-<div id="absplit-resize-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
+<div id="absplit-moveto-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">
             <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
@@ -8,7 +8,7 @@
         <span class="widget-icon">
             <i class="fa fa-pencil"></i>
         </span>
-        <h2>Resize Element</h2>
+        <h2>Move Elements</h2>
         <div class="drag">
             <i class="fa fa-align-justify"></i>
         </div>
@@ -17,10 +17,9 @@
     <div role="content">
         <!-- widget content -->
         <div class="widget-body">
-            <p>You can also the the arrow keys to get a more exact dimension.</p>
-            // TODO
-            Add Select box for position , reason is its nice to have it relative sometimes
-            <!--<div class="btn btn-sm btn-primary" id="bring-to-front"> Bring to Front</div>-->
+            Click on the element you wish to move to
+            
+            // TODO - Need a select to append / prepend / after / before
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">

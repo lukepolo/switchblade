@@ -71,7 +71,7 @@ class Controller_Editor extends \Controller_Template
                 z-index: 2147483646 !important;
             }
             
-            .absplit_swap_border {
+            .absplit_secondary_border {
                 outline: 3px solid red !important;
                 outline-offset: -3px !important;
                 cursor:pointer !important;
@@ -111,10 +111,10 @@ class Controller_Editor extends \Controller_Template
                 $(element).addClass('absplit-border');
             }
             
-            function add_absplit_swap_border(element)
+            function add_absplit_secondary_border(element)
             {
-                $('.absplit_swap_border').removeClass('absplit_swap_border');
-                $(element).addClass('absplit_swap_border');
+                $('.absplit_secondary_border').removeClass('absplit_secondary_border');
+                $(element).addClass('absplit_secondary_border');
             }
             
             $(document).on('mouseover','*', function(e)
@@ -141,7 +141,7 @@ class Controller_Editor extends \Controller_Template
                 }
             });
             
-            $(document).on('mouseover','body.absplit_swap *', function(e)
+            $(document).on('mouseover','body.absplit_swap *, body.absplit_moveto *', function(e)
             {
                 e.stopPropagation();
                 mouse_x = e.pageX;
@@ -151,7 +151,7 @@ class Controller_Editor extends \Controller_Template
                 
                 if(element)
                 {
-                    add_absplit_swap_border(element);
+                    add_absplit_secondary_border(element);
                 }
             });
             

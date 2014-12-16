@@ -172,7 +172,7 @@ $(document).on('click', '#redo-change', function()
 $(document).on('click', '#undo-change', function()
 {
     set_history_index();
-    if(pending_changes_history_index[variation_id] != 0)
+    if((pending_changes_history_index[variation_id] -1) != -1)
     {
         var history = $(pending_changes_history[variation_id])[--pending_changes_history_index[variation_id]];
         pending_changes[variation_id][history.path][history.type].temp_removed = true;
@@ -239,6 +239,10 @@ $(document).on('click', '.cancel', function()
     destroy_move_drag();
     apply_changes();
     close_menu();
+    
+    $('body', iframe_doc).removeClass('absplit_moveto absplit_swap');
+    $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+    
     if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
     {
         $('#absplit-element-menu').show();

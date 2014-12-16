@@ -12,8 +12,10 @@ var variation_count;
 var menu_height = 120;
 var orginal_style;
 
-var swap_item;
+// TODO
+// THIS WONT WORK - TRY AGAIN DUMBASS
 var swap_count = 0;
+var move_count = 0;
 
 // Holds all the types of elements  
 // TODO - need a function to check if it exists because it will become undefined if we dont 
@@ -132,16 +134,41 @@ $('#site-editor').load(function()
     iframe_window = $('#site-editor')[0].contentWindow;
     iframe_doc = $('#site-editor').contents()[0];
     
-    $(iframe_doc).on('click', '.absplit_swap_border', function()
+    $(iframe_doc).on('click', '.absplit_moveto .absplit_secondary_border', function()
+    {
+        var path = $(iframe_element).getPath();
+        move_count++;
+        
+        apply_revert = '$("' + path + '").appendTo("' + $('.absplit_secondary_border', iframe_doc).getPath() + '").attr("data-absplit-move", "'+move_count+'");';
+
+        if($(iframe_element).prev().length)
+        {
+            // we want to append
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).prev().getPath() +'")';
+        }
+        if($(iframe_element).next().length)
+        {
+            // we want to prepend
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').prependTo("'+ $(iframe_element).next().getPath() +'")';
+        }
+        else
+        {
+            // fuck it , get their parent and append 
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).parent().getPath() +'")';
+        }
+        
+        $('body', iframe_doc).removeClass('absplit_moveto');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(path, 'moveto', apply_revert, revert_function);
+    });
+    
+    $(iframe_doc).on('click', '.absplit_swap .absplit_secondary_border', function()
     {
         var swap_item_path = $(iframe_element).getPath();
-        
-        swap_with = $('.absplit_swap_border', iframe_doc);
-        
-        var swap_with_path = $(swap_with).getPath();
+        var swap_with_path = $('.absplit_secondary_border', iframe_doc).getPath();
         
         // the apply and revert function are going to be the same cause they deal with paths
-        
         swap_count++;
         
         apply_revert = new Array(
@@ -153,18 +180,17 @@ $('#site-editor').load(function()
         );
 
         revert_function = new Array(
-            'var clone_1 = $(\'[data-absplit-swap="1a"]\').clone().attr("data-absplit-swap", "");',
-            'var clone_2 = $(\'[data-absplit-swap="1b"]\').clone().attr("data-absplit-swap", "");',
+            'var clone_1 = $(\'[data-absplit-swap="'+swap_count+'a"]\').clone().attr("data-absplit-swap", "");',
+            'var clone_2 = $(\'[data-absplit-swap="'+swap_count+'b"]\').clone().attr("data-absplit-swap", "");',
             '$(\'[data-absplit-swap="1a"]\').after(clone_2);',
             '$(\'[data-absplit-swap="1b"]\').replaceWith(clone_1);',
             '$(\'[data-absplit-swap="1a"]\').remove()'
         );
 
-        // Added // to the end of the "revert" function is they must be diff to register
-        add_changes(swap_item_path, 'swap', apply_revert, revert_function);
-        
         $('body', iframe_doc).removeClass('absplit_swap');
-        $('.absplit_swap_border', iframe_doc).removeClass('absplit_swap_border');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(swap_item_path, 'swap', apply_revert, revert_function);
     });
 });
 
