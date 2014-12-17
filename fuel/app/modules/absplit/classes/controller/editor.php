@@ -47,14 +47,14 @@ class Controller_Editor extends \Controller_Template
         
         // force all relative paths to their own URL
         $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
-        $html = preg_replace('/(<head*>)(.*)(<\/head>)/si', "$1$2$body_url$3", $html); 
+        $html = preg_replace('~<head.*?>(.*?)</head>~si', "<head>$1\n$body_url\n</head>", $html); 
         
         
         // Fix relative links first
-        $html = preg_replace('/<(link|script)(?:.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*)/i', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
+        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.'/$4"', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
+        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](.*?)["\']/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$4"', $html);
         
         // Fixing CSS fonts , its only purpose is for that
         $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
@@ -219,7 +219,7 @@ class Controller_Editor extends \Controller_Template
     public function action_get()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']));
+        $url = str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']);
         
         try
         {
@@ -242,7 +242,7 @@ class Controller_Editor extends \Controller_Template
         $http_status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
         $contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
         curl_close($cURL);
-      
+        
         if($http_status == 200)
         {
             if($contentType == 'text/css')

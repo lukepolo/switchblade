@@ -227,4 +227,3 @@ $(document).on('click', '#move_to', function()
     
     $('body', iframe_doc).addClass('absplit_moveto');
 });
-

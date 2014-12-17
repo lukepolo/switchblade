@@ -83,19 +83,21 @@ function apply_changes()
             {
                 $.each(type_object, function(type, data)
                 {
-                    if(data.temp_removed == false && data.applied == false)
+                    if(data.temp_removed == false)
                     {
                         data.applied = true;
-                        $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        
                         if($.isArray(data.apply_function) == false)
                         {
                             iframe_window.eval(data.apply_function);
+                            $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
                         }
                         else
                         {
                             $.each(data.apply_function, function(index, apply_function)
                             {
                                 iframe_window.eval(apply_function);
+                                $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+apply_function);
                             });
                         }
                     }
@@ -166,6 +168,7 @@ $(document).on('click', '#redo-change', function()
             });
         }
     }
+    apply_changes()
 });
 
 // Move backward in thehistory list
@@ -188,6 +191,7 @@ $(document).on('click', '#undo-change', function()
             });
         }
     }
+    apply_changes()
 });
 
 // When pressing cancel we need to remove all pending changes!
