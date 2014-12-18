@@ -43,18 +43,21 @@ class Controller_Editor extends \Controller_Template
                
         $url_parsed = parse_url($url);
         
+        if(isset($url_parsed['path']) === false)
+        {
+            $url_parsed['path'] = null;
+        }
         $url_host = '//'.$url_parsed['host'];
         
         // force all relative paths to their own URL
-        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
-        $html = preg_replace('~<head.*?>(.*?)</head>~si', "<head>$1\n$body_url\n</head>", $html); 
-        
+        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'">';
+        $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
         
         // Fix relative links first
-        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.'/$4"', $html);
+        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$4"', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](.*?)["\']/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$4"', $html);
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
         
         // Fixing CSS fonts , its only purpose is for that
         $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
@@ -258,7 +261,7 @@ $pattern = <<<'LOD'
         (["']) (?>[^"'\\]++ | \\{2} | \\. | (?!\g{-1})["'] )*+ \g{-1}
     )
     (?<comment> /\* .*? \*/ )
-    (?<url_skip> (?: https?: | data: ) [^"'\s)}]*+ )
+    (?<url_skip> (?: https?: | data: | \.\. ) [^"'\s)}]*+ )
     (?<other_content>
         (?> [^u}/"']++ | \g<quoted_content> | \g<comment>
           | \Bu | u(?!rl\s*+\() | /(?!\*) 
@@ -289,12 +292,17 @@ LOD;
                 $parsed_url = parse_url($url);
                 
                 // Fix other URLS that are absoulte 
-                $absplit_get_url =
                 
                 $file = preg_replace('/url.*\((?:\'|")(\/)(.*)(?:\'|")/i', 'url("'.\Uri::create('absplit/get/').$parsed_url['host'].'/$2"' , $file);
                 
                 // Also we need to replace all font-face with a custom URL 
+                // // Fix HTTP links that wont work for FONTS
                 $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].preg_replace('/(.*\/).*/i','$1', $parsed_url['path']).'$8' , $file);
+                
+                // Now we have to fix any imports 
+                // https://regex101.com/r/cR9nI3/1
+                $file = preg_replace('/@import\s+url\((\'|"|http(?!s))(.*?)[\'"|)]/i', 'import url('.\Uri::create('absplit/get/').'$1$2)', $file);
+                
             }
             header('Content-Type: '.$contentType);
             echo $file;
