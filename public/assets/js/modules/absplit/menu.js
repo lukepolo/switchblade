@@ -173,10 +173,10 @@ $(document).on('click', '#select_parent li a, #select_child li a', function()
 // Pressing the close button on the widgets will close current element
 $('.jarviswidget-delete-btn').on('click', function()
 {
-    $('.cancel').first().click();
     close_menu();
     if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
     {
+        $('.cancel').first().click();
         $('#absplit-element-menu').show();
     }
     $(this).closest('.jarviswidget').hide();
