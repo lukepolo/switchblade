@@ -1,12 +1,26 @@
 <?php
-//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-//$url = 'http://ejjpeopleskills.com';
-$url = 'http://lukepolo.com';
-//$url = 'http://development.evanced.info/development/janice/wandooreader/';
+    //$url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+    $url = 'http://ejjpeopleskills.com';
+//    $url = 'http://lukepolo.com';
+//    $url = 'http://development.evanced.info/development/janice/wandooreader/';
+
+    $url_parsed = parse_url($url);
+
+    if(isset($url_parsed['path']) === false)
+    {
+        $url_parsed['path'] = null;
+    }
+    $url_host = '//'.$url_parsed['host'];
+    $base_url = $url_parsed['scheme'].':'.$url_host.$url_parsed['path'];
+
+
     echo Asset::css('loading.css'); 
     echo Asset::css('modules/absplit/main.css'); 
 ?>
+
 <script type="text/javascript">
+        // Add the base to our template!
+    var base_url = "<?php echo $base_url; ?>";
     // TODO - this will be set in PHP
     var variation_id = 1;
 </script>
