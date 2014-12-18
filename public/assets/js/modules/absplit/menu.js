@@ -48,6 +48,7 @@ function absplit_menu(element)
     $('#absplit-element-menu').menu().show();
 
     // TODO - check bottom - top
+    // wrote a function todo this , need to determine which way to adjust though , probalby write another function todo it for me
     // Checks to see if the menu is outside of the view
     var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
     if(left_pos < 250)

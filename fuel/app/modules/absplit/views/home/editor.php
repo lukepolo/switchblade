@@ -1,7 +1,7 @@
 <?php
 //    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-$url = 'http://ejjpeopleskills.com';
-//$url = 'http://lukepolo.com';
+//$url = 'http://ejjpeopleskills.com';
+$url = 'http://lukepolo.com';
 //$url = 'http://development.evanced.info/development/janice/wandooreader/';
     echo Asset::css('loading.css'); 
     echo Asset::css('modules/absplit/main.css'); 

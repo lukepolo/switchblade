@@ -48,3 +48,15 @@ function maxZIndex(win, dom)
     }
     return maxZ;
 }
+
+jQuery.expr.filters.offscreen = function(el) 
+{
+    return (
+        (
+            $(el).position().left < 0 || 
+            $(el).position().left + $(el).width() > $(window).width() ||
+            $(el).position().top < 0 ||
+            $(el).position().top + $(el).height() > $(window).height()
+        )
+    );
+};
