@@ -18,13 +18,14 @@ $(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit 
             add_changes(path, 'html', "$('" + path + "').html(" + JSON.stringify($(this).prev().code()) +");", "$('" + path + "').html(" + JSON.stringify($(iframe_element)[0].outerHTML) +");");
         break;
         case 'absplit-link-editor':
-            if($(this).attr('src'))
+            
+            if($(iframe_element).attr('src') != 'undefined')
             {
                 add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
             }
             else
             {
-                add_changes(path, 'src', "$('" + path + "').attr('href', '" + $(this).val() +"');", "$('" + path + "').attr('href', '" + $(iframe_element).attr('href') +"');");
+                add_changes(path, 'href', "$('" + path + "').attr('href', '" + $(this).val() +"');", "$('" + path + "').attr('href', '" + $(iframe_element).attr('href') +"');");
             }
         break;
         case 'absplit-img-editor':

@@ -6,8 +6,6 @@ function add_changes(path, type, apply_function, revert_function)
     // We also don't need to repeat any of the same apply functions if they type to fast
     if(apply_function == revert_function || ($(pending_changes_history[variation_id]).last()[0] && $(pending_changes_history[variation_id]).last()[0].apply_function == apply_function))
     {
-        console.log(apply_function);
-        console.log('bad changes');
         return;
     }
     else

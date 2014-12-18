@@ -21,9 +21,9 @@
             <form class="form-horizontal">
                 <fieldset>
                     <div class="form-group">
-                        <label class="col-md-3 control-label">HREF</label>
+                        <label class="col-md-3 control-label">Link</label>
                         <div class="col-md-9">
-                            <input class="link form-control" placeholder="HREF" type="text">
+                            <input class="link form-control" placeholder="Link" type="text">
                         </div>
                         <label class="col-md-3 control-label">Alt Text</label>
                         <div class="col-md-9">

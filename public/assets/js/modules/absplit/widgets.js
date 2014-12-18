@@ -161,7 +161,7 @@ $(document).on('click', '#bring-to-front', function()
 
 $(document).bind('keydown', function(event) 
 {
-    if($('.ui-resizable'))
+    if($('.ui-resizable').length)
     {
         switch(event.which) {
             case 37: 
