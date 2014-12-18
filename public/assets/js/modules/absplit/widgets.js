@@ -2,7 +2,10 @@
 function absplit_html_editor()
 {
     // Add the base to our template!
-    $('head').append('<base href="'+base_url+'">');
+    if($('base').length == 0)
+    {
+        $('head').append('<base href="'+base_url+'">');
+    }
     $('.widget-templates').hide();
     $('#absplit-html-edit').show();
 
