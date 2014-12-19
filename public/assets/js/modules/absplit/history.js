@@ -49,7 +49,6 @@ function add_changes(path, type, apply_function, revert_function)
             revert_function: revert_function,
             temp_removed: false,
             pending : true,
-            applied: false
         };
 
         // TODO - by variation_id
@@ -83,8 +82,6 @@ function apply_changes()
                 {
                     if(data.temp_removed == false)
                     {
-                        data.applied = true;
-                        
                         if($.isArray(data.apply_function) == false)
                         {
                             iframe_window.eval(data.apply_function);
@@ -102,40 +99,30 @@ function apply_changes()
                 });
             });
         });
+        pending_changes_history_index = pending_changes_history[variation_id].length
     }
 }
 
 function undo_changes()
 {
-    // undo all changes 
-    $(pending_changes).each(function(index, variation_details)
+    if(pending_changes_history[variation_id])
     {
-        $.each(variation_details, function(index, path_object)
+        $(pending_changes_history[variation_id].reverse()).each(function(index, data)
         {
-            $.each(path_object, function(path, type_object)
+            if($.isArray(data.revert_function) == false)
             {
-                $.each(type_object, function(type, data)
+                iframe_window.eval(data.revert_function);
+            }
+            else
+            {
+                $.each(data.revert_function, function(index, revert_function)
                 {
-                    if(data.applied == true)
-                    {
-                        data.applied = false;
-                        $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
-                        if($.isArray(data.revert_function) == false)
-                        {
-                            iframe_window.eval(data.revert_function);
-                        }
-                        else
-                        {
-                            $.each(data.revert_function, function(index, revert_function)
-                            {
-                                iframe_window.eval(revert_function);
-                            });
-                        }
-                    }
+                    iframe_window.eval(revert_function);
                 });
-            });
+            }
         });
-    });
+        $(pending_changes_history[variation_id]).reverse();
+    }
 }
 
 function set_history_index()

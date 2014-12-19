@@ -7,6 +7,7 @@ var element_tree = {
 };
 var pending_changes = {};
 var pending_changes_history = {};
+
 var pending_changes_history_index = {};
 var variation_count;
 var menu_height = 120;
