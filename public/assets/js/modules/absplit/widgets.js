@@ -111,11 +111,10 @@ $(document).on('click', '#remove_element', function()
     var path = $(iframe_element).getPath();
 
     add_changes(path, 'visibility', "$('" + path + "').css('visibility', 'hidden');", "$('" + path + "').css('visibility', 'visible');");
-
+    
     // Close menu
     close_menu();
-    
-    // TODO - save imediatleys
+    save();
 });
 
 // Drag and Resize

@@ -123,7 +123,7 @@ function undo_changes()
                 });
             }
         });
-        $(pending_changes_history[variation_id]).reverse();
+        pending_changes_history[variation_id].reverse();
     }
 }
 
@@ -213,7 +213,7 @@ $(document).on('click', '.cancel', function()
                             return false;
                         }
                     });
-                    delete pending_changes[$('#variation_list .active').data('variation-id')][path][type];
+                    delete pending_changes[variation_id][path][type];
                 }
             });
         });
@@ -245,8 +245,14 @@ $(document).on('click', '.cancel', function()
 // Save all changes to the variation
 $(document).on('click', '.save', function()
 {
+    save();
+    $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
+});
+
+function save()
+{
     // Remove all pending 
-    $(pending_changes[$('#variation_list .active').data('variation-id')]).each(function(index, path_object)
+    $(pending_changes[variation_id]).each(function(index, path_object)
     {
         $.each(path_object, function(path, type_object)
         {
@@ -258,5 +264,4 @@ $(document).on('click', '.save', function()
     });
     destroy_move_drag();
     apply_changes();
-    $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
-});
+}
