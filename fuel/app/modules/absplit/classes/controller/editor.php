@@ -14,7 +14,7 @@ class Controller_Editor extends \Controller_Template
     public function action_url()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI']));
+        $url = urldecode(str_replace('__..__', '.', str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI'])));
 
         $cURL = curl_init($url);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
@@ -49,6 +49,7 @@ class Controller_Editor extends \Controller_Template
         }
         $url_host = '//'.$url_parsed['host'];
         
+        $url_parsed['path'] = preg_replace('/[^\/]+\.\w+$/','', $url_parsed['path']);
         // force all relative paths to their own URL
         $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'">';
         $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
@@ -292,7 +293,6 @@ LOD;
                 $parsed_url = parse_url($url);
                 
                 // Fix other URLS that are absoulte 
-                
                 $file = preg_replace('/url.*\((?:\'|")(\/)(.*)(?:\'|")/i', 'url("'.\Uri::create('absplit/get/').$parsed_url['host'].'/$2"' , $file);
                 
                 // Also we need to replace all font-face with a custom URL 

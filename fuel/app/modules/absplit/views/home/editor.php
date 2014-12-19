@@ -1,7 +1,7 @@
 <?php
-    //$url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-//    $url = 'http://ejjpeopleskills.com';
-    $url = 'http://lukepolo.com';
+//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
+    $url = 'http://ejjpeopleskills.com/about.php';
+//    $url = 'http://lukepolo.com/blog';
 //    $url = 'http://development.evanced.info/development/janice/wandooreader/';
 
     $url_parsed = parse_url($url);
@@ -68,7 +68,7 @@
                     <div class='tetromino box4'></div>
                 </span>
                 <div class="tab-pane active" id="site-viewer">
-                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
+                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').  str_replace('.', '__..__', urlencode($url)); ?>"></iframe>
                 </div>
             </div>
             <!-- end content -->
