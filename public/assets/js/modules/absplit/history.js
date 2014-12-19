@@ -47,8 +47,8 @@ function add_changes(path, type, apply_function, revert_function)
             path : path,
             apply_function: apply_function,
             revert_function: revert_function,
-            temp_removed: false,
             pending : true,
+            code_editor: true
         };
 
         // TODO - by variation_id
@@ -80,26 +80,28 @@ function apply_changes()
             {
                 $.each(type_object, function(type, data)
                 {
-                    if(data.temp_removed == false)
+                    if($.isArray(data.apply_function) == false)
                     {
-                        if($.isArray(data.apply_function) == false)
+                        iframe_window.eval(data.apply_function);
+                        if(data.code_editor == true)
                         {
-                            iframe_window.eval(data.apply_function);
                             $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
                         }
-                        else
+                    }
+                    else
+                    {
+                        $.each(data.apply_function, function(index, apply_function)
                         {
-                            $.each(data.apply_function, function(index, apply_function)
+                            iframe_window.eval(apply_function);
+                            if(data.code_editor == true)
                             {
-                                iframe_window.eval(apply_function);
                                 $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+apply_function);
-                            });
-                        }
+                            }
+                        });
                     }
                 });
             });
         });
-        pending_changes_history_index = pending_changes_history[variation_id].length
     }
 }
 
@@ -137,47 +139,48 @@ function set_history_index()
 $(document).on('click', '#redo-change', function()
 {
     set_history_index();
-    if(pending_changes_history_index[variation_id] != pending_changes_history[variation_id].length)
+    if(pending_changes_history_index[variation_id] < pending_changes_history[variation_id].length)
     {
-        var history = $(pending_changes_history[variation_id])[pending_changes_history_index[variation_id]++];
-        pending_changes[variation_id][history.path][history.type].temp_removed = false;
-        if($.isArray(history.apply_function) == false)
-        {
-            iframe_window.eval(history.apply_function);
-        }
-        else
-        {
-            $.each(history.apply_function, function(index, apply_function)
-            {
-                iframe_window.eval(apply_function);
-            });
-        }
+        history_to_current(pending_changes_history_index[variation_id]++, true);
     }
-    apply_changes()
 });
 
 // Move backward in thehistory list
 $(document).on('click', '#undo-change', function()
 {
     set_history_index();
-    if((pending_changes_history_index[variation_id] -1) != -1)
+    if((pending_changes_history_index[variation_id] -1) > -1)
     {
-        var history = $(pending_changes_history[variation_id])[--pending_changes_history_index[variation_id]];
-        pending_changes[variation_id][history.path][history.type].temp_removed = true;
-        if($.isArray(history.revert_function) == false)
+        history_to_current(--pending_changes_history_index[variation_id], false);
+    }
+});
+
+function history_to_current(history_index, forward)
+{
+    if(forward)
+    {
+        var rev_history = $(pending_changes_history[variation_id])[history_index];
+        pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.apply_function;
+        pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.revert_function;
+        pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+    }
+    else
+    {
+        var rev_history = $(pending_changes_history[variation_id])[history_index];
+        pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.revert_function;
+        pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.apply_function;
+        if(history_index == 0)
         {
-            iframe_window.eval(history.revert_function);
+            // dont show in the code editor
+            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = false;
         }
         else
         {
-            $.each(history.revert_function, function(index, revert_function)
-            {
-                iframe_window.eval(revert_function);
-            });
+            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
         }
     }
-    apply_changes()
-});
+    apply_changes();
+}
 
 // When pressing cancel we need to remove all pending changes!
 $(document).on('click', '.cancel', function()
