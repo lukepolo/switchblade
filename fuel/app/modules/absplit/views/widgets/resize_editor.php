@@ -18,9 +18,6 @@
         <!-- widget content -->
         <div class="widget-body">
             <p>You can also the the arrow keys to get a more exact dimension.</p>
-            // TODO
-            Add Select box for position , reason is its nice to have it relative sometimes
-            <!--<div class="btn btn-sm btn-primary" id="bring-to-front"> Bring to Front</div>-->
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">

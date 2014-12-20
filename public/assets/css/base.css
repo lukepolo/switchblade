@@ -65,3 +65,7 @@ div[role="content"]:not(.no-padding) .widget-footer {
     margin-left: -12px;
     margin-right: -12px;
 }
+
+.btn-group .btn {
+    padding : 6px 12px !important;
+}

@@ -37,7 +37,7 @@
                     <a href="javascript:void(0);" onclick="javascript:absplit_img_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
                 </li>
                 <li id="link" class="ui-menu-item" role="presentation" style="display:none">
-                    <a href="javascript:void(0);" onclick="javascript:absplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
+                    <a href="javascript:void(0);" onclick="javascript:absplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link / Alt Text</a>
                 </li>
             </span>
         </ul>

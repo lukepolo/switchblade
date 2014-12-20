@@ -52,12 +52,12 @@
         <![endif]-->
         <?php
 	    echo $node;
-	    Casset::js('bootstrap.js');
-	    
             // JS FILES HERE
             // HACK
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
+            
+	    Casset::js('bootstrap.js');
 	    
 	    // Main APP JS
             Casset::js('app.config.js');

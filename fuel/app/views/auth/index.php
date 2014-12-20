@@ -57,9 +57,20 @@
                         </div>
                         <div class="row">
                             <section class="col col-6">
-                                <label class="select">
-                                    <?php echo \Form::select('gender', null, array('male' => 'Male', 'female' => 'Female', 'na' => 'Prefer Not To Answer')); ?>
-                                </label>
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="gender" value="male">
+                                        Male 
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="gender" value="female">
+                                        Female
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="gender" value="other">
+                                        Other
+                                    </label>
+                                </div>
                             </section>
                         </div>
                         <section>
@@ -215,3 +226,4 @@
         });
     });
 </script>
+							

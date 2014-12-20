@@ -127,11 +127,12 @@ $(document).on('click', '#resize_move', function()
     $(iframe_element, iframe_doc).resizable({
         handles: "n, e, s, w, ne, se, sw, nw"
     }).draggable({
-        start: function() {
+        start: function() 
+        {
             $('#absplit-resize-editor').hide();
         },   
-        stop: function() {
-            
+        stop: function() 
+        {
             var path = $(iframe_element).getPath();
             
             $('#absplit-resize-editor').show();
@@ -144,12 +145,9 @@ $(document).on('click', '#resize_move', function()
                 $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
             }
             
-            // TODO - may need to check if they aren't auto, will need to verify this works
-            add_changes(path, 'offset', "$('" + path + "').css('top', '" + $(iframe_element).css('top') + "').css('left', '" + $(iframe_element).css('left') + "').css('position', '" + $(iframe_element).css('position') + "').css('width', '" + $(iframe_element).css('width') + "').css('height', '" + $(iframe_element).css('height') + "')",
-                "$('" + path + "').attr('style', '" + orginal_style + "');");
+            add_changes(path, 'offset', "$('" + path + "').css('top', '" + $(iframe_element).css('top') + "').css('left', '" + $(iframe_element).css('left') + "').css('position', '" + $(iframe_element).css('position') + "').css('width', '" + $(iframe_element).css('width') + "').css('height', '" + $(iframe_element).css('height') + "')", "$('" + path + "').attr('style', '" + orginal_style + "');");
         }   
     });
-    
     
     $('#absplit-resize-editor').removeClass('screen_center');
     $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
@@ -158,17 +156,9 @@ $(document).on('click', '#resize_move', function()
     close_menu();
 });
 
-$(document).on('click', '#bring-to-front', function()
-{
-    // TODO - I DONT THINK THIS IS NEEDED?
-    // find the highest z-index on the page and bring it 1 above
-    zValue = maxZIndex(iframe_window, iframe_doc) + 1;
-    $(iframe_element).css('z-index', zValue+ ' !important');
-});
-
 $(document).bind('keydown', function(event) 
 {
-    if($('.ui-resizable').length)
+    if($('.ui-resizable', iframe_doc).length)
     {
         switch(event.which) {
             case 37: 
