@@ -2,7 +2,10 @@
 function absplit_html_editor()
 {
     // Add the base to our template!
-    $('head').append('<base href="<?php echo $base_url; ?>">');
+    if($('base').length == 0)
+    {
+        $('head').append('<base href="'+base_url+'">');
+    }
     $('.widget-templates').hide();
     $('#absplit-html-edit').show();
 
@@ -108,29 +111,122 @@ $(document).on('click', '#remove_element', function()
     var path = $(iframe_element).getPath();
 
     add_changes(path, 'visibility', "$('" + path + "').css('visibility', 'hidden');", "$('" + path + "').css('visibility', 'visible');");
-
+    
     // Close menu
     close_menu();
-    
-    // TODO - save imediatleys
+    save();
 });
 
 // Drag and Resize
 $(document).on('click', '#resize_move', function()
 {
+    orginal_style = $(iframe_element).attr('style');
+    
     $('#absplit-resize-editor').show();
+    absplit_widget_positions();
     
     $(iframe_element, iframe_doc).resizable({
         handles: "n, e, s, w, ne, se, sw, nw"
     }).draggable({
-        start: function() {
+        start: function() 
+        {
             $('#absplit-resize-editor').hide();
         },   
-        stop: function() {
+        stop: function() 
+        {
+            var path = $(iframe_element).getPath();
+            
             $('#absplit-resize-editor').show();
-        }
+            
+            $('#absplit-resize-editor').removeClass('screen_center');
+            $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');
+            
+            if($('#absplit-resize-editor').is(':offscreen'))
+            {
+                $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
+            }
+            
+            add_changes(path, 'offset', "$('" + path + "').css('top', '" + $(iframe_element).css('top') + "').css('left', '" + $(iframe_element).css('left') + "').css('position', '" + $(iframe_element).css('position') + "').css('width', '" + $(iframe_element).css('width') + "').css('height', '" + $(iframe_element).css('height') + "')", "$('" + path + "').attr('style', '" + orginal_style + "');");
+        }   
     });
     
-    $('.ui-resizable', iframe_doc).append('<div class="ui-resieable-overlay"></div>');
+    $('#absplit-resize-editor').removeClass('screen_center');
+    $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+    if($('#absplit-resize-editor').is(':offscreen'))
+    {
+        $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
+    }
+            
+    $('.ui-resizable', iframe_doc).append('<div class="ui-resizeable-overlay"></div>');
     close_menu();
+});
+
+$(document).bind('keydown', function(event) 
+{
+    if($('.ui-resizable', iframe_doc).length)
+    {
+        switch(event.which) {
+            case 37: 
+                $(iframe_element).animate(
+                    {
+                        left: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+                break;
+            case 39:
+                $(iframe_element).animate(
+                    {
+                        left: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 38:
+                $(iframe_element).animate(
+                    {
+                        top: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 40:
+                 $(iframe_element).animate(
+                    {
+                        top: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+        }
+    }
+});
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR SWAP IN THE MENU.JS
+// TODO - DON't ALLOW SWAP WITH CHILDREN >>> WILL FUCK UP THE DOM
+$(document).on('click', '#swap_element', function()
+{
+    $('#absplit-swap-editor').show();
+    close_menu();
+    swap_item = iframe_element;
+    
+    $(iframe_element).getPath();
+    
+    $('body', iframe_doc).addClass('absplit_swap');
+});
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR MOVE TO IN THE MENU.JS
+$(document).on('click', '#move_to', function(e)
+{
+    $('#absplit-moveto-editor').show();
+    close_menu();
+    
+    move_item = iframe_element;
+    
+    $('body', iframe_doc).addClass('absplit_moveto');
 });

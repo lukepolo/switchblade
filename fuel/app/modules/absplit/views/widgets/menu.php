@@ -37,15 +37,20 @@
                     <a href="javascript:void(0);" onclick="javascript:absplit_img_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Replace Image</a>
                 </li>
                 <li id="link" class="ui-menu-item" role="presentation" style="display:none">
-                    <a href="javascript:void(0);" onclick="javascript:absplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link</a>
+                    <a href="javascript:void(0);" onclick="javascript:absplit_link_editor()" class="ui-corner-all" tabindex="-1" role="menuitem">Edit Link / Alt Text</a>
                 </li>
             </span>
         </ul>
     </li>
     <hr>
-    <li id="resize_move" class="ui-menu-item" role="presentation">
-        <!--TODO - RESIZE-->
-        <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move</a>
+    <li>
+        <a id="move_to" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move To</a>
+    </li>
+    <li>
+        <a id="swap_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Swap</a>
+    </li>
+    <li class="ui-menu-item" role="presentation">
+        <a id="resize_move" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Move and Resize</a>
     </li>
     <li class="ui-menu-item" role="presentation">
         <a id="remove_element" href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">Remove</a>

@@ -3,10 +3,8 @@ function absplit_menu(element)
 {
     // Store element globally
     iframe_element = element;
-    absplit_widget_menu_position();
-
-    // TODO
-    // HACK -- we dont want the default menu classes
+    
+    // We dont want the default menu classes
     $('#absplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
 
     // Gets the element tag to display a name for the user
@@ -45,21 +43,8 @@ function absplit_menu(element)
     
     // Show the main menu
     $('#absplit-element-menu').menu().show();
-
-    // TODO - check bottom - top
-    // Checks to see if the menu is outside of the view
-    var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
-    if(left_pos < 250)
-    {
-        $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
-    }
-
-    // Checks to see if the menu is outside of the view
-    var right_pos = $('#absplit-element-menu').position().left;
-    if(right_pos < 250)
-    {
-        $('#absplit-element-menu').css('left', 350);
-    }
+    
+    absplit_widget_menu_position();
 }
 
 // Builds child / parent tree for the type given
@@ -83,9 +68,9 @@ function build_tree(type)
     }
 
     // Builds the element tree 
-    element_tree = new Array();
     var count = 0;
     
+    element_tree[type] = new Array();
     // Find all the childre of parents
     eval(map_func).map(function() 
     {
@@ -97,8 +82,7 @@ function build_tree(type)
             $('#no_'+type).remove();
             
             // Push the element into the tree array
-            // TODO - does this work , i dont think it should by the looks of it
-            element_tree.push(this);
+            element_tree[type].push(this);
 
             // If the element has an ID show it
             if(this.id)
@@ -113,7 +97,7 @@ function build_tree(type)
             // Append to the menu visually
             $('#select_'+type).append('\
                 <li class="ui-menu-item" role="presentation">\
-                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
+                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-type="' + type + '" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
                 </li>\
             ');
             count++;
@@ -130,9 +114,7 @@ function close_menu()
 // Resets all menu / widget positions next to element
 function absplit_widget_positions()
 {
-    // TODO
-    // detect if off page - dont allow
-    $('.widget-templates:not(#absplit-element-menu, #code_holder)').addClass('screen_center').draggable(
+    $('.widget-templates:not(#absplit-element-menu, #code_holder):visible').addClass('screen_center').draggable(
     {
         handle: '.drag', 
         cursor: "move",
@@ -150,34 +132,56 @@ function absplit_widget_menu_position()
 {
     // TODO
     // detect if off page - dont allow
-    var menu_height = 120;
     $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+        // TODO - check bottom - top
+    // wrote a function , need to determine which way to adjust though , probalby write another function
+    // Checks to see if the menu is outside of the view
+    var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
+    if(left_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
+    }
+
+    // Checks to see if the menu is outside of the view
+    var right_pos = $('#absplit-element-menu').position().left;
+    if(right_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', 350);
+    }
 }
 
- $('#absplit-close').on('click', function()
-    {
-        $('#absplit-element-menu').hide();
-        iframe_element = null;
-    });
+$('#absplit-close').on('click', function()
+{
+    $('#absplit-element-menu').hide();
+});
 
-    $(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
-    {
-        iframe_window.add_absplit_border(element_tree[$(this).data('id')]);
-    });
+$(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')]);
+});
 
-    $(document).on('click', '#select_parent li a, #select_child li a', function()
-    {
-        iframe_window.add_absplit_border(element_tree[$(this).data('id')])
-        absplit_menu(element_tree[$(this).data('id')]); 
-    });
+$(document).on('click', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')])
+    absplit_menu(element_tree[$(this).data('type')][$(this).data('id')]); 
+});
 
 // Pressing the close button on the widgets will close current element
 $('.jarviswidget-delete-btn').on('click', function()
 {
-    console.log($(this).closest('.jarviswidget').attr('id'));
+    close_menu();
     if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
     {
+        $('.cancel').first().click();
         $('#absplit-element-menu').show();
     }
     $(this).closest('.jarviswidget').hide();
 });
+
+function destroy_move_drag()
+{
+    $('.ui-resizeable-overlay', iframe_doc).remove();
+    $('.ui-resizable', iframe_doc).draggable("destroy");
+    $('.ui-resizable', iframe_doc).resizable("destroy");
+}

@@ -1,11 +1,22 @@
 // GLOBAL Variables
 var iframe_doc;
 var iframe_element;
-var element_tree = [];
+var element_tree = {
+    parent: null,
+    child: null
+};
 var pending_changes = {};
 var pending_changes_history = {};
+
 var pending_changes_history_index = {};
 var variation_count;
+var menu_height = 120;
+var orginal_style;
+
+// TODO
+// THIS WONT WORK - TRY AGAIN DUMBASS
+var swap_count = 0;
+var move_count = 0;
 
 // Holds all the types of elements  
 // TODO - need a function to check if it exists because it will become undefined if we dont 
@@ -81,16 +92,14 @@ function get_class_list(wrap, seperator)
 // Get an element respect to the iframe based on current x / y coords
 function absplit_get_element(mouse_x, mouse_y)
 {
+    // We must make sure that the element is realtive to the iframe / fix left and top
     if($(iframe_doc).scrollTop() > 0)
     {
-        // TOP relative
         mouse_y = mouse_y - $(iframe_doc).scrollTop();
     }
-    else if($(iframe_doc).scrollLeft() > 0 )
+    if($(iframe_doc).scrollLeft() > 0 )
     {
-        // TODO
-        // MAKE SURE IT WORKS
-        mouse_x = mouse_x - $(iframe_doc).scrollTop();
+        mouse_x = mouse_x - $(iframe_doc).scrollLeft();
     }
 
     return iframe_doc.elementFromPoint(mouse_x, mouse_y);
@@ -123,6 +132,66 @@ $('#site-editor').load(function()
     }
     iframe_window = $('#site-editor')[0].contentWindow;
     iframe_doc = $('#site-editor').contents()[0];
+    
+    $(iframe_doc).on('click', '.absplit_moveto .absplit_secondary_border', function()
+    {
+        var path = $(iframe_element).getPath();
+        move_count++;
+        
+        apply_revert = '$("' + path + '").' + $('#absplit-moveto-editor input:checked').val() + '("' + $('.absplit_secondary_border', iframe_doc).getPath() + '").attr("data-absplit-move", "'+move_count+'");';
+
+        if($(iframe_element).prev().length)
+        {
+            // we want to append
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).prev().getPath() +'")';
+        }
+        if($(iframe_element).next().length)
+        {
+            // we want to prepend
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').prependTo("'+ $(iframe_element).next().getPath() +'")';
+        }
+        else
+        {
+            // fuck it , get their parent and append 
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).parent().getPath() +'")';
+        }
+        
+        $('body', iframe_doc).removeClass('absplit_moveto');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(path, 'moveto', apply_revert, revert_function);
+    });
+    
+    $(iframe_doc).on('click', '.absplit_swap .absplit_secondary_border', function()
+    {
+        
+        var swap_item_path = $(iframe_element).getPath();
+        var swap_with_path = $('.absplit_secondary_border', iframe_doc).getPath();
+        
+        // the apply and revert function are going to be the same cause they deal with paths
+        swap_count++;
+        
+        apply_revert = new Array(
+            'var clone_1 = $("'+ swap_item_path +'").clone().attr("data-absplit-swap", "'+swap_count+'a");',
+            'var clone_2 = $("'+ swap_with_path +'").clone().attr("data-absplit-swap", "'+swap_count+'b");',
+            '$("'+ swap_with_path +'").after(clone_1);',
+            '$("'+ swap_item_path +'").replaceWith(clone_2);',
+            '$("'+ swap_with_path +'").remove();'
+        );
+
+        revert_function = new Array(
+            'var clone_1 = $(\'[data-absplit-swap="'+swap_count+'a"]\').clone().attr("data-absplit-swap", "");',
+            'var clone_2 = $(\'[data-absplit-swap="'+swap_count+'b"]\').clone().attr("data-absplit-swap", "");',
+            '$(\'[data-absplit-swap="1a"]\').after(clone_2);',
+            '$(\'[data-absplit-swap="1b"]\').replaceWith(clone_1);',
+            '$(\'[data-absplit-swap="1a"]\').remove()'
+        );
+
+        $('body', iframe_doc).removeClass('absplit_swap');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(swap_item_path, 'swap', apply_revert, revert_function);
+    });
 });
 
 // Shows the code editor
@@ -134,6 +203,5 @@ $(document).on('click', '.code_holder_open', function()
 // We need this for the parent right away
 $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
 
-// HACK - to remove all default hidden html tags
-// TODO 
+// Remove all all default hidden html tags withing summer note 
 $('#code_holder .note-editable').html('');

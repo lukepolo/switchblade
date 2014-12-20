@@ -1,4 +1,4 @@
-<div id="absplit-link-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
+<div id="absplit-moveto-editor" class="jarviswidget jarviswidget-color-blue widget-templates" style="min-width:450px;position: absolute;display: none;">
     <header role="heading" style="cursor: all-scroll">
         <div class="jarviswidget-ctrls" role="menu">
             <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Close">
@@ -8,7 +8,7 @@
         <span class="widget-icon">
             <i class="fa fa-pencil"></i>
         </span>
-        <h2>Edit Link</h2>
+        <h2>Move Elements</h2>
         <div class="drag">
             <i class="fa fa-align-justify"></i>
         </div>
@@ -17,21 +17,17 @@
     <div role="content">
         <!-- widget content -->
         <div class="widget-body">
-            <h3>Edit Your Link</h3>
-            <form class="form-horizontal">
-                <fieldset>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Link</label>
-                        <div class="col-md-9">
-                            <input class="link form-control" placeholder="Link" type="text">
-                        </div>
-                        <label class="col-md-3 control-label">Alt Text</label>
-                        <div class="col-md-9">
-                            <input class="alt form-control" placeholder="Alt Text" type="text"ss>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+            <p>Click on the element you wish to move to</p>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input checked="checked" type="radio" name="move_type" value="appendTo">
+                    Append 
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="move_type" value="prependTo">
+                    Prepend 
+                </label>
+            </div>
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">

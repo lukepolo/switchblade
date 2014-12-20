@@ -52,12 +52,12 @@
         <![endif]-->
         <?php
 	    echo $node;
-	    Casset::js('bootstrap.js');
-	    
             // JS FILES HERE
             // HACK
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
+            
+	    Casset::js('bootstrap.js');
 	    
 	    // Main APP JS
             Casset::js('app.config.js');
@@ -110,7 +110,12 @@
 		?>
 
                 $('.colorpicker').colorpicker({
-                    flat: true,
+                    format : 'rgba'
+                }).on('changeColor', function(e)
+                {
+                    var rgb = e.color.toRGB();
+                    $(this).val('rgba('+rgb.r+','+rgb.g+','+rgb.b+','+rgb.a+')');
+                    $(this).trigger('change');
                 });
        
 		// Generate all selects as select2

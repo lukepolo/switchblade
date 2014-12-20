@@ -14,7 +14,7 @@ class Controller_Editor extends \Controller_Template
     public function action_url()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI']));
+        $url = urldecode(str_replace('__..__', '.', str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI'])));
 
         $cURL = curl_init($url);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
@@ -43,15 +43,19 @@ class Controller_Editor extends \Controller_Template
                
         $url_parsed = parse_url($url);
         
+        if(isset($url_parsed['path']) === false)
+        {
+            $url_parsed['path'] = null;
+        }
         $url_host = '//'.$url_parsed['host'];
         
+        $url_parsed['path'] = preg_replace('/[^\/]+\.\w+$/','', $url_parsed['path']);
         // force all relative paths to their own URL
-        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.'">';
-        $html = preg_replace('/(<head*>)(.*)(<\/head>)/si', "$1$2$body_url$3", $html); 
-        
+        $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'">';
+        $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
         
         // Fix relative links first
-        $html = preg_replace('/<(link|script)(?:.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*)/i', '$2=$3'.$url_parsed['scheme'].':'.$url_host.'/$4$3', $html);
+        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$4"', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
         $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
@@ -71,6 +75,13 @@ class Controller_Editor extends \Controller_Template
                 z-index: 2147483646 !important;
             }
             
+            .absplit_secondary_border {
+                outline: 3px solid red !important;
+                outline-offset: -3px !important;
+                cursor:pointer !important;
+                z-index: 2147483646 !important;
+            }
+            
             .ui-draggable{cursor:move ;}
             .ui-draggable-disabled {cursor:default;}
             .ui-resizable-handle {border: 1px solid; opacity: 0.3; width:7px; height:7px;background-color: #FFFFFF;}
@@ -78,7 +89,7 @@ class Controller_Editor extends \Controller_Template
             .ui-resizable-e, .ui-resizable-w {width:7px; height:7px;top:50%; }
             .ui-resizable-se{ background-image: none;bottom: -5px; right: -5px; z-index: 1002;}
 
-            .ui-resieable-overlay {
+            .ui-resizeable-overlay {
                 background-color: grey;
                 position: absolute;
                 top: 0;
@@ -104,6 +115,12 @@ class Controller_Editor extends \Controller_Template
                 $(element).addClass('absplit-border');
             }
             
+            function add_absplit_secondary_border(element)
+            {
+                $('.absplit_secondary_border').removeClass('absplit_secondary_border');
+                $(element).addClass('absplit_secondary_border');
+            }
+            
             $(document).on('mouseover','*', function(e)
             {
                 if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
@@ -125,6 +142,20 @@ class Controller_Editor extends \Controller_Template
                             add_absplit_border(element);
                         }
                     }
+                }
+            });
+            
+            $(document).on('mouseover','body.absplit_swap *, body.absplit_moveto *', function(e)
+            {
+                e.stopPropagation();
+                mouse_x = e.pageX;
+                mouse_y = e.pageY;
+
+                element = window.top.absplit_get_element(mouse_x, mouse_y);
+                
+                if(element)
+                {
+                    add_absplit_secondary_border(element);
                 }
             });
             
@@ -192,7 +223,7 @@ class Controller_Editor extends \Controller_Template
     public function action_get()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
-        $url = urldecode(str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']));
+        $url = str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']);
         
         try
         {
@@ -215,7 +246,7 @@ class Controller_Editor extends \Controller_Template
         $http_status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
         $contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
         curl_close($cURL);
-      
+        
         if($http_status == 200)
         {
             if($contentType == 'text/css')
@@ -231,7 +262,7 @@ $pattern = <<<'LOD'
         (["']) (?>[^"'\\]++ | \\{2} | \\. | (?!\g{-1})["'] )*+ \g{-1}
     )
     (?<comment> /\* .*? \*/ )
-    (?<url_skip> (?: https?: | data: ) [^"'\s)}]*+ )
+    (?<url_skip> (?: https?: | data: | \.\. ) [^"'\s)}]*+ )
     (?<other_content>
         (?> [^u}/"']++ | \g<quoted_content> | \g<comment>
           | \Bu | u(?!rl\s*+\() | /(?!\*) 
@@ -262,12 +293,16 @@ LOD;
                 $parsed_url = parse_url($url);
                 
                 // Fix other URLS that are absoulte 
-                $absplit_get_url =
-                
                 $file = preg_replace('/url.*\((?:\'|")(\/)(.*)(?:\'|")/i', 'url("'.\Uri::create('absplit/get/').$parsed_url['host'].'/$2"' , $file);
                 
                 // Also we need to replace all font-face with a custom URL 
+                // // Fix HTTP links that wont work for FONTS
                 $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].preg_replace('/(.*\/).*/i','$1', $parsed_url['path']).'$8' , $file);
+                
+                // Now we have to fix any imports 
+                // https://regex101.com/r/cR9nI3/1
+                $file = preg_replace('/@import\s+url\((\'|"|http(?!s))(.*?)[\'"|)]/i', 'import url('.\Uri::create('absplit/get/').'$1$2)', $file);
+                
             }
             header('Content-Type: '.$contentType);
             echo $file;

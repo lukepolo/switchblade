@@ -42,12 +42,12 @@
     
         <!--<script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.js"></script>-->
         <?php
-	    Casset::js('bootstrap.js');
-	    
             // JS FILES Here
             // HACK
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
+            
+	    Casset::js('bootstrap.js');
 	    
 	    // Main APP JS
             Casset::js('app.config.js');

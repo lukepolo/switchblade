@@ -24,3 +24,39 @@ jQuery.fn.selectText = function(){
         selection.addRange(range);
     }
  };
+ 
+function maxZIndex(win, dom) 
+{
+    if(!dom)
+    {
+        dom = document;
+    }
+    
+    if(!win)
+    {
+        win = window;
+    }
+    var maxZ = Math.max.apply(null, win.$.map($('*', dom), function(e,n){
+           if($(e, dom).css('position')=='absolute')
+                return parseInt($(e).css('z-index'))||1 ;
+           })
+    );
+    
+    if(maxZ < 0)
+    {
+        maxZ = 0;
+    }
+    return maxZ;
+}
+
+jQuery.expr.filters.offscreen = function(el) 
+{
+    return (
+        (
+            $(el).position().left < 0 || 
+            $(el).position().left + $(el).width() > $(window).width() ||
+            $(el).position().top < 0 ||
+            $(el).position().top + $(el).height() > $(window).height()
+        )
+    );
+};

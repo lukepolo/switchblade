@@ -1,10 +1,26 @@
 <?php
 //    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-$url = 'lukepolo.com';
+//    $url = 'http://ejjpeopleskills.com/about.php';
+    $url = 'http://lukepolo.com';
+//    $url = 'http://development.evanced.info/development/janice/wandooreader/';
+
+    $url_parsed = parse_url($url);
+
+    if(isset($url_parsed['path']) === false)
+    {
+        $url_parsed['path'] = null;
+    }
+    $url_host = '//'.$url_parsed['host'];
+    $base_url = $url_parsed['scheme'].':'.$url_host.$url_parsed['path'];
+
+
     echo Asset::css('loading.css'); 
     echo Asset::css('modules/absplit/main.css'); 
 ?>
+
 <script type="text/javascript">
+        // Add the base to our template!
+    var base_url = "<?php echo $base_url; ?>";
     // TODO - this will be set in PHP
     var variation_id = 1;
 </script>
@@ -52,7 +68,7 @@ $url = 'lukepolo.com';
                     <div class='tetromino box4'></div>
                 </span>
                 <div class="tab-pane active" id="site-viewer">
-                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').rawurlencode($url); ?>"></iframe>
+                    <iframe id="site-editor" class="iframe-edit" src="<?php echo Uri::Create('absplit/editor/url/').  str_replace('.', '__..__', urlencode($url)); ?>"></iframe>
                 </div>
             </div>
             <!-- end content -->
@@ -96,6 +112,8 @@ $url = 'lukepolo.com';
     echo \View::Forge('widgets/css_editor');
     echo \View::Forge('widgets/goal_creator');
     echo \View::Forge('widgets/resize_editor');
+    echo \View::Forge('widgets/swap_editor');
+    echo \View::Forge('widgets/moveto_editor');
     
     Casset::js('modules/absplit/*');
     
