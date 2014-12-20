@@ -123,6 +123,7 @@ $(document).on('click', '#resize_move', function()
     orginal_style = $(iframe_element).attr('style');
     
     $('#absplit-resize-editor').show();
+    absplit_widget_positions();
     
     $(iframe_element, iframe_doc).resizable({
         handles: "n, e, s, w, ne, se, sw, nw"
@@ -152,6 +153,11 @@ $(document).on('click', '#resize_move', function()
     $('#absplit-resize-editor').removeClass('screen_center');
     $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
     
+    if($('#absplit-resize-editor').is(':offscreen'))
+    {
+        $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
+    }
+            
     $('.ui-resizable', iframe_doc).append('<div class="ui-resizeable-overlay"></div>');
     close_menu();
 });
@@ -215,7 +221,7 @@ $(document).on('click', '#swap_element', function()
 });
 
 // THERE IS A ON CLICK FUNCTION REGISTERED FOR MOVE TO IN THE MENU.JS
-$(document).on('click', '#move_to', function()
+$(document).on('click', '#move_to', function(e)
 {
     $('#absplit-moveto-editor').show();
     close_menu();

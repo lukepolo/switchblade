@@ -131,9 +131,7 @@ function close_menu()
 // Resets all menu / widget positions next to element
 function absplit_widget_positions()
 {
-    // TODO
-    // detect if off page - dont allow
-    $('.widget-templates:not(#absplit-element-menu, #code_holder)').addClass('screen_center').draggable(
+    $('.widget-templates:not(#absplit-element-menu, #code_holder):visible').addClass('screen_center').draggable(
     {
         handle: '.drag', 
         cursor: "move",

@@ -160,23 +160,29 @@ function history_to_current(history_index, forward)
     if(forward)
     {
         var rev_history = $(pending_changes_history[variation_id])[history_index];
-        pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.apply_function;
-        pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.revert_function;
-        pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+        if(pending_changes[variation_id][rev_history.path][rev_history.type].apply_function)
+        {
+            pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.apply_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.revert_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+        }
     }
     else
     {
         var rev_history = $(pending_changes_history[variation_id])[history_index];
-        pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.revert_function;
-        pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.apply_function;
-        if(history_index == 0)
+        if(pending_changes[variation_id][rev_history.path][rev_history.type].apply_function)
         {
-            // dont show in the code editor
-            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = false;
-        }
-        else
-        {
-            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+            pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.revert_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.apply_function;
+            if(history_index == 0)
+            {
+                // dont show in the code editor
+                pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = false;
+            }
+            else
+            {
+                pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+            }
         }
     }
     apply_changes();
