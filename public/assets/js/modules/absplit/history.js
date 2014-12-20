@@ -51,7 +51,6 @@ function add_changes(path, type, apply_function, revert_function)
             code_editor: true
         };
 
-        // TODO - by variation_id
         if(!pending_changes_history[variation_id])
         {
             pending_changes_history[variation_id] = new Array();

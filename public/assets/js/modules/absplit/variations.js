@@ -49,7 +49,6 @@ $(document).on('click', '#variation_list .active .variation-type', function()
 });
 
 // Removes a variation
-// TODO - decide what todo with the variation
 $(document).on('click', '#variation_list .fa.fa-close', function()
 {
     $(this).closest('li').remove();

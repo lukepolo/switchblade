@@ -92,16 +92,14 @@ function get_class_list(wrap, seperator)
 // Get an element respect to the iframe based on current x / y coords
 function absplit_get_element(mouse_x, mouse_y)
 {
+    // We must make sure that the element is realtive to the iframe / fix left and top
     if($(iframe_doc).scrollTop() > 0)
     {
-        // TOP relative
         mouse_y = mouse_y - $(iframe_doc).scrollTop();
     }
-    else if($(iframe_doc).scrollLeft() > 0 )
+    if($(iframe_doc).scrollLeft() > 0 )
     {
-        // TODO
-        // MAKE SURE IT WORKS
-        mouse_x = mouse_x - $(iframe_doc).scrollTop();
+        mouse_x = mouse_x - $(iframe_doc).scrollLeft();
     }
 
     return iframe_doc.elementFromPoint(mouse_x, mouse_y);
@@ -140,7 +138,7 @@ $('#site-editor').load(function()
         var path = $(iframe_element).getPath();
         move_count++;
         
-        apply_revert = '$("' + path + '").appendTo("' + $('.absplit_secondary_border', iframe_doc).getPath() + '").attr("data-absplit-move", "'+move_count+'");';
+        apply_revert = '$("' + path + '").' + $('#absplit-moveto-editor input:checked').val() + '("' + $('.absplit_secondary_border', iframe_doc).getPath() + '").attr("data-absplit-move", "'+move_count+'");';
 
         if($(iframe_element).prev().length)
         {
@@ -166,6 +164,7 @@ $('#site-editor').load(function()
     
     $(iframe_doc).on('click', '.absplit_swap .absplit_secondary_border', function()
     {
+        
         var swap_item_path = $(iframe_element).getPath();
         var swap_with_path = $('.absplit_secondary_border', iframe_doc).getPath();
         
@@ -204,6 +203,5 @@ $(document).on('click', '.code_holder_open', function()
 // We need this for the parent right away
 $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
 
-// HACK - to remove all default hidden html tags
-// TODO 
+// Remove all all default hidden html tags withing summer note 
 $('#code_holder .note-editable').html('');

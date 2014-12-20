@@ -17,9 +17,17 @@
     <div role="content">
         <!-- widget content -->
         <div class="widget-body">
-            Click on the element you wish to move to
-            
-            // TODO - Need a select to append / prepend / after / before
+            <p>Click on the element you wish to move to</p>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input checked="checked" type="radio" name="move_type" value="appendTo">
+                    Append 
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="move_type" value="prependTo">
+                    Prepend 
+                </label>
+            </div>
         </div>
         <div class="widget-footer smart-form">
             <div class="btn-group">

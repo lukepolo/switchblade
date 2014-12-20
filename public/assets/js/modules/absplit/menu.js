@@ -1,13 +1,10 @@
 // MAIN SYSTEM MENU
-// TODO - FIX CLOSING MENUS TO USE ONE FUNCTION TO MAKE IT ALOT EASIER
 function absplit_menu(element)
 {
     // Store element globally
     iframe_element = element;
-    absplit_widget_menu_position();
-
-    // TODO
-    // HACK -- we dont want the default menu classes
+    
+    // We dont want the default menu classes
     $('#absplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
 
     // Gets the element tag to display a name for the user
@@ -46,22 +43,8 @@ function absplit_menu(element)
     
     // Show the main menu
     $('#absplit-element-menu').menu().show();
-
-    // TODO - check bottom - top
-    // wrote a function todo this , need to determine which way to adjust though , probalby write another function todo it for me
-    // Checks to see if the menu is outside of the view
-    var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
-    if(left_pos < 250)
-    {
-        $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
-    }
-
-    // Checks to see if the menu is outside of the view
-    var right_pos = $('#absplit-element-menu').position().left;
-    if(right_pos < 250)
-    {
-        $('#absplit-element-menu').css('left', 350);
-    }
+    
+    absplit_widget_menu_position();
 }
 
 // Builds child / parent tree for the type given
@@ -150,6 +133,22 @@ function absplit_widget_menu_position()
     // TODO
     // detect if off page - dont allow
     $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+        // TODO - check bottom - top
+    // wrote a function , need to determine which way to adjust though , probalby write another function
+    // Checks to see if the menu is outside of the view
+    var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
+    if(left_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
+    }
+
+    // Checks to see if the menu is outside of the view
+    var right_pos = $('#absplit-element-menu').position().left;
+    if(right_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', 350);
+    }
 }
 
 $('#absplit-close').on('click', function()
