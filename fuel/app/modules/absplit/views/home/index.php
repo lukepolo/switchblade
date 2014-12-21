@@ -1,63 +1,93 @@
-<section id="widget-grid" class="">
-    <!-- row -->
-    <div class="row">
-        <!-- Widget ID (each widget will need unique ID)-->
-        <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
-            <header>
-                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Hide / Show Columns </h2>
-            </header>
-            <!-- widget div-->
-            <div>
-                <!-- widget edit box -->
-                <div class="jarviswidget-editbox">
-                        <!-- This area used as dropdown edit box -->
-                </div>
-                <!-- end widget edit box -->
-                <!-- widget content -->
-                <div class="widget-body no-padding">
-                    <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%">
-                        <thead>
-                            <tr>
-                                <th>URL</th>
-                                <th data-hide="phone,tablet">Type</th>
-                                <th data-hide="phone,tablet">Confidence Level</th>
-                                <th data-hide="phone,tablet">Active</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>35728</td>
-                                <td>Fogo</td>
-                                <td>
-                                    <label class="input"> 
-                                        <label class="toggle">
-                                            <?php 
-                                                echo \Form::input('active', "false", array('type' => 'hidden'));
-                                                echo \Form::checkbox('active', 'false', 'false', array('toggle' => true));
-                                            ?>
-                                            Active
-                                        </label>
-                                    </label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- end widget content -->
+<div class="well">
+    <?php echo Form::open(array('action' => Uri::Create('absplit/new_experiment'), 'id' => 'new_expiriement')); 
+    ?>
+        <div class="input-group">
+            <input name="url" required class="form-control" type="text" placeholder="Experiment URL">
+            <div class="input-group-btn">
+                <button class="btn btn-default btn-primary" type="submit">
+                    <i class="fa fa-plus"></i> New Experiment
+                </button>
             </div>
-            <!-- end widget div -->
         </div>
-        <!-- end widget -->
+    <?php echo Form::close(); ?>
+</div>
+<!-- row -->
+<div class="row">
+    <!-- Widget ID (each widget will need unique ID)-->
+    <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Experiments </h2>
+        </header>
+        <!-- widget div-->
+        <div>
+            <!-- widget edit box -->
+            <div class="jarviswidget-editbox">
+                    <!-- This area used as dropdown edit box -->
+            </div>
+            <!-- end widget edit box -->
+            <!-- widget content -->
+            <div class="widget-body no-padding">
+                <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover smart-form" width="100%">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th data-hide="phone,tablet">Type</th>
+                            <th data-hide="phone,tablet">Confidence Level</th>
+                            <th data-hide="phone,tablet">Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a href="<?php echo Uri::Create('absplit/editor'); ?>">http://lukepolo.com</a>
+                            </td>
+                            <td>Multivariable Test</td>
+                            <td>N/A</td>
+                            <td>
+                                <label class="input"> 
+                                    <label class="toggle">
+                                        <?php 
+                                            echo \Form::input('active', "false", array('type' => 'hidden'));
+                                            echo \Form::checkbox('active', 'false', 'false', array('toggle' => true));
+                                        ?>
+                                    </label>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- end widget content -->
+        </div>
+        <!-- end widget div -->
     </div>
-</section>
+    <!-- end widget -->
+</div>
 <!-- end widget grid -->
 <script type="text/javascript">
     // PAGE RELATED SCRIPTS
     // pagefunction	
     $(document).ready(function()
     {
+        $("#new_expiriement").validate({
+            rules: {
+                url: {
+                    required: true,
+                    url: true
+                },
+            },
+            messages: {
+                url: "Please enter a valid URL",
+            },
+            submitHandler: function(form) {
+                form.submit();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
+            }
+        });
+        
         var responsiveHelper_datatable_col_reorder = undefined;
 
         var breakpointDefinition = 
