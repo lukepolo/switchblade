@@ -10,39 +10,39 @@
             foreach($settings as $setting)
             {
             ?>
-                        <?php
-                        switch($setting->type)
-                        {
-                            case 'varchar':
-                            ?>
-                                <section>
-                                <label class="input"> 
+                <?php
+                switch($setting->type)
+                {
+                    case 'varchar':
+                    ?>
+                        <section>
+                            <label class="input"> 
                             <?php
-                                echo \Form::label(ucwords(str_replace('_',' ', $setting->name)));
-                                echo \Form::input($setting->name, $setting->data);
-                            break;
-                            case 'boolean': 
-                            ?>
-                                <section class="col-2">
-                                <label class="input"> 
-                                <label class="toggle">
-                                    <?php 
-                                        echo \Form::input($setting->name, "false", array('type' => 'hidden'));
+                            echo \Form::label(ucwords(str_replace('_',' ', $setting->name)));
+                            echo \Form::input($setting->name, $setting->data);
+                    break;
+                    case 'boolean': 
+                    ?>
+                        <section class="col-2">
+                            <label class="input"> 
+                            <label class="toggle">
+                                <?php 
+                                    echo \Form::input($setting->name, "false", array('type' => 'hidden'));
 
-                                        if($setting->data == 'false')
-                                        {
-                                            $setting->data = false;
-                                        }
-                                        echo \Form::checkbox($setting->name, $setting->data, $setting->data, array('toggle' => true));
-                                        echo ucwords($setting->name);
-                                    ?>
-                                </label>
-                            <?php
-                            break;
-                        }
-                        ?>
-                    </label>
-                </section>
+                                    if($setting->data == 'false')
+                                    {
+                                        $setting->data = false;
+                                    }
+                                    echo \Form::checkbox($setting->name, $setting->data, $setting->data, array('toggle' => true));
+                                    echo ucwords($setting->name);
+                                ?>
+                            </label>
+                    <?php
+                    break;
+                }
+                ?>
+                        </label>
+                    </section>
                 <?php
             }
             ?>

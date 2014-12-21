@@ -33,10 +33,17 @@
             <!--[if IE 8]>
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
+            <?php
+                if($error = Session::get_flash('error'))
+                {
+                ?>
+                    <div class="alert alert-danger text-center">
+                        <?php echo $error; ?>
+                    </div>
+                <?php
+                }
+            ?>
             <div id="content" class="<?php echo $container; ?>">
-                <!--[if IE 8]>
-			<h1 class="alert alert-danger">Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
-		<![endif]-->
                 <?php echo $content; ?>
             </div>
         </div>

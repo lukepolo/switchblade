@@ -42,7 +42,7 @@
                             ?>
                                 <tr>
                                     <td>
-                                        <a href="<?php echo Uri::Create('absplit/editor'); ?>"><?php echo $experiment->url; ?></a>
+                                        <a href="<?php echo Uri::Create('absplit/editor/'.$experiment->id); ?>"><?php echo $experiment->url; ?></a>
                                     </td>
                                     <td><?php echo $experiment->absplit_experiment_type_id; ?></td>
                                     <td>N/A</td>

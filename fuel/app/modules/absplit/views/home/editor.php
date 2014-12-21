@@ -1,9 +1,5 @@
 <?php
-//    $url = "https://www.discountfilters.com/refrigerator-water-filters/lg-lt700p-3-pack/p176272/";
-//    $url = 'http://ejjpeopleskills.com/about.php';
-    $url = 'http://lukepolo.com';
-//    $url = 'http://development.evanced.info/development/janice/wandooreader/';
-
+    $url = $experiment->url;
     $url_parsed = parse_url($url);
 
     if(isset($url_parsed['path']) === false)

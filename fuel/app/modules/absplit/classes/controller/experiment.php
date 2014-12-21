@@ -16,10 +16,16 @@ class Controller_Experiment extends \Controller_Template
                 'absplit_experiment_data_id' => 1
             ));
             
-            $experiment->save();
-            
-            \Debug::dump($experiment);
-            die;
+            try
+            {
+                $experiment->save();
+                \Response::redirect(\Uri::Create('absplit/editor/'.$experiment->id));
+            }
+            catch(\Exception $e)
+            {
+                \Session::set_flash('error', 'The experiment failed to save, please contact customer support '.\Settings::get('helpdesk'));
+                \Response::redirect_back();
+            }
         }
     }
 }
