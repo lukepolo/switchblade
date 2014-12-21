@@ -69,3 +69,10 @@ div[role="content"]:not(.no-padding) .widget-footer {
 .btn-group .btn {
     padding : 6px 12px !important;
 }
+
+.truncate {
+    white-space: nowrap;
+    max-width: 69em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

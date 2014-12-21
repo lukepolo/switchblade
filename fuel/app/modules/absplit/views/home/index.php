@@ -31,7 +31,7 @@
                         <tr>
                             <th>URL</th>
                             <th data-hide="phone,tablet">Test Type</th>
-                            <th data-hide="phone,tablet">Confidence Level</th>
+                            <th data-hide="phone,tablet">Confidence</th>
                             <th data-hide="phone,tablet">Active</th>
                         </tr>
                     </thead>
@@ -41,7 +41,7 @@
                             {
                             ?>
                                 <tr>
-                                    <td>
+                                    <td class="truncate">
                                         <a href="<?php echo Uri::Create('absplit/editor/'.$experiment->id); ?>"><?php echo $experiment->url; ?></a>
                                     </td>
                                     <td><?php echo $experiment->absplit_experiment_type_id; ?></td>
@@ -58,7 +58,6 @@
                                                     }
                                                     echo \Form::checkbox('active', $experiment->active, $experiment->active, array('toggle' => true));
                                                 ?>
-                                                Active
                                             </label>
                                         </label>
                                     </td>
@@ -118,7 +117,7 @@
                 // Initialize the responsive datatables helper once.
                 if (!experiments) 
                 {
-                    experiments = new ResponsiveDatatablesHelper($('#datatable_col_reorder'), breakpointDefinition);
+                    experiments = new ResponsiveDatatablesHelper($('#experiments'), breakpointDefinition);
                 }
             },
             "rowCallback" : function(nRow) 
