@@ -33,6 +33,16 @@
             <!--[if IE 8]>
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
+            <?php
+                if($error = Session::get_flash('error'))
+                {
+                ?>
+                    <div class="alert alert-danger text-center">
+                        <?php echo $error; ?>
+                    </div>
+                <?php
+                }
+            ?>
             <div id="content" class="<?php echo $container; ?>">
                 <?php echo $content; ?>
             </div>
@@ -53,7 +63,7 @@
         <?php
 	    echo $node;
             // JS FILES HERE
-            // HACK
+            // HACK - FOR IFRAME - RESIZE
             // http://stackoverflow.com/questions/5670193/how-to-resize-elements-inside-iframe-with-jquery-resizable#answer-6219607
             Casset::js('jquery-ui-modifed.js');
             
@@ -71,10 +81,18 @@
             
             // CUSTOM NOTIFICATION
             Casset::js('notification/SmartNotification.js');
-            // JARVIS WIDGETS
-            Casset::js('smartwidgets/jarvis.widget.js');
+            
+            // DATA TABLES
+            Casset::js('plugin/datatables/jquery.dataTables.js');
+            Casset::js('plugin/datatables/dataTables.colVis.js');
+            Casset::js('plugin/datatables/dataTables.tableTools.js');
+            Casset::js('plugin/datatables/dataTables.bootstrap.js');
+            Casset::js('plugin/datatable-responsive/datatables.responsive.js');
+            Casset::js('plugin/datatables/jquery.dataTables.js');
+            
             // EASY PIE CHARTS
             Casset::js('plugin/easy-pie-chart/jquery.easy-pie-chart.js');
+            
             // SPARKLINES
             Casset::js('plugin/sparkline/jquery.sparkline.js');
             // JQUERY VALIDATE

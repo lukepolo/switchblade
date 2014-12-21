@@ -11,5 +11,6 @@ return array(
     // Modules default path
     'absplit' => 'absplit/home',
     'absplit/get/(:any)' => 'absplit/editor/get/$1',
+    'absplit/editor/(:num)' => 'absplit/editor/experiment/$1' 
     
 );

@@ -24,11 +24,6 @@
             </li>
             <li class="top-menu-hidden">
                 <a href="<?php echo Uri::Create('absplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
-                <ul>
-                    <li>
-                        <a href="<?php echo Uri::Create('absplit/editor'); ?>"><i class="fa fa-stack-overflow"></i>Editor</a>
-                    </li>
-                </ul>
             </li>
             <li class="top-menu-hidden">
                 <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-bar-chart txt-color-blue"></i> <span class="menu-item-parent">Analytics</span></a>

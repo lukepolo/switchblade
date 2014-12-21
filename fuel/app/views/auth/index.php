@@ -9,82 +9,79 @@
                         'id' => 'register-form'
                     ));
                 ?>    
-                    <header>
-                        Register
-                    </header>
-                    <fieldset>
-                        <section>
-                            <label class="input"> 
-                                <i class="icon-append fa fa-user"></i>
-                                <?php echo \Form::input('username');?>
-                                <b class="tooltip tooltip-bottom-right">Enter Username</b> 
-                            </label>
-                        </section>
-                        <section>
+                <header>
+                    Register
+                </header>
+                <fieldset>
+                    <section>
+                        <label class="input"> 
+                            <i class="icon-append fa fa-user"></i>
+                            <?php echo \Form::input('username');?>
+                            <b class="tooltip tooltip-bottom-right">Enter Username</b> 
+                        </label>
+                    </section>
+                    <section>
+                        <label class="input">
+                            <i class="icon-append fa fa-envelope"></i>
+                            <?php echo \Form::input('email');?>
+                            <b class="tooltip tooltip-bottom-right">Enter Email Address</b>
+                        </label>
+                    </section>
+                    <section>
+                        <label class="input"> 
+                            <i class="icon-append fa fa-lock"></i>
+                            <?php echo \Form::password('password');?>
+                            <b class="tooltip tooltip-bottom-right">Enter Your Password</b>
+                        </label>
+                    </section>
+                    <section>
+                        <label class="input">
+                            <i class="icon-append fa fa-lock"></i>
+                            <?php echo \Form::password('confirm_password');?>
+                            <b class="tooltip tooltip-bottom-right">Verify Your Password</b> 
+                        </label>
+                    </section>
+                </fieldset>
+                <fieldset>
+                    <div class="row">
+                        <section class="col col-6">
                             <label class="input">
-                                <i class="icon-append fa fa-envelope"></i>
-                                <?php echo \Form::input('email');?>
-                                <b class="tooltip tooltip-bottom-right">Enter Email Address</b>
+                                <?php echo \Form::input('first_name');?>
                             </label>
                         </section>
-                        <section>
-                            <label class="input"> 
-                                <i class="icon-append fa fa-lock"></i>
-                                <?php echo \Form::password('password');?>
-                                <b class="tooltip tooltip-bottom-right">Enter Your Password</b>
-                            </label>
-                        </section>
-                        <section>
+                        <section class="col col-6">
                             <label class="input">
-                                <i class="icon-append fa fa-lock"></i>
-                                <?php echo \Form::password('confirm_password');?>
-                                <b class="tooltip tooltip-bottom-right">Verify Your Password</b> 
+                                <?php echo \Form::input('last_name');?>
                             </label>
                         </section>
-                    </fieldset>
-                    <fieldset>
-                        <div class="row">
-                            <section class="col col-6">
-                                <label class="input">
-                                    <?php echo \Form::input('first_name');?>
+                    </div>
+                    <div class="row">
+                        <section class="col col-6">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    Male<?php echo \Form::radio('male', 'gender');?>
                                 </label>
-                            </section>
-                            <section class="col col-6">
-                                <label class="input">
-                                    <?php echo \Form::input('last_name');?>
+                                <label class="btn btn-default">
+                                    Female<?php echo \Form::radio('female', 'gender');?>
                                 </label>
-                            </section>
-                        </div>
-                        <div class="row">
-                            <section class="col col-6">
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-default">
-                                        <input type="radio" name="gender" value="male">
-                                        Male 
-                                    </label>
-                                    <label class="btn btn-default">
-                                        <input type="radio" name="gender" value="female">
-                                        Female
-                                    </label>
-                                    <label class="btn btn-default">
-                                        <input type="radio" name="gender" value="other">
-                                        Other
-                                    </label>
-                                </div>
-                            </section>
-                        </div>
-                        <section>
-                                <label class="checkbox">
-                                    <?php echo \Form::checkbox('terms'); ?>
-                                    I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
+                                <label class="btn btn-default">
+                                    Other<?php echo \Form::radio('other', 'gender');?>
                                 </label>
+                            </div>
                         </section>
-                    </fieldset>
-                    <footer>
-                        <button type="submit" class="btn btn-primary">
-                                Register
-                        </button>
-                    </footer>
+                    </div>
+                    <section>
+                            <label class="checkbox">
+                                <?php echo \Form::checkbox('terms'); ?>
+                                I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
+                            </label>
+                    </section>
+                </fieldset>
+                <footer>
+                    <button type="submit" class="btn btn-primary">
+                            Register
+                    </button>
+                </footer>
             <?php echo Form::close(); ?>
         </div>
     </div>

@@ -4,13 +4,29 @@ namespace ABSplit;
 
 class Controller_Editor extends \Controller_Template
 {
-    public function action_index()
+    public function action_experiment($experiment_id)
     {
+        // We want to use the full width
         $this->template->container = null;
-        $this->template->content = \View::forge('home/editor');
+        
+        $data = new \stdClass;
+        
+        $data->experiment = \Model_Absplit_Experiment::query()
+            ->where('id', $experiment_id)
+            ->where('user_id', \Auth::get('id'))
+            ->get_one();
+        
+        if(empty($data) === false)
+        {
+            $this->template->content = \View::forge('home/editor', $data);
+        }
+        else
+        {
+            \Response::redirect_back(Uri::Create('absplit'));
+        }
     }
 
-    // TOOD - put a reason for no param
+    // NO param because there is no way to pass a URL easily through FUELPHP
     public function action_url()
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
