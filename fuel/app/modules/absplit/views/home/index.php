@@ -1,5 +1,5 @@
 <div class="well">
-    <?php echo Form::open(array('action' => Uri::Create('absplit/new_experiment'), 'id' => 'new_expiriement')); 
+    <?php echo Form::open(array('action' => Uri::Create('absplit/experiment/new'), 'id' => 'new_expiriement')); 
     ?>
         <div class="input-group">
             <input name="url" required class="form-control" type="text" placeholder="Experiment URL">
@@ -11,9 +11,7 @@
         </div>
     <?php echo Form::close(); ?>
 </div>
-<!-- row -->
 <div class="row">
-    <!-- Widget ID (each widget will need unique ID)-->
     <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
         <header>
             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
@@ -28,33 +26,46 @@
             <!-- end widget edit box -->
             <!-- widget content -->
             <div class="widget-body no-padding">
-                <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover smart-form" width="100%">
+                <table id="experiments" class="table table-striped table-bordered table-hover smart-form" width="100%">
                     <thead>
                         <tr>
                             <th>URL</th>
-                            <th data-hide="phone,tablet">Type</th>
+                            <th data-hide="phone,tablet">Test Type</th>
                             <th data-hide="phone,tablet">Confidence Level</th>
                             <th data-hide="phone,tablet">Active</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <a href="<?php echo Uri::Create('absplit/editor'); ?>">http://lukepolo.com</a>
-                            </td>
-                            <td>Multivariable Test</td>
-                            <td>N/A</td>
-                            <td>
-                                <label class="input"> 
-                                    <label class="toggle">
-                                        <?php 
-                                            echo \Form::input('active', "false", array('type' => 'hidden'));
-                                            echo \Form::checkbox('active', 'false', 'false', array('toggle' => true));
-                                        ?>
-                                    </label>
-                                </label>
-                            </td>
-                        </tr>
+                        <?php
+                            foreach($experiments as $experiment)
+                            {
+                            ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo Uri::Create('absplit/editor'); ?>"><?php echo $experiment->url; ?></a>
+                                    </td>
+                                    <td><?php echo $experiment->absplit_experiment_type_id; ?></td>
+                                    <td>N/A</td>
+                                    <td>
+                                        <label class="input"> 
+                                            <label class="toggle">
+                                               <?php 
+                                                    echo \Form::input('active', "false", array('type' => 'hidden'));
+
+                                                    if($experiment->active == false)
+                                                    {
+                                                        $experiment->active = false;
+                                                    }
+                                                    echo \Form::checkbox('active', $experiment->active, $experiment->active, array('toggle' => true));
+                                                ?>
+                                                Active
+                                            </label>
+                                        </label>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
                     </tbody>
                 </table>
             </div>
@@ -64,7 +75,6 @@
     </div>
     <!-- end widget -->
 </div>
-<!-- end widget grid -->
 <script type="text/javascript">
     // PAGE RELATED SCRIPTS
     // pagefunction	
@@ -88,7 +98,7 @@
             }
         });
         
-        var responsiveHelper_datatable_col_reorder = undefined;
+        var experiments = undefined;
 
         var breakpointDefinition = 
         {
@@ -97,7 +107,7 @@
         };
 
         /* COLUMN SHOW - HIDE */
-        $('#datatable_col_reorder').dataTable(
+        $('#experiments').dataTable(
         {
             "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'C>r>"+
                 "t"+
@@ -106,20 +116,20 @@
             "preDrawCallback" : function() 
             {
                 // Initialize the responsive datatables helper once.
-                if (!responsiveHelper_datatable_col_reorder) 
+                if (!experiments) 
                 {
-                    responsiveHelper_datatable_col_reorder = new ResponsiveDatatablesHelper($('#datatable_col_reorder'), breakpointDefinition);
+                    experiments = new ResponsiveDatatablesHelper($('#datatable_col_reorder'), breakpointDefinition);
                 }
             },
             "rowCallback" : function(nRow) 
             {
                 // Creates an exapnd icon so they can use on the mobile
-                responsiveHelper_datatable_col_reorder.createExpandIcon(nRow);
+                experiments.createExpandIcon(nRow);
             },
             "drawCallback" : function(oSettings) 
             {
                 // makes the datatable responsive
-                responsiveHelper_datatable_col_reorder.respond();
+                experiments.respond();
             }			
         });
     });

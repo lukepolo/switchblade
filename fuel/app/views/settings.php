@@ -35,7 +35,7 @@
                                         }
                                         echo \Form::checkbox($setting->name, $setting->data, $setting->data, array('toggle' => true));
                                         echo ucwords($setting->name);
-                                    ;?>
+                                    ?>
                                 </label>
                             <?php
                             break;
