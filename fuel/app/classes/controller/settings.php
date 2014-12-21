@@ -11,7 +11,7 @@ class Controller_Settings extends Controller_Template
                 $setting = Model_Setting::query()
                     ->where('name', $name)
                     ->get_one();
-                
+
                 if(empty($setting) === false)
                 {
                     $setting->data = $data;

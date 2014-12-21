@@ -19,8 +19,8 @@ class Form extends Fuel\Core\Form
     
     public static function open($attributes = array(), array $hidden = array())
     {
-        $hidden['csrf'] = \Form::csrf(); // Differs from orginal
-        return static::$instance->open($attributes, $hidden);
+        // Also append the CSRF
+        return static::$instance->open($attributes, $hidden).\Form::csrf();
     }
     
     public static function input($field, $value = null, array $attributes = array())
