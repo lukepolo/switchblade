@@ -55,7 +55,7 @@ class Settings
         return static::$settings;
     }
     
-    static function pagination($total_count,$per_page = 25)
+    static function pagination($total_count, $per_page = 25)
     {
         $config = array(
             'total_items'    => $total_count,

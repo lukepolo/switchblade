@@ -36,35 +36,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            foreach($experiments as $experiment)
-                            {
-                            ?>
-                                <tr>
-                                    <td class="truncate">
-                                        <a href="<?php echo Uri::Create('absplit/editor/'.$experiment->id); ?>"><?php echo $experiment->url; ?></a>
-                                    </td>
-                                    <td><?php echo $experiment->absplit_experiment_type_id; ?></td>
-                                    <td>N/A</td>
-                                    <td>
-                                        <label class="input"> 
-                                            <label class="toggle">
-                                               <?php 
-                                                    echo \Form::input('active', "false", array('type' => 'hidden'));
-
-                                                    if($experiment->active == false)
-                                                    {
-                                                        $experiment->active = false;
-                                                    }
-                                                    echo \Form::checkbox('active', $experiment->active, $experiment->active, array('toggle' => true));
-                                                ?>
-                                            </label>
-                                        </label>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
+                        <tr>
+                            
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -108,11 +82,21 @@
         /* COLUMN SHOW - HIDE */
         $('#experiments').dataTable(
         {
-            "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'C>r>"+
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url : '<?php echo Uri::Create('absplit/experiment/search'); ?>',
+                dataSrc: function(json)
+                {
+                    return $.map(json.data, function(el) { return el; });
+                }
+            },
+            sDom: "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'C>r>"+
                 "t"+
                 "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-sm-6 col-xs-12'p>>",
-            "autoWidth" : true,
-            "preDrawCallback" : function() 
+            autoWidth : true,
+            iDisplayLength: 10,
+            preDrawCallback : function()
             {
                 // Initialize the responsive datatables helper once.
                 if (!experiments) 
@@ -120,16 +104,37 @@
                     experiments = new ResponsiveDatatablesHelper($('#experiments'), breakpointDefinition);
                 }
             },
-            "rowCallback" : function(nRow) 
+            rowCallback : function(nRow) 
             {
                 // Creates an exapnd icon so they can use on the mobile
                 experiments.createExpandIcon(nRow);
             },
-            "drawCallback" : function(oSettings) 
+            drawCallback : function(oSettings) 
             {
                 // makes the datatable responsive
                 experiments.respond();
-            }			
+            },
+            columns: 
+            [
+                {
+                    data : "url",
+                    class: "truncate"
+                },
+                {
+                    data : "absplit_experiment_type_id"
+                },
+                {
+                    data : "confidence"
+                },
+                {
+                    data : "active"
+                }
+            ],
+            order: 
+            [
+                // active column
+                [3, 'desc']
+            ]
         });
     });
 </script>
