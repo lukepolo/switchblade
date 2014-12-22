@@ -32,7 +32,7 @@
                             <th>URL</th>
                             <th data-hide="phone,tablet">Test Type</th>
                             <th data-hide="phone,tablet">Confidence</th>
-                            <th data-hide="phone,tablet">Active</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,7 +71,7 @@
             }
         });
         
-        var experiments = undefined;
+        var experiments;
 
         var breakpointDefinition = 
         {
@@ -106,6 +106,7 @@
             },
             rowCallback : function(nRow) 
             {
+                console.log('create one');
                 // Creates an exapnd icon so they can use on the mobile
                 experiments.createExpandIcon(nRow);
             },
