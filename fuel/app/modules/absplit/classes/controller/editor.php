@@ -71,10 +71,10 @@ class Controller_Editor extends \Controller_Template
         $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
         
         // Fix relative links first
-        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$4"', $html);
+        $html = preg_replace('/<.*(link|script)(.*)(href|src)=("\')(?!http|www)(?!\/\/)(.*?)("\')/i', '<$1$2$3=$4"'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$5$6', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$5$6', $html);
         
         // Fixing CSS fonts , its only purpose is for that
         $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
