@@ -71,13 +71,16 @@ class Controller_Editor extends \Controller_Template
         $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
         
         // Fix relative links first
-        $html = preg_replace('/<.*(link|script)(.*)(href|src)=["\'](?!http|www)(?!\/\/)(.*?)["\']/i', '<$1$2$3="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$4"', $html);
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*?)(\'|")/i', '<$1$2$3=$4'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$5$6', $html);
         
         // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$5"', $html);
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!https)(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$5$6', $html);
+        
+        // Lastly Fix any // that should render as HTTPS
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(\/\/)(.*?)(\'|")/i' , '<$1$2$3=$4https://$6$7', $html);
         
         // Fixing CSS fonts , its only purpose is for that
-        $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3="'.\Uri::Create('absplit/get').'/$6"', $html);
+        $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$6$7', $html);
         
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
@@ -119,39 +122,43 @@ class Controller_Editor extends \Controller_Template
         // TODO - ADD JQUERY BUT NO COCONFLICT VERSION!
         // ADD JS FILE
 
-        $html = $html."
+        $html = $html.'
+            
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>var $SWB = jQuery.noConflict(true);</script>
+
         <script>
         
             var selected_element;
-            $('body').attr('oncontextmenu', 'return false');
+            $SWB("body").attr("oncontextmenu", "return false");
             
             function add_absplit_border(element)
             {
-                $('.absplit-border').removeClass('absplit-border');
-                $(element).addClass('absplit-border');
+                $SWB(".absplit-border").removeClass("absplit-border");
+                $SWB(element).addClass("absplit-border");
             }
             
             function add_absplit_secondary_border(element)
             {
-                $('.absplit_secondary_border').removeClass('absplit_secondary_border');
-                $(element).addClass('absplit_secondary_border');
+                $SWB(".absplit_secondary_border").removeClass("absplit_secondary_border");
+                $SWB(element).addClass("absplit_secondary_border");
             }
             
-            $(document).on('mouseover','*', function(e)
+            $SWB(document).on("mouseover","*", function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
+                if(!$SWB("#original", window.parent.document).hasClass("active") && $SWB(".ui-resizable").length == 0)
                 {
-                    $(this).addClass('absplit-hover');
+                    $SWB(this).addClass("absplit-hover");
 
                     // Alot of times its the actual parent that needs the hovering
-                    $(this).parent().addClass('absplit-hover');
-                    if(!$('#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize', window.parent.document).is(':visible'))
+                    $SWB(this).parent().addClass("absplit-hover");
+                    if(!$SWB("#absplit-element-menu, body .ui-draggable-dragging, .drag, body.resize", window.parent.document).is(":visible"))
                     {
                         e.stopPropagation();
                         mouse_x = e.pageX;
                         mouse_y = e.pageY;
 
-                        element = window.top.absplit_get_element(mouse_x, mouse_y)
+                        element = window.top.absplit_get_element(mouse_x, mouse_y);
 
                         if(element)
                         {
@@ -161,7 +168,7 @@ class Controller_Editor extends \Controller_Template
                 }
             });
             
-            $(document).on('mouseover','body.absplit_swap *, body.absplit_moveto *', function(e)
+            $SWB(document).on("mouseover","body.absplit_swap *, body.absplit_moveto *", function(e)
             {
                 e.stopPropagation();
                 mouse_x = e.pageX;
@@ -176,40 +183,40 @@ class Controller_Editor extends \Controller_Template
             });
             
             // Prevent all links from loading
-            $(document).on('click', '*', function(e)
+            $SWB(document).on("click", "*", function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
+                if(!$SWB("#original", window.parent.document).hasClass("active") && $SWB(".ui-resizable").length == 0)
                 {
-                    if($('#absplit-element-menu', window.parent.document).is(':visible'))
+                    if($SWB("#absplit-element-menu", window.parent.document).is(":visible"))
                     {
                         // Clear out the elements
                         selected_element = null;
                         window.parent.iframe_element = null;
-                        $('#absplit-element-menu', window.parent.document).hide();
+                        $SWB("#absplit-element-menu", window.parent.document).hide();
                     }
                 }
                 e.preventDefault();
                 e.stopPropagation();
             });
             
-            $(document).on('mouseleave', '*', function(e)
+            $SWB(document).on("mouseleave", "*", function(e)
             {
-                if($(this).hasClass('absplit-locked') === false)
+                if($SWB(this).hasClass("absplit-locked") === false)
                 {
-                    $(this).removeClass('absplit-hover');
+                    $SWB(this).removeClass("absplit-hover");
                 }
             });
             
             // Bind new context menu
-            $(document).on('mousedown', '*', function(e)
+            $SWB(document).on("mousedown", "*", function(e)
             {
-                if(!$('#original', window.parent.document).hasClass('active') && $('.ui-resizable').length == 0)
+                if(!$SWB("#original", window.parent.document).hasClass("active") && $SWB(".ui-resizable").length == 0)
                 {
                     if(e.which == 3)
                     {
                         selected_element = this;
-                        $('.absplit-border').removeClass('absplit-border'); // this really needed?
-                        $(selected_element).addClass('absplit-border');
+                        $SWB(".absplit-border").removeClass("absplit-border"); // this really needed?
+                        $SWB(selected_element).addClass("absplit-border");
                         e.preventDefault();
                         e.stopPropagation();
                         window.top.absplit_menu(this);
@@ -219,7 +226,7 @@ class Controller_Editor extends \Controller_Template
                 }
             });
             
-            $(window).on('resize scroll', function()
+            $SWB(window).on("resize scroll", function()
             {
                 if(selected_element)
                 {
@@ -227,7 +234,7 @@ class Controller_Editor extends \Controller_Template
                 }
             });
         
-        </script>";
+        </script>';
 
         curl_close($cURL);
 

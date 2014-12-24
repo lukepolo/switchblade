@@ -69,3 +69,18 @@ div[role="content"]:not(.no-padding) .widget-footer {
 .btn-group .btn {
     padding : 6px 12px !important;
 }
+
+
+ /*DataTable Fixes*/
+.truncate {
+    white-space: nowrap;
+    max-width: 50em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dataTables_wrapper .toggle i {
+    margin-top: -5px;
+    margin-right: 15px;
+}
+

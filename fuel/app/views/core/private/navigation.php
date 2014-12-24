@@ -20,7 +20,7 @@
         -->
         <ul>
             <li class="active">
-                <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
             </li>
             <li class="top-menu-hidden">
                 <a href="<?php echo Uri::Create('absplit'); ?>"><i class="fa fa-lg fa-fw fa-code txt-color-blue"></i> <span class="menu-item-parent">A/B Tester</span></a>
