@@ -31,10 +31,10 @@ class Controller_Editor extends \Controller_Template
     {
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
         $url = urldecode(str_replace('__..__', '.', str_replace('/absplit/editor/url/','', $_SERVER['REQUEST_URI'])));
-
+        
         $cURL = curl_init($url);
-        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt ($cURL, CURLOPT_CONNECTTIMEOUT, 10);
 
         // Get the HTML
@@ -65,33 +65,57 @@ class Controller_Editor extends \Controller_Template
         }
         $url_host = '//'.$url_parsed['host'];
         
+        // TODO - IF THE URL IS HTTP MAKE SURE TO USE HTTPS THROUGH SWITCHBLADE
         $url_parsed['path'] = preg_replace('/[^\/]+\.\w+$/','', $url_parsed['path']);
         // force all relative paths to their own URL
         $body_url = '<base href="'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'">';
+        
+        $body_url = $body_url."
+        <script>
+            var open = XMLHttpRequest.prototype.open;
+
+            XMLHttpRequest.prototype.open = function() 
+            {
+                var pattern = /^((http|https|ftp):\/\/)/;
+
+                if(pattern.test(arguments[1]) == false)
+                {
+                    arguments[1] = '".\Uri::Create('absplit/get')."/".$url_parsed['scheme'].':'.$url_host.$url_parsed['path']."' + arguments[1];
+                }
+                open.apply(this, arguments);
+                console.log(' NOW TO SEND');
+            }
+        </script>";
+        
         $html = preg_replace('/<head>(.*)<\/head>/s', "<head>$1\n$body_url\n</head>", $html); 
+    
+        // TODO - On replacing CSS URLS - need to fix issue if they are missing a forward slash non http 
         
         // Fix relative links first
+        // TODO - Do not include the first / other wise we are going ot end up with // before real URL
         $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!http|www)(?!\/\/)(.*?)(\'|")/i', '<$1$2$3=$4'.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'/$5$6', $html);
-        
-        // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!https)(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$5$6', $html);
         
         // Lastly Fix any // that should render as HTTPS
         $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(\/\/)(.*?)(\'|")/i' , '<$1$2$3=$4https://$6$7', $html);
+    
+        // Fix relative css links
+        // https://regex101.com/r/zO2aG9/1
+        $html = preg_replace('/url\((?!\/\/)(\/|\'\/|"\/)(.*?)(\'|"|\))/i', 'url('.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'$1$2$3', $html);
+        
+        // Next we know if their site is http we have to strip their .css files and .js files and replace with our URL
+        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$5$6', $html);
         
         // Fixing CSS fonts , its only purpose is for that
         $html = preg_replace('/<(link)(.*)(href|src)=(\'|")(\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.\Uri::Create('absplit/get').'/$6$7', $html);
-        
+
         // http://zerosixthree.se/dynamically-change-text-color-with-sass/
         // need to install SASS
-        
         $html = $html."
         <style>
             .absplit-border {
                 outline: 3px solid #00CCCC !important;
                 outline-offset: -3px !important;
                 cursor:pointer !important;
-                z-index: 2147483646 !important;
             }
             
             .absplit_secondary_border {
@@ -233,7 +257,6 @@ class Controller_Editor extends \Controller_Template
                     window.top.absplit_widget_menu_position(element);
                 }
             });
-        
         </script>';
 
         curl_close($cURL);
@@ -245,28 +268,25 @@ class Controller_Editor extends \Controller_Template
     
     public function action_get()
     {
+        header('Access-Control-Allow-Origin: *');
         // We grab the URL from the server as FUELPHP parses the forward slasses out of the URL
         $url = str_replace('/absplit/get/','', $_SERVER['REQUEST_URI']);
         
-        try
-        {
-            $extension = pathinfo($url)['extension'];
-        }
-        catch(\Exception $e)
-        {
-            $extension = '';
-            // continue;
-        }
-        
         $cURL = curl_init($url);
         
-        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt ($cURL, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($cURL, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($cURL, CURLOPT_HEADER, 0);
+        curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($cURL, CURLOPT_TIMEOUT, 3);
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST,false);
         
         $file = curl_exec($cURL);
         
+        
         $http_status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+        
         $contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
         curl_close($cURL);
         
@@ -315,16 +335,13 @@ LOD;
                 
                 $parsed_url = parse_url($url);
                 
-                // Fix other URLS that are absoulte 
-                $file = preg_replace('/url.*\((?:\'|")(\/)(.*)(?:\'|")/i', 'url("'.\Uri::create('absplit/get/').$parsed_url['host'].'/$2"' , $file);
-                
                 // Also we need to replace all font-face with a custom URL 
                 // // Fix HTTP links that wont work for FONTS
                 $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].preg_replace('/(.*\/).*/i','$1', $parsed_url['path']).'$8' , $file);
                 
                 // Now we have to fix any imports 
                 // https://regex101.com/r/cR9nI3/1
-                $file = preg_replace('/@import\s+url\((\'|"|http(?!s))(.*?)[\'"|)]/i', 'import url('.\Uri::create('absplit/get/').'$1$2)', $file);
+                $file = preg_replace('/@import\s+url\((\'|"|h)(.*?)[\'"|)]/i', 'import url('.\Uri::create('absplit/get/').'$1$2)', $file);
                 
             }
             header('Content-Type: '.$contentType);
