@@ -335,14 +335,20 @@ LOD;
                 
                 $parsed_url = parse_url($url);
                 
-                // Also we need to replace all font-face with a custom URL 
-                // // Fix HTTP links that wont work for FONTS
-                $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].preg_replace('/(.*\/).*/i','$1', $parsed_url['path']).'$8' , $file);
+                // Remove the quotes from the URL's as they are optional , which allows correcting much easier
+                // https://www.regex101.com/r/iU3kZ0/2
+                $file = preg_replace('/url\((\'|")(.*?)(\'|")/', 'url($2', $file);
+                                
+                // Fix things that have no begining slash by adding the path!
+                // https://www.regex101.com/r/eS7gP8/5
+                $real_path = preg_replace('/(.*\/).*/i','$1', $parsed_url['path']);
                 
-                // Now we have to fix any imports 
-                // https://regex101.com/r/cR9nI3/1
-                $file = preg_replace('/@import\s+url\((\'|"|h)(.*?)[\'"|)]/i', 'import url('.\Uri::create('absplit/get/').'$1$2)', $file);
+                // Fix urls with relative paths
+                // https://www.regex101.com/r/eS7gP8/7
+                $file = preg_replace('/url\((?!\/|h)(.*?)(\))/i',  'url('.\Uri::create('absplit/get/').$parsed_url['host'].$real_path.'$1)' , $file);
                 
+                // Fix HTTP links that wont work for FONTS
+                $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].'/$8' , $file);
             }
             header('Content-Type: '.$contentType);
             echo $file;
