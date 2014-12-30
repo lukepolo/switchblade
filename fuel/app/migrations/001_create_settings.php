@@ -8,8 +8,8 @@ class Create_settings
 	{
 		\DBUtil::create_table('settings', array(
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
-			'name' => array('constraint' => 255, 'type' => 'varchar', 'null' => true),
-			'data' => array('constraint' => 255, 'type' => 'varchar', 'null' => true),
+			'name' => array('constraint' => 255, 'type' => 'varchar'),
+			'data' => array('constraint' => 255, 'type' => 'varchar'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 

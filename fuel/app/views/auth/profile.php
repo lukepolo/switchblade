@@ -76,6 +76,16 @@
                 </footer>
             <?php echo Form::close(); ?>
         </div>
+        <pre class="prettyprint">
+<code class="language-js">
+&lt;script type="text/javascript">
+    (function(g,d,e,f,a,b,c){window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=d.createElement(e);c=d.getElementsByTagName(e)[0];b.async=1;b.src=f;c.parentNode.insertBefore(b,c)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
+
+    swb('swb-auth','api-key-here');
+    swb('get-mods');    
+&lt;/script>
+</code>
+        </pre>
     </div>
 </div>
 <script>

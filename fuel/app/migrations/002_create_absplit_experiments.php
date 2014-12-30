@@ -11,9 +11,8 @@ class Create_absplit_experiments
 			'user_id' => array('constraint' => 11, 'type' => 'int'),
 			'url' => array('constraint' => 255, 'type' => 'varchar'),
                         'absplit_experiment_type_id' => array('constraint' => 11, 'type' => 'int'),
-                        'absplit_experiment_settings_id' => array('constraint' => 11, 'type' => 'int'),
                         'active' => array('constraint' => 1, 'type' => 'tinyint'),
-                        'absplit_experiment_data_id' => array('constraint' => 11, 'type' => 'int'),
+                        'absplit_experiment_data_id' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
