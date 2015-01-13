@@ -192,7 +192,7 @@ return array(
 		// Restrict the path that the cookie is available to
 		 'path'        => '/',
 		// Restrict the domain that the cookie is available to
-		 'domain'      => '',
+		 'domain'      => 'switchblade.io',
 		// Only transmit cookies over secure connections
 		 'secure'      => true,
 		// Only transmit cookies over HTTP, disabling Javascript access

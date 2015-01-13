@@ -39,7 +39,7 @@ return array(
 	'match_ua'			=> true,
 
 	// cookie domain  (optional, default = '')
-	'cookie_domain' 	=> '',
+	'cookie_domain' 	=> 'switchblade.io',
 
 	// cookie path  (optional, default = '/')
 	'cookie_path'		=> '/',
