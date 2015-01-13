@@ -267,6 +267,22 @@ function save()
             });
         });
     });
+    
+    // Save it to the database
+    $.ajax({
+        url: '/absplit/experiment/save',
+        type: 'post',
+        data: {
+            experiment_id: experiment_id,
+            changes :pending_changes,
+            history: pending_changes_history
+        }
+    }).error(function(data)
+    {
+        $('#content .alert').remove();
+        $('#content').prepend('<div class="alert alert-danger"></div>').find('.alert').html(data.responseText)
+    });
+    
     destroy_move_drag();
     apply_changes();
 }

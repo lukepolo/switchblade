@@ -17,7 +17,7 @@
                 </ul>
             </div>
         </div>
-        <div style="margin:10px;display: none;" id="update_profile_fields">
+        <div class="row" style="margin:10px;display: none;" id="update_profile_fields">
             <?php
                 echo \Form::open(array(
                     'method' => 'POST',
@@ -76,6 +76,15 @@
                 </footer>
             <?php echo Form::close(); ?>
         </div>
+        <pre class="prettyprint">
+<code class="language-js">
+&lt;script type="text/javascript">
+    (function(g,c,e,f,a,b,d){c.getElementsByTagName("html")[0].style.visibility="hidden";window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
+    swb('auth','<?php echo Auth::get('apikey'); ?>');
+    swb('get_mods');    
+&lt;/script>
+</code>
+        </pre>
     </div>
 </div>
 <script>

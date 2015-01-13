@@ -73,6 +73,9 @@
             Casset::js('app.config.js');
             Casset::js('app.js');
 	    
+            // google-code-prettify
+            Casset::js('google-code-prettify/run_prettify.js');
+            
 	    // SELECT2
             Casset::js('select2.min.js');
 	    

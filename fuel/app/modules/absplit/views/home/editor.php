@@ -19,6 +19,8 @@
     var base_url = "<?php echo $base_url; ?>";
     // TODO - this will be set in PHP
     var variation_id = 1;
+    
+    var experiment_id = <?php echo $experiment->id; ?>;
 </script>
 <div class="jarviswidget jarviswidget-sortable" id="absplit-editor" role="widget" style="">
     <header role="heading">
@@ -117,7 +119,7 @@
 <script type="text/javascript">
     $(document).ready(function()
     {
-         $('.summernote-no-tools').summernote({
+        $('.summernote-no-tools').summernote({
             toolbar: [
             ],
             height: 400,
