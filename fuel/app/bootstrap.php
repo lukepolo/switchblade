@@ -6,6 +6,7 @@ require COREPATH.'bootstrap.php';
 Autoloader::add_classes(array(
     'Controller_Template' => APPPATH.'classes/controller/template.php',
     'Form' => APPPATH.'classes/core/form.php',
+    'Controller_Rest' => APPPATH.'classes/core/controller/rest.php',
 ));
 
 // Register the autoloader

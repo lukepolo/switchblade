@@ -19,7 +19,6 @@
  * This will allow you to upgrade fuel without losing your custom config.
  */
 
-
 return array(
 
 	/*
@@ -44,7 +43,7 @@ return array(
 	|	E.g: My Secret REST API
 	|
 	*/
-	'realm' => 'REST API',
+	'realm' => 'SwitchBlade REST API',
 
 	/*
 	| Is login required and if so, which type of login?
@@ -55,7 +54,7 @@ return array(
 	| or define a method name in your REST controller that handles authorization
 	|
 	*/
-	'auth' => '',
+	'auth' => '_api_auth',
 
 	/*
 	| array of usernames and passwords for login
@@ -72,7 +71,7 @@ return array(
 	| disabling this will speed up your requests if you do not use a ACCEPT header.
 	|
 	*/
-	'ignore_http_accept' => false,
+	'ignore_http_accept' => true,
 
 );
 

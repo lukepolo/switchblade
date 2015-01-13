@@ -213,6 +213,13 @@ class Controller_Auth extends Controller_Template
                         if(empty($user_id) == false)
                         {
                             Auth::force_login($user_id);
+                            
+                            Auth::update_user(
+                                array(
+                                    'apikey' => Crypt::encode(Auth::get('id'))
+                                )
+                            );
+                            
                             Response::Redirect(Uri::Base());
                         }
                         else

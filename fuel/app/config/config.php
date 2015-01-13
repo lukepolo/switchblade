@@ -226,7 +226,7 @@ return array(
 		/**
 		 *  Wether to strip the extension
 		 */
-		 'strip_extension' => false,
+		 'strip_extension' => true,
 	 ),
 
 	/**
@@ -275,7 +275,6 @@ return array(
                     'orm',
                     'fuel-casset',
                     'auth',
-//                    'generator',
                     'email',
 		 ),
 
@@ -287,7 +286,9 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		 'modules'  => array(),
+		 'modules'  => array(
+                     'AbSplit'
+                 ),
 
 		/**
 		 * Classes to autoload & initialize even when not used

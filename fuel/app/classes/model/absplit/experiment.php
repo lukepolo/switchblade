@@ -6,6 +6,7 @@ class Model_Absplit_Experiment extends \Orm\Model
 		'id',
 		'user_id',
 		'url',
+                'url_pattern',
 		'absplit_experiment_type_id',
                 'active',
                 'absplit_experiment_data_id',

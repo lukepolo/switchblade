@@ -20,6 +20,14 @@
                 // They must be logged in to see a private page
                 if(\Auth::Check())
                 {
+                    if(empty(Auth::get('apikey')) === true)
+                    {
+                        Auth::update_user(
+                            array(
+                                'apikey' => Crypt::encode(Auth::get('id'))
+                            )
+                        );
+                    }
                     $this->template->set = true;
                     $this->template->header = View::forge('core/private/header');
                     $this->template->navigation = View::forge('core/private/navigation');
