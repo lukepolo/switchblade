@@ -8,7 +8,7 @@ class Controller_Api extends \Controller_Hybrid
         // URL MATCH
         $experiment = \Model_Absplit_Experiment::query()
             ->related('absplit_experiment_datum')
-            ->where('user_id', \Auth::get('id'))
+            ->where('user_id', \Controller_Rest::$user_id)
             ->where('url', trim($_SERVER['HTTP_REFERER'], '/'))
             ->get_one();
 
