@@ -45,7 +45,7 @@ return array(
 	'cookie_path'		=> '/',
 
 	// cookie http_only flag  (optional, default = use the cookie class default)
-	'cookie_http_only'	=> null,
+	'cookie_http_only'	=> true,
 
 	// whether or not to encrypt the session cookie (optional, default is true)
         // TODO - build a decrypter based on Crypt!
