@@ -26,6 +26,8 @@ var low_options = {
     quality: 1
 };
 
+var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'public/assets/img/screenshots/';
+
 function auth(req, res, next)
 {
     console.log('Trying to auth '+ req.query.apikey);
@@ -64,45 +66,37 @@ function auth(req, res, next)
     }
 };
 
-//app.use(auth);
+app.use(auth);
 
-app.get('/hi/:url', function(req, res) 
+app.get('/hi', function(req, res) 
 {
-    var path = '/var/www/html/dev/switchblade/public/assets/img/screenshots/'+ req.params.url+ '.png';
-    webshot(req.params.url, path, hi_options, function(err) 
+    console.log('Trying to create Hi Res '+ req.query.url);
+    var path = screenshot_folder + req.query.url+ '.png';
+    webshot(req.query.url, path, hi_options, function(err) 
     {
-        console.log('Hi Res - '+path);
+        console.log('Created Hi Res - '+path);
         res.sendFile(path);
     });
-
 });
 
-app.get('/:url', function(req, res) 
+app.get('/', function(req, res) 
 {
-    console.log('Trying to create Reg Res '+ req.params.url);
-    var path = '/var/www/html/dev/switchblade/public/assets/img/screenshots/'+ req.params.url+ '.png';
-    
-    try
+    console.log('Trying to create Reg Res '+ req.query.url);
+    var path = screenshot_folder + req.query.url+ '.png';
+    webshot(req.query.url, path, options, function(err) 
     {
-        webshot(req.params.url, path, options, function(err) 
-        {
-            console.log('Reg Res - '+path);
-            res.sendFile(path);
-        });
-    }
-    catch(err)
-    {
-        console.log(err);
-        res.status(500).send('ERROR '+ err + ', please contact support!');
-    }
+        console.log('Created Reg Res - '+path);
+        res.sendFile(path);
+    });
 });
 
-app.get('/low/:url', function(req, res) 
+app.get('/low', function(req, res) 
 {
-    var path = '/var/www/html/dev/switchblade/public/assets/img/screenshots/'+ req.params.url+ '.png';
-    webshot(req.params.url, path, low_options, function(err) 
+    console.log('Trying to create Low Res '+ req.query.url);
+    var path = screenshot_folder + req.query.url+ '.png';
+    webshot(req.query.url, path, low_options, function(err) 
     {
-        console.log('Low Res - '+path);
+        console.log('Created Low Res - '+path);
         res.sendFile(path);
     });
 

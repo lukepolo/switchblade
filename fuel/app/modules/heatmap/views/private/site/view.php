@@ -4,7 +4,7 @@ echo Asset::css('modules/absplit/main.css');
 ?>
 <div id="img" style="max-width: 1024px">
     
-    <img src="<?php echo Uri::Create('assets/img/screenshots/lukepolo.com.png'); ?>">
+    <img src="<?php echo Uri::Create('assets/img/screenshots/'.  urlencode($url).'.png'); ?>">
 </div>
 <script>
     var heatmap_data = <?php echo json_encode($heatmap); ?>;

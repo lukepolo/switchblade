@@ -96,17 +96,19 @@ class Controller_Api extends \Controller_Hybrid
     
    public static function get_screenshot($url)
    {       
-        $url = 'https://screenshot.switchblade.io/'.urlencode($url).'?apikey='.\Controller_Rest::$api_key;
-        
-        $parsed_url = parse_url($url);
-        var_dump($url);
-        $fp = fsockopen('ssl://'.$parsed_url['host'], 443, $errno, $errstr, 30);
+        if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
+        {
+            $url = 'https://screenshot.switchblade.io/?url='.$url.'&apikey='.\Controller_Rest::$api_key;
 
-        $out ="GET ".$parsed_url["path"]."?".$parsed_url['query']." HTTP/1.1\n"; 
-        $out .= "Host: ".$parsed_url['host']."\r\n";
-        $out .= "Connection: Close\r\n\r\n";
+            $parsed_url = parse_url($url);
+            $fp = fsockopen('ssl://'.$parsed_url['host'], 443, $errno, $errstr, 30);
 
-        fwrite($fp, $out);
-        fclose($fp);
+            $out ="GET ".$parsed_url["path"]."?".$parsed_url['query']." HTTP/1.1\n"; 
+            $out .= "Host: ".$parsed_url['host']."\r\n";
+            $out .= "Connection: Close\r\n\r\n";
+
+            fwrite($fp, $out);
+            fclose($fp);
+        }
    }
 }
