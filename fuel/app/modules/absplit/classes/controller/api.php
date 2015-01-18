@@ -22,10 +22,11 @@ class Controller_Api extends \Controller_Hybrid
             $js_code = [];
             foreach($experiment_data->$variation as $variation => $data)
             {
-                $js_code[] = reset($data)->apply_function;
+                $js_code['data'][] = reset($data)->apply_function;
             }
 
-            return json_encode($js_code);
+            $js_code['function'] = 'absplit';
+            return $js_code;
         }
     }
 }

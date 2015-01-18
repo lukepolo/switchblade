@@ -10,8 +10,20 @@ return array(
     
     'my_profile' => 'profile',
     
-    // Modules default path
+    // MODULES 
+    
+    // ABSPLIT
     'absplit' => 'absplit/home',
+    'absplit/dashboard' => 'absplit/home/dashboard',
     'absplit/get/(:any)' => 'absplit/editor/get/$1',
-    'absplit/editor/(:num)' => 'absplit/editor/experiment/$1' 
+    'absplit/editor/(:num)' => 'absplit/editor/experiment/$1',
+    
+    // ANALYTICS
+    'analytics' => 'analytics/home',
+    'analytics/dashboard' => 'analytics/home/dashboard',
+    
+    // HeatMap
+    'heatmap' => 'heatmap/home',
+    'heatmap/dashboard' => 'heatmap/home/dashboard',
+    
 );

@@ -33,5 +33,11 @@ return array(
         'enable_cache'   => true,
         'profiling'      => false,
         'readonly'       => false,
+    ),
+    'mongo' => array(
+        'default' => array(
+            'hostname'   => 'localhost',
+            'database'   => 'switchblade_dev',
+        ),
     )
 );

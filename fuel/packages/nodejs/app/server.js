@@ -5,7 +5,7 @@ var os = require('os')
 
 // HTTPS
 var https = require('https');
-fs = require('fs');
+var fs = require('fs');
 var options = {
     key:    fs.readFileSync('/etc/ssl/switchblade.key'),
     cert:   fs.readFileSync('/etc/ssl/switchblade.crt'),

@@ -21,7 +21,7 @@
                 var socket = io.connect('<?php echo rtrim(Uri::Base(),'/'); ?>:7777');
                 var user_data = {
                     name: '<?php echo $first_name; ?>',
-                    id: '<?php echo Auth::get('id'); ?>',
+                    id: '<?php echo \Auth::get_user_id()[1]; ?>',
                 }
                 
                 socket.emit('user_info', user_data);

@@ -2,7 +2,6 @@
 {
     var query_data = {};
     
-    // http://www.html5rocks.com/en/tutorials/cors/
     function createCORSRequest(method, url) 
     {
         url = url+"?"+EncodeQueryData(query_data);
@@ -25,22 +24,64 @@
             xhr =  null;
             throw new Error('CORS not supported');
         }
-        return xhr;
+        
+        xhr.onreadystatechange = function() 
+        {
+            if (xhr.readyState == 4) 
+            { 
+                if(xhr.responseText)
+                {
+                    // Apend the JS to the end of the file
+                    var data = JSON.parse(xhr.responseText);
+                    data.forEach(function(command)
+                    {
+                        if(command)
+                        {
+                            // run what we need to get
+                            console.log(command);
+                            try 
+                            {
+                                swb_fn[command.function].apply(this,command.data);
+                            } 
+                            catch(e)
+                            {
+                                // try to call instead
+                                try 
+                                {
+                                    swb_fn[command.function].call(this,command.data);
+                                }
+                                catch(e)
+                                {
+                                    document.getElementsByTagName('html')[0].style.visibility= "";
+                                    console.log('BAD FUNCTION: '+command.function);
+                                    console.log(e);
+                                }
+                            }
+                        }
+                    });
+                }
+                document.getElementsByTagName('html')[0].style.visibility= "";
+            }
+        }
+        
+        xhr.send();
     }
         
+    function EncodeQueryData(data)
+    {
+        var ret = [];
+        for (var d in data)
+        {
+            ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+        }
+       return ret.join("&");
+    }
+    
     // Watch for the events inside the array and run them
     swb.q.push = function() 
     {    
         run_command(arguments[0]);
     };
-    
-    function EncodeQueryData(data)
-    {
-       var ret = [];
-       for (var d in data)
-          ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-       return ret.join("&");
-    }
     
     function run_command(commands) 
     {
@@ -64,28 +105,38 @@
     var get_mods = function()
     {
         var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/mods.json");
-        
-        if(xhr)
+    }
+    
+    var pageview = function()
+    {
+        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/analytics/api/pageview");
+    }
+    
+    var absplit = function(data)
+    {
+        data.forEach(function(data)
         {
-            xhr.send();
-            xhr.onreadystatechange = function() 
-            {
-                if (xhr.readyState == 4) 
-                { 
-                    if(xhr.responseText)
-                    {
-                        // Apend the JS to the end of the file
-                        var data = JSON.parse(xhr.responseText);
+            eval(data);
+        });
+    }
+    
+    var apply_script = function(script_arguments)
+    {
+        var script_url = script_arguments.url;
+        var script_callback = eval(script_arguments.callback);
+        // Adding the script tag to the head as suggested before
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = script_url;
 
-                        data.forEach(function(data)
-                        {
-                            eval(data);
-                        });
-                    }
-                    document.getElementsByTagName('html')[0].style.visibility= "";
-                }
-            }
-        }
+        // Then bind the event to the callback function.
+        // There are several events for cross browser compatibility.
+        script.onreadystatechange = script_callback;
+        script.onload = script_callback;
+
+        // Fire the loading
+        head.appendChild(script);
     }
     
     // All Functions Must Be Set Here 
@@ -94,6 +145,10 @@
         init:init,
         auth: auth,
         get_mods: get_mods,
+        pageview: pageview,
+        absplit: absplit,
+        apply_script: apply_script
     };
+    
     init();
 })(window);
