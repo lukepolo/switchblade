@@ -287,7 +287,9 @@ return array(
 		 * A path must be set in module_paths for this to work.
 		 */
 		 'modules'  => array(
-                     'AbSplit'
+                     'AbSplit',
+                     'Analytics',
+                     'HeatMap'
                  ),
 
 		/**
@@ -305,12 +307,15 @@ return array(
 		 */
 		 'config'  => array(
                      'auth',
-                     'opauth',
-                     'crypt',
-                     'db',
-                     'session',
                      'cache',
-                     'casset'
+                     'casset',
+                     'crypt',
+                     'date',
+                     'db',
+                     'email',
+                     'opauth',
+                     'rest',
+                     'session'
                  ),
 
 		/**

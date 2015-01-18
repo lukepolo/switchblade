@@ -13,12 +13,12 @@ class Controller_Editor extends \Controller_Template
         
         $data->experiment = \Model_Absplit_Experiment::query()
             ->where('id', $experiment_id)
-            ->where('user_id', \Auth::get('id'))
+            ->where('user_id', \Auth::get_user_id()[1])
             ->get_one();
         
         if(empty($data) === false)
         {
-            $this->template->content = \View::forge('home/editor', $data);
+            $this->template->content = \View::forge('private/editor', $data);
         }
         else
         {

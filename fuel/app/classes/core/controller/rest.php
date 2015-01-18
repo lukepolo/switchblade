@@ -7,15 +7,23 @@ header("Access-Control-Allow-Headers: Authorization");
 class Controller_Rest extends Fuel\Core\Controller_Rest
 {
     public static $user_id;
-    // TODO - look into securing it more
-    // http://www.sitepoint.com/using-json-web-tokens-node-js/
+    public static $api_key;
     protected function _api_auth()
     {
         if(\Auth::Check() === false)
         {
-            static::$user_id = (int) Crypt::decode(Input::get('key'));
+            if(Input::get('key'))
+            {
+                static::$api_key = Input::get('key');
+            }
+            else
+            {
+                static::$api_key = Input::post('key');
+            }
+                
+            static::$user_id = (int) Crypt::decode(static::$api_key);
 
-            if(is_int(static::$user_id))
+            if(static::$user_id != 0)
             {
                 $api_key = \Auth\Model\Auth_Metadata::query()
                     ->where('user_id', static::$user_id)
@@ -23,7 +31,7 @@ class Controller_Rest extends Fuel\Core\Controller_Rest
                     ->get_one();
                 
                 // Double check for the apikey
-                if($api_key->value == Input::get('key'))
+                if($api_key->value == static::$api_key)
                 {
                     return true;
                 }

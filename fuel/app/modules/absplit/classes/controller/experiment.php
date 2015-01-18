@@ -10,7 +10,7 @@ class Controller_Experiment extends \Controller_Hybrid
         if(\Input::Post())
         {
             $experiment = \Model_Absplit_Experiment::Forge(array(
-                'user_id' => \Auth::get('id'),
+                'user_id' => \Auth::get_user_id()[1],
                 'url' => \Input::post('url'),
                 'url_pattern' => \Input::post('url'),
                 'absplit_experiment_type_id' => 1,
@@ -35,7 +35,7 @@ class Controller_Experiment extends \Controller_Hybrid
     {
         $experiments = \Model_Absplit_Experiment::query()
             ->related('absplit_experiment_datum')
-            ->where('user_id', \Auth::get('id'))
+            ->where('user_id', \Auth::get_user_id()[1])
             ->where('id' , \Input::Post('experiment_id'))
             ->get_one();
         
@@ -80,7 +80,7 @@ class Controller_Experiment extends \Controller_Hybrid
             $order_by = 'url';
         }
         $total_count = \Model_Absplit_Experiment::query()
-            ->where('user_id', \Auth::get('id'));
+            ->where('user_id', \Auth::get_user_id()[1]);
         
         if(\Input::Get('search.value'))
         {
@@ -90,7 +90,7 @@ class Controller_Experiment extends \Controller_Hybrid
         $total_count = $total_count->count();
             
         $experiments = \Model_Absplit_Experiment::query()
-            ->where('user_id', \Auth::get('id'));
+            ->where('user_id', \Auth::get_user_id()[1]);
         if(\Input::Get('search.value'))
         {
             $experiments = $experiments->where('url', 'LIKE', '%'.\Input::Get('search.value').'%');

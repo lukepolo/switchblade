@@ -216,9 +216,17 @@ class Controller_Auth extends Controller_Template
                             
                             Auth::update_user(
                                 array(
-                                    'apikey' => Crypt::encode(Auth::get('id'))
+                                    'apikey' => Crypt::encode(\Auth::get_user_id()[1])
                                 )
                             );
+                            $mongodb = \Mongo_Db::instance();
+                            
+                            // add their api key to mongo
+                            $mongodb->insert('users', array(
+                                'api_key' => \Auth::get('apikey'),
+                                'user_id' => \Auth::get_user_id()[1],
+                                'mods' => null
+                            ));
                             
                             Response::Redirect(Uri::Base());
                         }
