@@ -3,8 +3,7 @@ echo Asset::css('modules/absplit/main.css');
     Casset::js('heatmap.min.js');
 ?>
 <div id="img" style="max-width: 1024px">
-    
-    <img src="<?php echo Uri::Create('assets/img/screenshots/'.  urlencode($url).'.png'); ?>">
+    <img src="<?php echo Uri::Create('assets/img/screenshots/'. $url['image_path'] .'.jpg'); ?>">
 </div>
 <script>
     var heatmap_data = <?php echo json_encode($heatmap); ?>;

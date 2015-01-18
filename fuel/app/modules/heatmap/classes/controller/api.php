@@ -33,9 +33,7 @@ class Controller_Api extends \Controller_Hybrid
         
         $url = trim($parsed_url['host'].$parsed_url['path'], '/');
         
-        // generate user image
-        Controller_Api::get_screenshot($url);
-        
+
         $user_id = $mongodb->insert('heatmap_users', array(
             'domain_id' => $domain_id,
             'url' => $url,
@@ -43,6 +41,8 @@ class Controller_Api extends \Controller_Hybrid
             'time' => time(),
         ));
         
+        // generate user image
+        Controller_Api::get_screenshot($url, $user_id);
         
         return array(
             'function' => 'apply_script', 
@@ -94,11 +94,11 @@ class Controller_Api extends \Controller_Hybrid
         ));
     }
     
-   public static function get_screenshot($url)
+   public static function get_screenshot($url, $user_id)
    {       
         if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
         {
-            $url = 'https://screenshot.switchblade.io/?url='.$url.'&apikey='.\Controller_Rest::$api_key;
+            $url = 'https://screenshot.switchblade.io/low/?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
 
             $parsed_url = parse_url($url);
             $fp = fsockopen('ssl://'.$parsed_url['host'], 443, $errno, $errstr, 30);

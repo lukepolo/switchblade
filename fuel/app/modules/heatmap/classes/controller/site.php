@@ -22,7 +22,9 @@ class Controller_Site extends \Controller_Template
             'user' => $user_id
         ));
         
-        $data->url = $data->heatmap_user['url'];
+        
+        $mongodb->where(array('user_id' => $user_id));
+        $data->url = $mongodb->get_one('screenshots');
         
         $this->template->content = \View::Forge('private/site/view', $data);
     }
