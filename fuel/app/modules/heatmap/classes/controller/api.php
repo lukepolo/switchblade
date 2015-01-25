@@ -56,8 +56,7 @@ class Controller_Api extends \Controller_Hybrid
                     {
                         heat_data.push({
                             x: ev.x + window.scrollX,
-                            y: ev.y + window.scrollY,
-                            value: 1
+                            y: ev.y + window.scrollY
                         });
                         
                         if(heat_data.length >= 50)

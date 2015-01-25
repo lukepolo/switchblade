@@ -7,18 +7,22 @@ var fs = require('fs');
 var app = express();
 var db = mongojs.connect("mongodb://127.0.0.1:27017/switchblade_dev", ["users", "screenshots"]);
 
+var delay = 0;
+
 var hi_options = {
     shotSize: {
         height: 'all'
     },
-    quality : 100
+    quality : 100,
+    renderDelay: delay
 };
 
 var options = {
     shotSize: {
         height: 'all',
         quality : 85
-    }
+    },
+    renderDelay: delay 
 };
 
 var low_options = {
@@ -26,6 +30,7 @@ var low_options = {
         height: 'all',
     },
     quality: 50,
+    renderDelay: delay
 };
 
 var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'public/assets/img/screenshots/';
