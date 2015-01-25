@@ -26,4 +26,8 @@ return array(
     'heatmap' => 'heatmap/home',
     'heatmap/dashboard' => 'heatmap/home/dashboard',
     
+    // Screenshot / Ketch Screen
+    'screenshot' => 'screenshot/home',
+    'screenshot/dashboard' => 'screenshot/home/dashboard',
+    
 );

@@ -8,31 +8,6 @@ var app = express();
 var db = mongojs.connect("mongodb://127.0.0.1:27017/switchblade_dev", ["users", "screenshots"]);
 
 var delay = 0;
-
-var hi_options = {
-    shotSize: {
-        height: 'all'
-    },
-    quality : 100,
-    renderDelay: delay
-};
-
-var options = {
-    shotSize: {
-        height: 'all',
-        quality : 85
-    },
-    renderDelay: delay 
-};
-
-var low_options = {
-    shotSize: {
-        height: 'all',
-    },
-    quality: 50,
-    renderDelay: delay
-};
-
 var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'public/assets/img/screenshots/';
 
 function auth(req, res, next)
@@ -70,16 +45,15 @@ function auth(req, res, next)
     }
 };
 
-function get_screenshot(url, options, res, user_id)
+function get_screenshot(url, options, res, api_key, user_id)
 {
     console.log('Trying to create '+ url);
-    console.log(user_id);
-    db.screenshots.insert({url: url, user_id: user_id, checksum: null, image_path: null}, function(err, screenshot_id)
+    db.screenshots.insert({url: url, user_id: user_id, checksum: null, image_path: null, api_key : api_key}, function(err, row)
     { 
         if(!err)
         {
-            screenshot_id = screenshot_id._id;
-            var path = screenshot_folder + screenshot_id + '.jpg';
+            image_path = row._id;
+            var path = screenshot_folder + image_path + '.jpg';
             webshot(url, path, options, function(err) 
             {
                 console.log('Created Reg Res - '+path);
@@ -93,13 +67,12 @@ function get_screenshot(url, options, res, user_id)
                     {
                         db.screenshots.findOne({checksum: sum}, function(err, records)
                         {
-                            console.log(records)
                             if(!err)
                             {
                                 if(records != null)
                                 {
-                                    console.log('Deleteing '+ screenshot_id);
-                                    screenshot_id = records._id;
+                                    image_path = records._id;
+                                    console.log('Deleteing '+ image_path);
                                     fs.unlink(path, function(err)
                                     {
                                         if(err)
@@ -109,14 +82,20 @@ function get_screenshot(url, options, res, user_id)
                                     });
                                 }
                                 
-                                db.screenshots.update({user_id: user_id, url: url}, {url: url, user_id: user_id, checksum: sum,  image_path: screenshot_id}, function(err) 
+                                db.screenshots.findAndModify({
+                                    query: {
+                                        _id: row._id
+                                    }, 
+                                    update: { $set: {checksum: sum,  image_path: image_path}},
+                                    new: true
+                                }, function(err, doc) 
                                 {
+                                    console.log(doc);
                                     if(err)
                                     {
                                         console.log('ERROR '+ err + ', please contact support!');
                                     }
                                 });
-                                
                             }
                             else
                             {
@@ -143,18 +122,38 @@ app.use(auth);
 
 app.get('/hi', function(req, res) 
 {
-    get_screenshot(req.query.url, hi_options, res, req.query.user_id);
+    var options = {
+    shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
 });
 
 app.get('/', function(req, res) 
 {
-    get_screenshot(req.query.url, options, res, req.query.user_id);
+    var options = {
+        shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
 });
 
 app.get('/low', function(req, res) 
 {
-    get_screenshot(req.query.url, low_options, res, req.query.user_id);
-
+    var options = {
+        shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
 });
  
 app.listen(7778);

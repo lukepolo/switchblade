@@ -32,6 +32,9 @@
                 <a href="<?php echo Uri::Create('heatmap/dashboard'); ?>"><i class="fa fa-lg fa-fw fa-fire txt-color-blue"></i> <span class="menu-item-parent">Heat Happing</span></a>
             </li>
             <li class="top-menu-hidden">
+                <a href="<?php echo Uri::Create('screenshot/dashboard'); ?>"><i class="fa fa-lg fa-fw fa-desktop txt-color-blue"></i> <span class="menu-item-parent">Ketch Screen</span></a>
+            </li>
+            <li class="top-menu-hidden">
                 <a href="<?php echo Uri::Create('#'); ?>"><i class="fa fa-lg fa-fw fa-dashboard txt-color-blue"></i> <span class="menu-item-parent">Pinger</span></a>
             </li>
             <li class="top-menu-hidden">

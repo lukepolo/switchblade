@@ -3,7 +3,7 @@ return array(
     'default' => array(
         'type'           => 'mysqli',
         'connection'     => array(
-            'hostname'       => 'localhost',
+            'hostname'       => '127.0.0.1',
             'database'       => 'switchblade_dev',
             'username'       => 'switchblade',
             'password'       => '!MolyPOX!',
@@ -20,7 +20,7 @@ return array(
     'production' => array(
         'type'           => 'mysqli',
         'connection'     => array(
-            'hostname'       => 'localhost',
+            'hostname'       => '127.0.0.1',
             'database'       => 'switchblade',
             'username'       => 'switchblade',
             'password'       => '!MolyPOX!',
@@ -36,8 +36,9 @@ return array(
     ),
     'mongo' => array(
         'default' => array(
-            'hostname'   => 'localhost',
+            'hostname'   => '127.0.0.1',
             'database'   => 'switchblade_dev',
+            'password'   => '!MolyPOX!'
         ),
     )
 );

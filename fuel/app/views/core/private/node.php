@@ -2,7 +2,7 @@
     if(Auth::Check())
     {
     ?>
-        <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.3.2.js"></script>
         <script type="text/javascript">
             <?php
                 if(Fuel::$env == 'development')

@@ -8,7 +8,27 @@ echo Asset::css('modules/absplit/main.css');
 <script>
     var heatmap_data = <?php echo json_encode($heatmap); ?>;
     var heatmapInstance;
+    var img_loaded = false;
+    $('#img img').load(function()
+    {
+        img_loaded = true;
+    });
     $(document).ready(function()
+    {
+       if(img_loaded)
+       {
+           render_heatmap();
+       }
+       else
+       {
+           $('#img img').load(function()
+            {
+                render_heatmap();
+            });
+       }
+    });
+    
+    function render_heatmap()
     {
         heatmapInstance = h337.create({
             container: $('#img')[0],
@@ -21,11 +41,13 @@ echo Asset::css('modules/absplit/main.css');
             $(heatmap_object.data).each(function(index, point)
             {
                 heatmapInstance.addData({
-                    x: point.x,
+                    x: point.x * (1024 /  point.width),
                     y: point.y,
                     value: count++
                 });
             });
         });
-    });
+        
+        // TODO - add Pree - Loading Screen
+    }
 </script>
