@@ -7,7 +7,7 @@ class Controller_Home extends \Controller_Template
     public $public_classes = array(
         'action_index',
     );
-        
+    
     public function action_index()
     {
         $this->template->content = \View::Forge('public/index');

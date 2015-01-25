@@ -1,6 +1,6 @@
 <?php
-    abstract class Controller_Template extends \Fuel\Core\Controller_Template {
-        
+    abstract class Controller_Template extends \Fuel\Core\Controller_Template 
+    {
 	// We want the template to be the foundation so we speificy the default template of private!
         public $template = 'private';
         public function before()
@@ -38,16 +38,11 @@
                         ));
                     }
                     
-                    $this->template->set = true;
                     $this->template->header = View::forge('core/private/header');
                     $this->template->navigation = View::forge('core/private/navigation');
                     $this->template->ribbon = View::forge('core/private/ribbon');
                     $this->template->footer = View::forge('core/private/footer');
 		    $this->template->node = View::forge('core/private/node');
-                    
-                    // Grab the auth user and store it in a global field
-                    
-                    $this->template->set_global('username', 'Joe14');
                     
                     // Gets the users name
                     if(Auth::get('first_name'))
@@ -90,13 +85,20 @@
             }
             else
             {
-                $this->template = View::forge('public');
-                $this->template->set = true;
+                $procssed_route = Router::process(\Request::forge(Uri::String()));
+                if(empty($procssed_route->module) === false)
+                {
+                    $this->template = View::forge($procssed_route->module.'::public/template');
+                }
+                else
+                {
+                    $this->template = View::forge('public');
+                    $this->template->header = View::forge('core/public/header');
+                    $this->template->footer = View::forge('core/public/footer');
+                }
+                 
                 $this->template->title = 'Switch Blade ';
                 $this->template->container = 'container';
-                $this->template->header = View::forge('core/public/header');
-                $this->template->footer = View::forge('core/public/footer');
-
             }
             
             $this->template->php_session_errors = View::forge('core/php_session_errors');
