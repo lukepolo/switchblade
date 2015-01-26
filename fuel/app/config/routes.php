@@ -1,11 +1,19 @@
 <?php
 
-    $host = parse_url(Uri::Base())['host'];
+    $host = explode('.',parse_url(Uri::Base())['host']);
+    if(count($host) === 3)
+    {
+        $host = $host[1];
+    }
+    else
+    {
+        $host = $host[0];
+    }
     
     // If the host is not switchblade we need to redirect them root to a diff path
-    switch(substr($host, strpos($host, '.') + 1))
+    switch($host)
     {
-        case 'ketchscreen.com':
+        case 'ketchscreen':
             $overrides =  array(
                 '_root_'  => 'screenshot/home',  // The default route
                 // Add any special routes here, otherwise we assume the default routes begin with screenshot
