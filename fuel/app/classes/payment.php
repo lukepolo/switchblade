@@ -25,6 +25,8 @@ class Payment
     public $charge;
     public $refund;
     
+    public $error;
+    
     public function __construct($charge_id = null)
     {
         // SEND API KEY
@@ -170,7 +172,7 @@ class Payment
         } 
         catch (\Exception $e) 
         {
-            Session::set('error', $e->getMessage());
+            $this->error = $e->getMessage();
             return false;
         }
     }

@@ -28,6 +28,8 @@ class Controller_Payments extends Controller_Template
         }
         else
         {
+            echo $payment->error;
+            die;
             Response::Redirect_Back(Uri::Create('payments'));
         }
         die;
@@ -67,7 +69,10 @@ class Controller_Payments extends Controller_Template
             // try to process refund 
             $refund = new \Payment($payment->charge_id);
             
-            $refund->process_refund($payment, $payment->amount);
+            if(!$refund->process_refund($payment, $payment->amount))
+            {
+                \Session::set('error', $this->error);
+            }
         }
         else
         {
