@@ -76,7 +76,63 @@
                 </footer>
             <?php echo Form::close(); ?>
         </div>
-        <pre class="prettyprint">
+        <?php
+            if(empty($payments) === false)
+            {
+            ?>
+                <div class="row" style="margin:10px;">
+                    <hr>
+                    <h3>Payments</h3>
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Order Date</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <?php
+                                foreach($payments as $payment)
+                                {
+                                ?>
+                                    <tr>
+                                        <td><?php echo $payment->id; ?></td>
+                                        <td><?php echo $payment->product->name; ?></td>
+                                        <td><?php echo $payment->product->description; ?></td>
+                                        <td><?php echo money_format('%.2n', $payment->amount / 100); ?></td>
+                                        <td><?php echo \Date::forge($payment->created_at); ?></td>
+                                        <td>
+                                            <?php
+                                                if($payment->refund == false)
+                                                {
+                                                ?>
+                                                    <a href="<?php echo Uri::Create('payments/refund/'.$payment->id); ?>">Start Refund</a>
+                                                <?php
+                                                }
+                                                else
+                                                {
+                                                ?>
+                                                    Refunded
+                                                <?php
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                    <hr>
+                </div>
+            <?php
+            }
+        ?>
+        <div class="row" style="margin:10px;">
+            <h2>Javascript Code <small>Copy and paste directly after your &lthead> tag </small></h2>
+            <pre class="prettyprint">
 <code class="language-js">
 &lt;script type="text/javascript">
     (function(g,c,e,f,a,b,d){c.getElementsByTagName("html")[0].style.visibility="hidden";window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
@@ -84,7 +140,9 @@
     swb('get_mods');    
 &lt;/script>
 </code>
-        </pre>
+            </pre>
+        </div>
+
     </div>
 </div>
 <script>

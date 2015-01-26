@@ -13,42 +13,66 @@ class Payment
     public $city;
     public $state;
     public $zip;
-    public $country;
+    public $country = 'US';
     public $amount;
     public $currency = 'usd';
     
-    public function __construct()
+    public $product_id;
+    public $subscription = false;
+    
+    public $time_period = 31;
+    
+    public $charge;
+    public $refund;
+    
+    public function __construct($charge_id = null)
     {
-        // TODO  SETUP Dev / Prod Keys
         // SEND API KEY
-        \Stripe::setApiKey('sk_test_saciivOBVDmsbJptRSdoAyZC');
-      
-        if(empty($currency) === false)
-        {
-            $this->currency = $currency;
-        }
+        \Stripe::setApiKey(Config::get('stripe.'.\Fuel::$env.'.key'));
         
+        if(empty($charge_id) === false)
+        {
+            $this->charge = Stripe_Charge::retrieve($charge_id);
+        }
     }
     
     public function charge()
     {
-        // if in dev we ALWAYS TEST
-        if($this->validate())
+        // Attempt to charge the card, if not return the error
+        try
         {
-            return Stripe_Charge::create(
+            $this->validate();
+            
+            $this->charge = Stripe_Charge::create(
                 array(
                     'name' => $this->name,
                     'card' => $this->card_id,
                     'customer' => $this->customer->id,
                     'amount' => $this->amount, 
                     'currency' => $this->currency,
-                    'description' => 'testing',
+                    'description' => $this->description,
+                    'metadata' => array(
+                        'user_id' => \Auth::get_user_id()[1],
+                    )
                 )
             );
+            
+            $payment = \Model_Payment::forge(array(
+                'user_id' => \Auth::get_user_id()[1],
+                'charge_id' => $this->charge->id,
+                'amount' => $this->charge->amount,
+                'product_id' => $this->product_id,
+                'refunded' => false
+            ));
+            
+            $payment->save();
+            
+            return true;
         }
-        else
+        catch(\Exception $e)
         {
-            return $this->validate();
+            $this->error = $e->getMessage();
+            return false;
         }
     }
     
@@ -78,15 +102,13 @@ class Payment
             $customer = Stripe_Customer::create(array(
                 'email' => \Auth::get('email'),
                 'metadata' => array(
-                    'userid' => \Auth::get_user_id()[1],
+                    'user_id' => \Auth::get_user_id()[1],
                 )
             ));
             
-            Auth::update_user(
-                array(
+            Auth::update_user(array(
                     'stripe_user' => $customer->id
-                )
-            );
+            ));
         }
         
         $this->customer = $customer;
@@ -121,5 +143,35 @@ class Payment
         );
         
         $this->card_id = $card->id;
+    }
+    
+    public static function get_payments()
+    {
+        return \Model_Payment::query()
+            ->Related('product')
+            ->where('user_id', \Auth::get_user_id()[1])
+            ->get();
+    }
+    
+    public function process_refund($payment, $amount, $reason = 'requested_by_customer')
+    {
+        try
+        {
+            $this->refund = $this->charge->refunds->create(array(
+                'amount' => $amount,
+                'reason' => $reason
+            ));
+            
+            $payment->refund = $this->refund->id;
+            $payment->save();
+            
+            Session::set('success', 'You have been refunded please wait 1 to 3 days before the refund is completed.');
+            return true;
+        } 
+        catch (\Exception $e) 
+        {
+            Session::set('error', $e->getMessage());
+            return false;
+        }
     }
 }

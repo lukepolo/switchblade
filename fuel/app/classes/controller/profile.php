@@ -32,8 +32,9 @@ class Controller_Profile extends Controller_Template
                 }
             }
         }
+        $data->payments = \Payment::get_payments();
         
-        $this->template->content = View::Forge('auth/profile');
+        $this->template->content = View::Forge('auth/profile', $data);
     }
     
     public function action_update_img()

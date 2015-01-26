@@ -9,6 +9,8 @@ return array(
         0 => '001_create_settings',
         1 => '002_create_absplit_experiments',
         2 => '003_create_absplit_experiment_data',
+        3 => '004_create_payments',
+        4 => '005_create_products',
       ),
     ),
     'module' => 

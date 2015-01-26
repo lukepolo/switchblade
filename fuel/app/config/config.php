@@ -316,7 +316,8 @@ return array(
                      'email',
                      'opauth',
                      'rest',
-                     'session'
+                     'session',
+                     'stripe'
                  ),
 
 		/**
