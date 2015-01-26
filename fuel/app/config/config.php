@@ -289,7 +289,8 @@ return array(
 		 'modules'  => array(
                      'AbSplit',
                      'Analytics',
-                     'HeatMap'
+                     'HeatMap',
+                     'Screenshot'
                  ),
 
 		/**
