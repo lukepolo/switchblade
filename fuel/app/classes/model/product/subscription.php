@@ -1,14 +1,13 @@
 <?php
 
-class Model_Payment extends \Orm\Model
+class Model_Product_Subscription extends \Orm\Model
 {
 	protected static $_properties = array(
 		'id',
-		'user_id',
-		'charge_id',
-		'refund',
-                'amount',
-                'product_id',
+		'stripe_id',
+		'product_id',
+		'description',
+		'price',
 		'created_at',
 		'updated_at',
 	);
@@ -24,10 +23,6 @@ class Model_Payment extends \Orm\Model
 		),
 	);
 
-	protected static $_table_name = 'payments';
-        
-        protected static $_belongs_to = array(
-            'product'
-        );
+	protected static $_table_name = 'product_subscriptions';
 
 }

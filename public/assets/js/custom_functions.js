@@ -8,6 +8,17 @@ function ucwords(str)
     return str;
 }
 
+function toDate(timestamp)
+{
+    var a = new Date(timestamp*1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    
+    var time = date + ' ' + month + ' ' + year;
+    return time;
+}
 jQuery.fn.selectText = function(){
     var doc = document;
     var element = this[0];
@@ -60,3 +71,4 @@ jQuery.expr.filters.offscreen = function(el)
         )
     );
 };
+

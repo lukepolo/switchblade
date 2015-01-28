@@ -3,10 +3,7 @@ class Controller_Payments extends Controller_Template
 {
     public function action_index()
     {
-        $payment = new \Payment();
-        
-        // TODO - Remove Test Data
-        $payment = new \Payment();
+        $payment = new \StripeAPI();
 
         $payment->card_number = '4242424242424242';
         $payment->exp_month = '11';
@@ -16,11 +13,14 @@ class Controller_Payments extends Controller_Template
         $payment->city = 'Indianapolis';
         $payment->state = 'Indiana';
         $payment->zip = '46200';
-        $payment->amount = '100';
-        $payment->description = '1 Month of Service for KetchURL.';
-        $payment->product_id = 1;
-            
-        if($payment->charge() ===  true)
+        
+        $subscription  = Model_Product_Subscription::query()
+            ->where('id', 2)
+            ->get_one();
+        
+        $payment->description = $subscription->description;
+        
+        if($payment->add_subscription($subscription) ===  true)
         {
             // TODO - Redirect to proper products internal dashboard
             echo 'Success!';
@@ -37,7 +37,7 @@ class Controller_Payments extends Controller_Template
         if(\Input::Method() === "POST")
         {
             // TODO - Remove Test Data
-            $payment = new \Payment();
+            $payment = new \StripeAPI();
             
             $payment->card_number = '4242424242424242';
             $payment->exp_month = '11';
@@ -56,28 +56,28 @@ class Controller_Payments extends Controller_Template
         $data = new stdClass;
     }
     
-    public function action_refund($payment_id)
+    
+    // TODO - REDO
+    public function action_refund($charge_id)
     {
-        $payment = \Model_Payment::query()
-            ->where('id', $payment_id)
-            ->where('user_id', \Auth::get_user_id()[1])
-            ->get_one();
-        
-        if(empty($payment) === false)
+        $refund = new \StripeAPI($charge_id);
+        // TODO - we will need a process to process refunds
+        if(!$refund->process_refund())
         {
-            // TODO - we will need a process to process refunds
-            // try to process refund 
-            $refund = new \Payment($payment->charge_id);
-            
-            if(!$refund->process_refund($payment, $payment->amount))
-            {
-                \Session::set('error', $this->error);
-            }
-        }
-        else
-        {
-            \Session::set('error', 'Please contact customer support with error #1 <br> '.\Settings::get('helpdesk'));
+            \Session::set('error', $refund->error);
         }
         Response::Redirect_Back(Uri::Create('profile'));
+    }
+    
+    public function action_get()
+    {
+        return new \Response(
+            \StripeAPI::get_payments(), 
+            200,
+            array(
+                'Content-type' => 'application/json'
+            )
+        );
+        exit();
     }
 }

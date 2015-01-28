@@ -31,9 +31,7 @@ class Controller_Profile extends Controller_Template
                     Session::set('error', 'Your current password is incorrect, please try again');
                 }
             }
-        }
-        $data->payments = \Payment::get_payments();
-        
+        }      
         $this->template->content = View::Forge('auth/profile', $data);
     }
     
@@ -76,5 +74,5 @@ class Controller_Profile extends Controller_Template
             }
         }
         die;
-    }
+    }        
 }

@@ -76,61 +76,42 @@
                 </footer>
             <?php echo Form::close(); ?>
         </div>
-        <?php
-            if(empty($payments) === false)
-            {
-            ?>
-                <div class="row" style="margin:10px;">
-                    <hr>
-                    <h3>Payments</h3>
-                    <table class="table table-striped table-condensed">
-                        <thead>
-                            <th>Order ID</th>
-                            <th>Product</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                            <th>Order Date</th>
-                            <th></th>
-                        </thead>
-                        <tbody>
-                            <?php
-                                foreach($payments as $payment)
-                                {
-                                ?>
-                                    <tr>
-                                        <td><?php echo $payment->id; ?></td>
-                                        <td><?php echo $payment->product->name; ?></td>
-                                        <td><?php echo $payment->product->description; ?></td>
-                                        <td><?php echo money_format('%.2n', $payment->amount / 100); ?></td>
-                                        <td><?php echo \Date::forge($payment->created_at); ?></td>
-                                        <td>
-                                            <?php
-                                                if($payment->refund == false)
-                                                {
-                                                ?>
-                                                    <a href="<?php echo Uri::Create('payments/refund/'.$payment->id); ?>">Start Refund</a>
-                                                <?php
-                                                }
-                                                else
-                                                {
-                                                ?>
-                                                    Refunded
-                                                <?php
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                <?php
-                                }
-                            ?>
-                        </tbody>
-                    </table>
-                    <hr>
-                </div>
-            <?php
-            }
-        ?>
+        <div class="row" style="margin:10px;" id="subscriptions">
+            <hr>
+            <h3>Subscriptions</h3>
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <th>Subscription</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Next Charge Date</th>
+                    <th></th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row" style="margin:10px;" id="payments">
+            <hr>
+            <h3>Payments</h3>
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <th>Order</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Charge Date</th>
+                    <th></th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        
         <div class="row" style="margin:10px;">
+            <hr>
             <h2>Javascript Code <small>Copy and paste directly after your &lthead> tag </small></h2>
             <pre class="prettyprint">
 <code class="language-js">
@@ -149,6 +130,60 @@
     var image;
     $(document).ready(function()
     {
+        $.ajax({
+            url: '<?php echo Uri::Create('payments/get'); ?>',
+            type: 'GET',
+            success: function(payments) {
+                $.each(payments.data, function(index, payment)
+                {
+                    console.log(payment);
+                    if(payment.refunded)
+                    {
+                        var refund_text = 'Refunded';
+                    }
+                    else
+                    {
+                        var refund_text = '<a href="<?php echo Uri::Create('payments/refund/'); ?>' + payment.id + '">Start Refund</a>';
+                    }
+                    $('#payments table tbody').append('\
+                    <tr>\
+                        <td>' + payment.id + '</td>\
+                        <td>' + ucwords(payment.statement_descriptor) + '</td>\
+                        <td>$' + payment.amount / 100+ '</td>\
+                        <td>' + toDate(payment.created) + '</td>\
+                        <td>' + refund_text + '</td>\
+                    </tr>')
+                });
+            }
+        });
+        
+        $.ajax({
+            url: '<?php echo Uri::Create('subscriptions/get'); ?>',
+            type: 'GET',
+            success: function(subscriptions) {
+                $.each(subscriptions.data, function(index, subscription)
+                {
+                    if(subscription.canceled_at)
+                    {
+                        var cancel_text = 'Cancled';
+                    }
+                    else
+                    {
+                        var cancel_text = '<a href="<?php echo Uri::Create('subscriptions/cancel/'); ?>' + subscription.id + '">Start Cancelation</a>';
+                    }
+                    $('#subscriptions table tbody').append('\
+                    <tr>\
+                        <td>' + subscription.id + '</td>\
+                        <td>' + subscription.plan.name + '</td>\
+                        <td>' + ucwords(subscription.status) + '</td>\
+                        <td>$' + subscription.plan.amount / 100 + '</td>\
+                        <td>' + toDate(subscription.current_period_end) + '</td>\
+                        <td>' + cancel_text + '</td>\
+                    </tr>')
+                });
+            }
+        });
+        
         $('#edit-profile').click(function()
         {
            $('#update_profile_fields').slideToggle();
@@ -254,7 +289,6 @@
             {
                 $('.select_picture').attr('src', e.target.result);
             }
-
             reader.readAsDataURL(input.files[0]);
         }
     }
