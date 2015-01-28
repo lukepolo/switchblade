@@ -32,7 +32,12 @@
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
             <div id="content" class="<?php echo $container; ?>">
-                <?php echo $content; ?>
+                <?php 
+                    if(isset($content) === true)
+                    {
+                        echo $content;
+                    }
+                ?>
             </div>
         </div>
         <footer>

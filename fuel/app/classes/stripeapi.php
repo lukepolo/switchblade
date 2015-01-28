@@ -2,8 +2,8 @@
 class StripeAPI
 {
     protected $card_id;
-    protected $customer;
     
+    public $customer;
     public $card_number;
     public $exp_month;
     public $exp_year;
@@ -87,7 +87,7 @@ class StripeAPI
         // TODO - Need user profile page to continue
     }
     
-    public function create_customer()
+    public function create_customer($customer_id = null)
     {
         if(empty($this->customer) === true)
         {
@@ -95,6 +95,10 @@ class StripeAPI
             if(\Auth::get('stripe_user'))
             {
                 $customer = Stripe_Customer::retrieve(\Auth::get('stripe_user'));
+            }
+            elseif(empty($customer_id) === false)
+            {
+                $customer = Stripe_Customer::retrieve($customer_id);
             }
             else 
             {

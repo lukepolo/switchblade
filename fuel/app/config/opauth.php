@@ -77,14 +77,14 @@ return array(
 	 */
 	'Strategy' => array(
             'Google' => array(
-                'client_id' => Settings::get('google_client_id'),
-                'client_secret' => Settings::get('google_client_secret_id'),
+                'client_id' => '528960278580-0ceodaa98qa4kqbrnfc7rd2k1460knv8.apps.googleusercontent.com',
+                'client_secret' => 'Ddf_LOsXtW7uB8U0JyozfZmP',
                 'state' => Uri::Base(),
                 'redirect_uri' => 'https://oauth.switchblade.io/auth/register/google/oauth2callback'
             ),
             'Twitter' => array(
-                'key' => Settings::get('twitter_key'),
-                'secret' => Settings::get('twitter_secret_id')
+                'key' => 'DxbUf9Dn6KhUuPDqLvvfdMpD4',
+                'secret' => 'FCxCL6nRTgCveGVSbVosPEvY0CeX49EOrMOOrBet04yhz7QEfe'
             )
 	 ),
 );

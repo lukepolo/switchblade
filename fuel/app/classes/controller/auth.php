@@ -167,7 +167,6 @@ class Controller_Auth extends Controller_Template
         {
             if(\Settings::get('registration') == false)
             {
-                // TODO -- add in settings if registration is open!
                 if(Input::Post('terms') !== false)
                 {
                     // Check to see if they have a user!
@@ -201,7 +200,8 @@ class Controller_Auth extends Controller_Template
                                 'last_name' => Input::Post('last_name'),
                                 'gender' => Input::Post('gender'),
                             )
-                        );   
+                        );
+                        
                         if(empty($user_id) == false)
                         {
                             Auth::force_login($user_id);
