@@ -131,7 +131,7 @@
     $(document).ready(function()
     {
         $.ajax({
-            url: '<?php echo Uri::Create('payments/get'); ?>',
+            url: '<?php echo Uri::Create('stripe/payments/get'); ?>',
             type: 'GET',
             success: function(payments) {
                 $.each(payments.data, function(index, payment)
@@ -143,7 +143,7 @@
                     }
                     else
                     {
-                        var refund_text = '<a href="<?php echo Uri::Create('payments/refund/'); ?>' + payment.id + '">Start Refund</a>';
+                        var refund_text = '<a href="<?php echo Uri::Create('stripe/payments/refund/'); ?>' + payment.id + '">Start Refund</a>';
                     }
                     $('#payments table tbody').append('\
                     <tr>\
@@ -158,7 +158,7 @@
         });
         
         $.ajax({
-            url: '<?php echo Uri::Create('subscriptions/get'); ?>',
+            url: '<?php echo Uri::Create('stripe/subscriptions/get'); ?>',
             type: 'GET',
             success: function(subscriptions) {
                 $.each(subscriptions.data, function(index, subscription)
@@ -169,16 +169,19 @@
                     }
                     else
                     {
-                        var cancel_text = '<a href="<?php echo Uri::Create('subscriptions/cancel/'); ?>' + subscription.id + '">Start Cancelation</a>';
+                        var cancel_text = '<a href="<?php echo Uri::Create('stripe/subscriptions/cancel/'); ?>' + subscription.id + '">Start Cancelation</a>';
                     }
+                    console.log(subscription.plan);
                     $('#subscriptions table tbody').append('\
                     <tr>\
                         <td>' + subscription.id + '</td>\
-                        <td>' + subscription.plan.name + '</td>\
+                        <td>' + ucwords(subscription.plan.statement_descriptor) + '</td>\
                         <td>' + ucwords(subscription.status) + '</td>\
                         <td>$' + subscription.plan.amount / 100 + '</td>\
                         <td>' + toDate(subscription.current_period_end) + '</td>\
-                        <td>' + cancel_text + '</td>\
+                        <td>' + cancel_text + '\
+                            <br><a href="<?php echo Uri::Create('stripe/subscriptions/update/'); ?>'+ subscription.id +'/Ketch-Basic-Year">Modify Plan</a>\
+                        </td>\
                     </tr>')
                 });
             }

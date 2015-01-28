@@ -1,6 +1,6 @@
 <?php
 
-class Model_Product_Subscription extends \Orm\Model
+class Model_Product_Plan extends \Orm\Model_Soft
 {
 	protected static $_properties = array(
 		'id',
@@ -8,8 +8,13 @@ class Model_Product_Subscription extends \Orm\Model
 		'product_id',
 		'description',
 		'price',
+                'interval',
+                'interval_count',
+                'active',
+                'order',
 		'created_at',
 		'updated_at',
+                'deleted_at',
 	);
 
 	protected static $_observers = array(
@@ -23,6 +28,6 @@ class Model_Product_Subscription extends \Orm\Model
 		),
 	);
 
-	protected static $_table_name = 'product_subscriptions';
+	protected static $_table_name = 'product_plans';
 
 }

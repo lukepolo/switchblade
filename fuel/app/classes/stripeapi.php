@@ -1,9 +1,14 @@
 <?php
 class StripeAPI
 {
-    protected $card_id;
-    
+    // Stripe Variables
+    public $charge;
+    public $refund;
     public $customer;
+    public $subscription;
+    public $card_id;
+    
+    // CC INFO
     public $card_number;
     public $exp_month;
     public $exp_year;
@@ -14,22 +19,20 @@ class StripeAPI
     public $state;
     public $zip;
     public $country = 'US';
+    
+    // Payment Variables
     public $amount;
     public $currency = 'usd';
     
-    public $subscription;
-    
-    public $description;
-    
-    public $time_period = 31;
-    
-    public $charge;
-    public $refund;
-    
-    public $error;
-    public $metadata = array();
-    
+    // Subscription Variables
+    public $trial_end = 'now';
+    public $quantity = 1;
     public $coupon;
+    
+    // MISC
+    public $metadata = array();
+    public $description;
+    public $error;
     
     public function __construct($charge_id = null)
     {
@@ -44,35 +47,6 @@ class StripeAPI
         }
     }
     
-    public function charge()
-    {
-        // Attempt to charge the card, if not return the error
-        try
-        {
-            $this->validate();
-            
-            $this->charge = Stripe_Charge::create(
-                array(
-                    'name' => $this->name,
-                    'card' => $this->card_id,
-                    'customer' => $this->customer->id,
-                    'amount' => $this->amount, 
-                    'currency' => $this->currency,
-                    'description' => $this->description,
-                    'metadata' => array(
-                        $this->metadata
-                    )
-                )
-            );
-            return true;
-        }
-        catch(\Exception $e)
-        {
-            $this->error = $e->getMessage();
-            return false;
-        }
-    }
-    
     public function validate()
     {
         // TODO - Validate CARD INFO before we pass it to the customer 
@@ -81,12 +55,7 @@ class StripeAPI
         // TODO - make a return false
         return true;
     }
-    
-    public function refund()
-    {
-        // TODO - Need user profile page to continue
-    }
-    
+       
     public function create_customer($customer_id = null)
     {
         if(empty($this->customer) === true)
@@ -150,34 +119,32 @@ class StripeAPI
         }
     }
     
-    public static function get_payments($limit = 12)
+    public function charge()
     {
+        // Attempt to charge the card, if not return the error
         try
         {
-            $payemnts = new \StripeAPI();
-            $payments = Stripe_Charge::all(array(
-                'customer' => \Auth::get('stripe_user'),
-                'limit' => $limit
-            ));
-            return $payments->__toJSON();
+            $this->validate();
+            
+            $this->charge = Stripe_Charge::create(
+                array(
+                    'name' => $this->name,
+                    'card' => $this->card_id,
+                    'customer' => $this->customer->id,
+                    'amount' => $this->amount, 
+                    'currency' => $this->currency,
+                    'description' => $this->description,
+                    'metadata' => array(
+                        $this->metadata
+                    )
+                )
+            );
+            return true;
         }
-        catch (\Exception $e) 
+        catch(\Exception $e)
         {
-            return $e->getMessage();
-        }
-    }
-    
-    public static function get_subscriptions()
-    {
-        try
-        {
-            $payment = new \StripeAPI();
-            $subscriptions = Stripe_Customer::retrieve(\Auth::get('stripe_user'))->subscriptions->all();
-            return $subscriptions->__toJSON();
-        }
-        catch (\Exception $e) 
-        {
-            return $e->getMessage();
+            $this->error = $e->getMessage();
+            return false;
         }
     }
     
@@ -202,6 +169,31 @@ class StripeAPI
             }
         } 
         catch (\Exception $e) 
+        {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+    
+    public function add_subscription(Model_Product_Plan $plan)
+    {
+        try
+        {
+            $this->validate();
+            $this->metadata['plan_id'] = (int) $plan->id;
+            
+            // subscribe them to a subscription
+            $this->customer->subscriptions->create(array(
+                'plan' => $plan->stripe_id,
+                'coupon' => $this->coupon,
+                'metadata' => $this->metadata,
+                'trial_end' => $this->trial_end,
+                'quantity' => $this->quantity
+            ));
+            
+            return true;
+        }
+        catch(\Exception $e)
         {
             $this->error = $e->getMessage();
             return false;
@@ -242,26 +234,69 @@ class StripeAPI
         }
     }
     
-    public function add_subscription(Model_Product_Subscription $subscription)
+    public function update_subscription($subscription_id, $plan_id)
     {
         try
         {
-            $this->validate();
-            $this->metadata['plan_id'] = (int) $subscription->id;
+            $this->customer = Stripe_Customer::retrieve(\Auth::get('stripe_user'));
+            $this->subscription = $this->customer->subscriptions->retrieve($subscription_id);
             
-            // subscribe them to a subscription
-            $this->customer->subscriptions->create(array(
-                'plan' => $subscription->stripe_id,
-                'coupon' => $this->coupon,
-                'metadata' => $this->metadata
-            ));
-            
-            return true;
+            if($this->metadata['user_id'] == \Auth::get_user_id()[1])
+            {
+                try
+                {
+                    $this->subscription->plan = $plan_id;
+                    $this->subscription->save();
+                    Session::set('success', 'Your subscription has been updated.');
+                    return;
+                }
+                catch(Exception $e)
+                {
+                    $this->error = $e->getMessage();
+                    return false;
+                }
+            }
+            else
+            {
+                $this->error = 'Please contact customer support with error #3 <br> '.\Settings::get('helpdesk');
+                return false;
+            }
         }
         catch(\Exception $e)
         {
             $this->error = $e->getMessage();
             return false;
+        }
+    }
+    
+    public static function get_payments($limit = 12)
+    {
+        try
+        {
+            $payemnts = new \StripeAPI();
+            $payments = Stripe_Charge::all(array(
+                'customer' => \Auth::get('stripe_user'),
+                'limit' => $limit
+            ));
+            return $payments->__toJSON();
+        }
+        catch (\Exception $e) 
+        {
+            return $e->getMessage();
+        }
+    }
+    
+    public static function get_subscriptions()
+    {
+        try
+        {
+            $payment = new \StripeAPI();
+            $subscriptions = Stripe_Customer::retrieve(\Auth::get('stripe_user'))->subscriptions->all();
+            return $subscriptions->__toJSON();
+        }
+        catch (\Exception $e) 
+        {
+            return $e->getMessage();
         }
     }
 }
