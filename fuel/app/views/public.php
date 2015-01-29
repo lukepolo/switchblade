@@ -23,7 +23,7 @@
 	    Casset::css('smartadmin-skins.css');
             echo Casset::render_css();
         ?>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     </head>
     <body class="menu-on-top">
         <?php echo $header; ?>

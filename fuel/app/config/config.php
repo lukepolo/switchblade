@@ -276,6 +276,7 @@ return array(
                     'fuel-casset',
                     'auth',
                     'email',
+                    'minify-html'
 		 ),
 
 		/**
@@ -313,11 +314,11 @@ return array(
                      'crypt',
                      'date',
                      'db',
-                     'email',
+                     'error_codes',
                      'opauth',
                      'rest',
                      'session',
-                     'stripe'
+                     'stripe',
                  ),
 
 		/**

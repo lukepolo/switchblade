@@ -43,12 +43,12 @@ return array(
 		/**
 		 * Mail useragent string
 		 */
-		'useragent' => 'FuelPHP, PHP 5.3 Framework',
+		'useragent' => 'SwitchBlade.io',
 
 		/**
 		 * Mail driver (mail, smtp, sendmail, noop)
 		 */
-		'driver' => 'mail',
+		'driver' => 'smtp',
 
 		/**
 		 * Whether to send as html, set to null for autodetection.
@@ -80,8 +80,8 @@ return array(
 		 * Default sender details
 		 */
 		'from' => array(
-			'email'     => false,
-			'name'      => false,
+			'email'     => 'Support@SwitchBlade.io',
+			'name'      => 'SwitchBlade.io',
 		),
 
 		/**
@@ -118,12 +118,12 @@ return array(
 		 * SMTP settings
 		 */
 		'smtp' => array(
-			'host'      => '',
-			'port'      => 25,
-			'username'  => '',
-			'password'  => '',
+			'host'      => 'smtp.sendgrid.net',
+			'port'      => 587,
+			'username'  => 'lukepolo',
+			'password'  => '!dasquidi$smessy%@',
 			'timeout'   => 5,
-			'starttls'  => false,
+			'starttls'  => true,
 		),
 
 		/**
@@ -178,6 +178,6 @@ return array(
 		 * are "http://", "https://" or \Input::protocol() if you want to use
 		 * whatever was used to request the controller.
 		 */
-		'relative_protocol_replacement' => false,
+		'relative_protocol_replacement' => 'https://',
 	),
 );

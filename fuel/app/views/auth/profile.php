@@ -130,6 +130,7 @@
     var image;
     $(document).ready(function()
     {
+        prettyPrint();
         $.ajax({
             url: '<?php echo Uri::Create('stripe/payments/get'); ?>',
             type: 'GET',
@@ -296,3 +297,5 @@
         }
     }
 </script>
+<?php
+    Casset::js('prettify/prettify.js');

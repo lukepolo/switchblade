@@ -1,5 +1,4 @@
 <?php
-
 return array(
     'production' => array(
         'key' => 'sk_live_RHDqPlwLN1IOFlKkt6KVTP6e'
