@@ -25,8 +25,8 @@ class MinifyHTML
     
     public static function _init()
     {
-        \Config::load('minifyhtml', true);
-        static::$_defaults = \Config::get('minifyhtml');
+        \Config::load('minify-html', true);
+        static::$_defaults = \Config::get('minify-html');
     }
     
     /**

@@ -51,13 +51,15 @@ class Controller_Api extends \Controller_Hybrid
                 'callback' => "callback = function()
                 {
                     var heat_data = new Array();
-                    
+                    var heatmap_doc = document.documentElement;
+
                     document.querySelector('body').onmousemove = function(ev) 
                     {
                         heat_data.push({
-                            x: ev.x + window.scrollX,
-                            y: ev.y + window.scrollY,
-                            width: window.innerWidth
+                            x: ev.x + (window.pageXOffset || heatmap_doc.scrollLeft) - (heatmap_doc.clientLeft || 0),
+                            y: ev.y + (window.pageYOffset || heatmap_doc.scrollTop)  - (heatmap_doc.clientTop || 0),
+                            width: heatmap_doc.scrollWidth,
+                            height: heatmap_doc.scrollHeight 
                         });
                         
                         if(heat_data.length >= 50)
