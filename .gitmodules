@@ -1,3 +1,6 @@
 [submodule "fuel/packages/fuelphp-casset"]
 	path = fuel/packages/fuel-casset
 	url = git://github.com/canton7/fuelphp-casset
+[submodule "fuel/core"]
+	path = fuel/core
+	url = git://github.com/fuel/core.git
