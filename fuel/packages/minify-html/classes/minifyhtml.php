@@ -87,10 +87,10 @@ class MinifyHTML
             {
                 if(empty($match) === false)
                 {
-                    if(\Package::loaded('fuel-casset'))
+                    if(class_exists('JShrink\Minifier'))
                     {
                         // load casset if not laoded already
-                        $match = \Casset\Casset_JSMin::minify($match);
+                        $match = \JShrink\Minifier::minify($match, array('flaggedComments' => false));
                     }
                     // MINIFY IF THEY HAVE CASSET
                     static::$saveJS[] = $match;

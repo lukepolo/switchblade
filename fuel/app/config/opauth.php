@@ -34,7 +34,6 @@ return array(
 	 * local user account with a random password, if a nickname and an
 	 * email address is present
 	 */
-         // TODO - we may want this!
 	'auto_registration' => false,
 
 	/**
@@ -49,9 +48,7 @@ return array(
 	 *
 	 * Uncomment if you would like to view debug messages
 	 */
-         // TURN TO FALSE LATER
-        // TODO
-	'debug' => true,
+	'debug' => false,
 
 	/**
 	 * A random string used for signing of auth response.

@@ -43,7 +43,7 @@ class Controller_Api extends \Controller_Hybrid
         
         // generate user image
         Controller_Api::get_screenshot($url, $user_id);
-        
+
         // CUSTOM JS back to the user
         return array(
             'function' => 'apply_script', 
@@ -66,7 +66,11 @@ class Controller_Api extends \Controller_Hybrid
                             $.ajax({
                                 type: 'POST',
                                 url: '".\Uri::Create('heatmap/api/add_heatpoint')."',
-                                data: {key:'".\Input::Get('key')."', point_data: heat_data, user: '".$user_id."'},
+                                data: {
+                                    key:'".\Input::Get('key')."',
+                                    point_data: heat_data,
+                                    user: '".$user_id."'
+                                }
                             });
                             heat_data = new Array();
                         }

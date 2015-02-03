@@ -1,6 +1,5 @@
 <?php
 
-// TODO - we may need to change *
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization");
 

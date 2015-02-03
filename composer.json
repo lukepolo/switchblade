@@ -20,7 +20,8 @@
         "psr/log": "1.0.*@dev",
         "wisembly/elephant.io": "~3.0",
         "stripe/stripe-php": "1.*",
-        "simpletest/simpletest": "dev-master"
+        "simpletest/simpletest": "dev-master",
+        "tedivm/jshrink": "~1.0"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
