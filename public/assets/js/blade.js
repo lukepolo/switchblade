@@ -29,10 +29,11 @@
         {
             if (xhr.readyState == 4) 
             { 
-                if(xhr.responseText)
+                if(xhr.responseText && xhr.status == 200)
                 {
                     // Apend the JS to the end of the file
                     var data = JSON.parse(xhr.responseText);
+                    console.log(data);
                     data.forEach(function(command)
                     {
                         if(command)
@@ -64,7 +65,15 @@
             }
         }
         
-        xhr.send();
+        try
+        {
+            xhr.send();
+        }
+        catch(err)
+        {
+            console.log(err);
+            document.getElementsByTagName('html')[0].style.visibility= "";
+        }
     }
         
     function EncodeQueryData(data)

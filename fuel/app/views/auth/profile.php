@@ -137,7 +137,6 @@
             success: function(payments) {
                 $.each(payments.data, function(index, payment)
                 {
-                    console.log(payment);
                     if(payment.refunded)
                     {
                         var refund_text = 'Refunded';
@@ -172,7 +171,7 @@
                     {
                         var cancel_text = '<a href="<?php echo Uri::Create('stripe/subscriptions/cancel/'); ?>' + subscription.id + '">Start Cancelation</a>';
                     }
-                    console.log(subscription.plan);
+                    console.log(subscription);
                     $('#subscriptions table tbody').append('\
                     <tr>\
                         <td>' + subscription.id + '</td>\

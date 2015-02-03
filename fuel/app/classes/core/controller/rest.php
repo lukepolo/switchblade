@@ -8,6 +8,8 @@ class Controller_Rest extends Fuel\Core\Controller_Rest
 {
     public static $user_id;
     public static $api_key;
+    public static $mods;
+    
     protected function _api_auth()
     {
         if(\Auth::Check() === false)
@@ -21,20 +23,18 @@ class Controller_Rest extends Fuel\Core\Controller_Rest
                 static::$api_key = Input::post('key');
             }
                 
-            static::$user_id = (int) Crypt::decode(static::$api_key);
-
-            if(static::$user_id != 0)
+            $mongodb = \Mongo_Db::instance();
+            
+            $user = $mongodb->where(array(
+                    'api_key' => static::$api_key
+                ))
+                ->get_one('users');
+            
+            if(isset($user['user_id']) === true)
             {
-                $api_key = \Auth\Model\Auth_Metadata::query()
-                    ->where('user_id', static::$user_id)
-                    ->where('key', 'apikey')
-                    ->get_one();
-                
-                // Double check for the apikey
-                if($api_key->value == static::$api_key)
-                {
-                    return true;
-                }
+                static::$user_id = $user['user_id'];
+                static::$mods = $user['mods'];
+                return true;
             }
 
             return false;

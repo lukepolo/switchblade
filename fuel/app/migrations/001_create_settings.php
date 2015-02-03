@@ -15,6 +15,8 @@ class Create_settings
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
 		), array('id'));
+                
+                \DBUtil::create_index('settings', array('name'), 'name');
 	}
 
 	public function down()

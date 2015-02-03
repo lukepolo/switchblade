@@ -21,6 +21,12 @@ class Create_product_plans
                         'deleted_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
 		), array('id'));
+                
+                //Main Index
+                \DBUtil::create_index('product_plans', array('stripe_id'), 'stripe_id');
+                // JOIN Index
+                \DBUtil::create_index('product_plans', array('product_id'), 'product_id');
+                
 	}
 
 	public function down()

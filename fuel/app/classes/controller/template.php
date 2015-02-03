@@ -37,7 +37,6 @@
                             'mods' => null
                         ));
                     }
-                    
                     $this->template->header = View::forge('core/private/header');
                     $this->template->navigation = View::forge('core/private/navigation');
                     $this->template->ribbon = View::forge('core/private/ribbon');

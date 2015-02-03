@@ -14,6 +14,9 @@ class Create_products
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
 		), array('id'));
+                
+                // Main Index
+                \DBUtil::create_index('products', array('name'), 'name');
 	}
 
 	public function down()

@@ -89,6 +89,7 @@ class MinifyHTML
                 {
                     if(\Package::loaded('fuel-casset'))
                     {
+                        // load casset if not laoded already
                         $match = \Casset\Casset_JSMin::minify($match);
                     }
                     // MINIFY IF THEY HAVE CASSET

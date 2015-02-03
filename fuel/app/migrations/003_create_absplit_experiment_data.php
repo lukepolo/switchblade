@@ -17,6 +17,9 @@ class Create_absplit_experiment_data
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
 		), array('id'));
+                
+                // JOIN Index
+                \DBUtil::create_index('absplit_experiment_data', array('absplit_experiment_id'), 'absplit_experiment_id');
 	}
 
 	public function down()
