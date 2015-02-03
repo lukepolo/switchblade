@@ -8,8 +8,8 @@ class Controller_Api extends \Controller_Hybrid
         $mongodb = \Mongo_Db::instance();
        
         $mongodb->where(array(
-            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
-            'user_id' => \Controller_Rest::$user_id
+            'user_id' => \Controller_Rest::$user_id,
+            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host']
         ));
         
         $domain = $mongodb->get_one('user_domains');

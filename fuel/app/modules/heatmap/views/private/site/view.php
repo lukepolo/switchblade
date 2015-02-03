@@ -40,9 +40,11 @@ echo Asset::css('modules/absplit/main.css');
             var count = 1;
             $(heatmap_object.data).each(function(index, point)
             {
-                heatmapInstance.addData({
-                    x: point.x * (1024 /  point.width),
-                    y: point.y,
+                var point_x = ($('#img img').width() / 2) - (point.width / 2 - point.x * (($('#img img').width() / 2) / (point.width / 2)))
+                
+                heatmapInstance.addData({ 
+                    x: point_x,
+                    y: point.y * ($('#img img').height() /  point.height),
                     value: count++
                 });
             });

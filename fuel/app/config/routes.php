@@ -1,19 +1,27 @@
 <?php
 
-    $host = explode('.',parse_url(Uri::Base())['host']);
-    if(count($host) === 3)
+    try
     {
-        $host = $host[1];
+        $host = explode('.',parse_url(Uri::Base())['host']);
+        if(count($host) === 3)
+        {
+            $host = $host[1];
+        }
+        else
+        {
+            $host = $host[0];
+        }
     }
-    else
+    catch(\Exception $e)
     {
-        $host = $host[0];
+        $host = '';
     }
     
     // If the host is not switchblade we need to redirect them root to a diff path
     switch($host)
     {
         case 'ketchscreen':
+        case 'ketchurl':
             $overrides =  array(
                 '_root_'  => 'screenshot/home',  // The default route
                 // Add any special routes here, otherwise we assume the default routes begin with screenshot
@@ -25,6 +33,8 @@
         break;
     }
     
+    
+    // GLOBAL ROUTES
     return array_merge(array(
         '_root_'  => 'home',  // The default route
         '_404_'   => 'core/404',    // The main 404 route

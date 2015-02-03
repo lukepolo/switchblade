@@ -72,6 +72,8 @@ class Controller_Editor extends \Controller_Template
         }
         $url_host = '//'.$url_parsed['host'];
         
+        // TODO - remove SWB Scripts
+        
         // TODO - IF THE URL IS HTTP MAKE SURE TO USE HTTPS THROUGH SWITCHBLADE
         $url_parsed['path'] = preg_replace('/[^\/]+\.\w+$/','', $url_parsed['path']);
         
@@ -315,12 +317,16 @@ class Controller_Editor extends \Controller_Template
                 $file = preg_replace('/url\((\'|")(.*?)(\'|")/', 'url($2', $file);
                                 
                 // Fix things that have no begining slash by adding the path!
-                // https://www.regex101.com/r/eS7gP8/5
                 $real_path = preg_replace('/(.*\/).*/i','$1', $parsed_url['path']);
                 
                 // Fix urls with relative paths
                 // https://www.regex101.com/r/eS7gP8/7
-                $file = preg_replace('/url\((?!\/|h)(.*?)(\))/i',  'url('.\Uri::create('absplit/get/').$parsed_url['host'].$real_path.'$1)' , $file);
+                $file = preg_replace('/url\((?!\/|h)(.*?)(\))/i',  'url('.$real_path.'$1)' , $file);
+                
+                // Now Append the URL to all paths that do not have http / https
+                $file = preg_replace('/url\((?!http)\/(.*?)(\))/i',  'url('.\Uri::create('absplit/get/').$parsed_url['host'].'$1)' , $file);
+                
+                
                 
 // So fucked if we had to update this              
 //http://stackoverflow.com/questions/21392684/extracting-urls-from-font-face-by-searching-within-font-face-for-replacement
@@ -352,6 +358,11 @@ $pattern = <<<'LOD'
 )
 ~xs
 LOD;
+                // TODO - Not all urls are fixed
+                // https://luke.switchblade.io/absplit/get/http://lukepolo.com/assets/cache/52121464918df368a83e7dd62d95a927.css
+                // look for gly
+                
+
                 // Fix HTTP links that wont work for FONTS - I believe these are the only ones that need to be fixed at this time
                 $file = preg_replace($pattern,  \Uri::create('absplit/get/').$parsed_url['host'].'/$8' , $file);
             }

@@ -10,10 +10,13 @@ class Create_settings
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'name' => array('constraint' => 255, 'type' => 'varchar'),
 			'data' => array('constraint' => 255, 'type' => 'varchar'),
+                        'type' => array('constraint' => 255, 'type' => 'varchar'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 
 		), array('id'));
+                
+                \DBUtil::create_index('settings', array('name'), 'name');
 	}
 
 	public function down()

@@ -34,7 +34,6 @@ return array(
 	 * local user account with a random password, if a nickname and an
 	 * email address is present
 	 */
-         // TODO - we may want this!
 	'auto_registration' => false,
 
 	/**
@@ -49,9 +48,7 @@ return array(
 	 *
 	 * Uncomment if you would like to view debug messages
 	 */
-         // TURN TO FALSE LATER
-        // TODO
-	'debug' => true,
+	'debug' => false,
 
 	/**
 	 * A random string used for signing of auth response.
@@ -77,14 +74,14 @@ return array(
 	 */
 	'Strategy' => array(
             'Google' => array(
-                'client_id' => Settings::get('google_client_id'),
-                'client_secret' => Settings::get('google_client_secret_id'),
+                'client_id' => '528960278580-0ceodaa98qa4kqbrnfc7rd2k1460knv8.apps.googleusercontent.com',
+                'client_secret' => 'Ddf_LOsXtW7uB8U0JyozfZmP',
                 'state' => Uri::Base(),
                 'redirect_uri' => 'https://oauth.switchblade.io/auth/register/google/oauth2callback'
             ),
             'Twitter' => array(
-                'key' => Settings::get('twitter_key'),
-                'secret' => Settings::get('twitter_secret_id')
+                'key' => 'DxbUf9Dn6KhUuPDqLvvfdMpD4',
+                'secret' => 'FCxCL6nRTgCveGVSbVosPEvY0CeX49EOrMOOrBet04yhz7QEfe'
             )
 	 ),
 );

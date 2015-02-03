@@ -8,6 +8,7 @@ Autoloader::add_classes(array(
     'Form' => APPPATH.'classes/core/form.php',
     'Controller_Rest' => APPPATH.'classes/core/controller/rest.php',
     'Controller_Hybrid' => APPPATH.'classes/core/controller/hybrid.php',
+    'Security' => APPPATH.'classes/core/security.php'
 ));
 
 // Register the autoloader

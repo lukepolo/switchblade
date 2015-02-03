@@ -59,13 +59,13 @@
                         <section class="col col-6">
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-default">
-                                    Male<?php echo \Form::radio('male', 'gender');?>
+                                    Male<?php echo \Form::radio('gender', 'male');?>
                                 </label>
                                 <label class="btn btn-default">
-                                    Female<?php echo \Form::radio('female', 'gender');?>
+                                    Female<?php echo \Form::radio('gender', 'female');?>
                                 </label>
                                 <label class="btn btn-default">
-                                    Other<?php echo \Form::radio('other', 'gender');?>
+                                    Other<?php echo \Form::radio('gender', 'other');?>
                                 </label>
                             </div>
                         </section>

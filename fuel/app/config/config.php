@@ -115,13 +115,13 @@ return array(
 	 */
 	'security' => array(
 		 'csrf_autoload'    => false,
-		 'csrf_token_key'   => 'fuel_csrf_token',
+		 'csrf_token_key'   => 'csrf_token',
 		 'csrf_expiration'  => 0,
 
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
 		 */
-		 'token_salt'            => '!Th3JumPisSoHigh!',
+		 'token_salt'            => 'hmayk90QRXckSYvnk6PK7Dgol3cvj0f6acjAw4anvRyrb2eqP4',
 
 		/**
 		 * Allow the Input class to use X headers when present
@@ -276,6 +276,7 @@ return array(
                     'fuel-casset',
                     'auth',
                     'email',
+                    'minify-html'
 		 ),
 
 		/**
@@ -289,7 +290,8 @@ return array(
 		 'modules'  => array(
                      'AbSplit',
                      'Analytics',
-                     'HeatMap'
+                     'HeatMap',
+                     'Screenshot'
                  ),
 
 		/**
@@ -312,10 +314,11 @@ return array(
                      'crypt',
                      'date',
                      'db',
-                     'email',
+                     'error_codes',
                      'opauth',
                      'rest',
-                     'session'
+                     'session',
+                     'stripe',
                  ),
 
 		/**

@@ -55,7 +55,7 @@ return array(
 
 	// specific configuration settings for the memcached driver
 	'memcached'  => array(
-		'cache_id'  => 'fuel',  // unique id to distinquish fuel cache items from others stored on the same server(s)
+		'cache_id'  => 'swb',  // unique id to distinquish fuel cache items from others stored on the same server(s)
 		'servers'   => array(   // array of servers and portnumbers that run the memcached service
 			'default' => array('host' => '127.0.0.1', 'port' => 11211, 'weight' => 100)
 		),
@@ -63,7 +63,7 @@ return array(
 
 	// specific configuration settings for the apc driver
 	'apc'  => array(
-		'cache_id'  => 'fuel',  // unique id to distinquish fuel cache items from others stored on the same server(s)
+		'cache_id'  => 'swb',  // unique id to distinquish fuel cache items from others stored on the same server(s)
 	),
 
 	// specific configuration settings for the redis driver
@@ -73,7 +73,7 @@ return array(
 
 	// specific configuration settings for the xcache driver
 	'xcache'  => array(
-		'cache_id'  => 'fuel',  // unique id to distinquish fuel cache items from others stored on the same server(s)
+		'cache_id'  => 'swb',  // unique id to distinquish fuel cache items from others stored on the same server(s)
 	),
 );
 

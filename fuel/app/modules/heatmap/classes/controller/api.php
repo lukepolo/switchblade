@@ -10,8 +10,8 @@ class Controller_Api extends \Controller_Hybrid
         $mongodb = \Mongo_Db::instance();
        
         $mongodb->where(array(
-            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
-            'user_id' => \Controller_Rest::$user_id
+            'user_id' => \Controller_Rest::$user_id,
+            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host']
         ));
         
         $domain = $mongodb->get_one('user_domains');
@@ -43,7 +43,8 @@ class Controller_Api extends \Controller_Hybrid
         
         // generate user image
         Controller_Api::get_screenshot($url, $user_id);
-        
+
+        // CUSTOM JS back to the user
         return array(
             'function' => 'apply_script', 
             'data' => array(
@@ -65,7 +66,11 @@ class Controller_Api extends \Controller_Hybrid
                             $.ajax({
                                 type: 'POST',
                                 url: '".\Uri::Create('heatmap/api/add_heatpoint')."',
-                                data: {key:'".\Input::Get('key')."', point_data: heat_data, user: '".$user_id."'},
+                                data: {
+                                    key:'".\Input::Get('key')."',
+                                    point_data: heat_data,
+                                    user: '".$user_id."'
+                                }
                             });
                             heat_data = new Array();
                         }
@@ -81,8 +86,8 @@ class Controller_Api extends \Controller_Hybrid
         $mongodb = \Mongo_Db::instance();
        
         $mongodb->where(array(
-            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
             'user_id' => \Controller_Rest::$user_id,
+            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host']
         ));
         
         $domain = $mongodb->get_one('user_domains');

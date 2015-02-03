@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="description" content="">
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +16,14 @@
             // CSS FILES
             Casset::css('bootstrap.css');
             Casset::css('base.css');
+            Casset::css('prettify.css');
             Casset::css('font-awesome.css');
 	    Casset::css('smartadmin-production-plugins.css');
             Casset::css('smartadmin-production.css');
 	    Casset::css('smartadmin-skins.css');
             echo Casset::render_css();
         ?>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>       
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>       
     </head>
     <body class="menu-on-top">
         <?php echo $header; ?>
@@ -72,10 +72,7 @@
 	    // Main APP JS
             Casset::js('app.config.js');
             Casset::js('app.js');
-	    
-            // google-code-prettify
-            Casset::js('google-code-prettify/run_prettify.js');
-            
+	                
 	    // SELECT2
             Casset::js('select2.min.js');
 	    

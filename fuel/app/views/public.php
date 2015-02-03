@@ -23,7 +23,7 @@
 	    Casset::css('smartadmin-skins.css');
             echo Casset::render_css();
         ?>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     </head>
     <body class="menu-on-top">
         <?php echo $header; ?>
@@ -32,7 +32,12 @@
                 <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
             <![endif]-->
             <div id="content" class="<?php echo $container; ?>">
-                <?php echo $content; ?>
+                <?php 
+                    if(isset($content) === true)
+                    {
+                        echo $content;
+                    }
+                ?>
             </div>
         </div>
         <footer>

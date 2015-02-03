@@ -76,7 +76,44 @@
                 </footer>
             <?php echo Form::close(); ?>
         </div>
-        <pre class="prettyprint">
+        <div class="row" style="margin:10px;" id="subscriptions">
+            <hr>
+            <h3>Subscriptions</h3>
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <th>Subscription</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Next Charge Date</th>
+                    <th></th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row" style="margin:10px;" id="payments">
+            <hr>
+            <h3>Payments</h3>
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <th>Order</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Charge Date</th>
+                    <th></th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="row" style="margin:10px;">
+            <hr>
+            <h2>Javascript Code <small>Copy and paste directly after your &lthead> tag </small></h2>
+            <pre class="prettyprint">
 <code class="language-js">
 &lt;script type="text/javascript">
     (function(g,c,e,f,a,b,d){c.getElementsByTagName("html")[0].style.visibility="hidden";window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
@@ -84,13 +121,72 @@
     swb('get_mods');    
 &lt;/script>
 </code>
-        </pre>
+            </pre>
+        </div>
+
     </div>
 </div>
 <script>
     var image;
     $(document).ready(function()
     {
+        prettyPrint();
+        $.ajax({
+            url: '<?php echo Uri::Create('stripe/payments/get'); ?>',
+            type: 'GET',
+            success: function(payments) {
+                $.each(payments.data, function(index, payment)
+                {
+                    if(payment.refunded)
+                    {
+                        var refund_text = 'Refunded';
+                    }
+                    else
+                    {
+                        var refund_text = '<a href="<?php echo Uri::Create('stripe/payments/refund/'); ?>' + payment.id + '">Start Refund</a>';
+                    }
+                    $('#payments table tbody').append('\
+                    <tr>\
+                        <td>' + payment.id + '</td>\
+                        <td>' + ucwords(payment.statement_descriptor) + '</td>\
+                        <td>$' + payment.amount / 100+ '</td>\
+                        <td>' + toDate(payment.created) + '</td>\
+                        <td>' + refund_text + '</td>\
+                    </tr>')
+                });
+            }
+        });
+        
+        $.ajax({
+            url: '<?php echo Uri::Create('stripe/subscriptions/get'); ?>',
+            type: 'GET',
+            success: function(subscriptions) {
+                $.each(subscriptions.data, function(index, subscription)
+                {
+                    if(subscription.canceled_at)
+                    {
+                        var cancel_text = 'Cancled';
+                    }
+                    else
+                    {
+                        var cancel_text = '<a href="<?php echo Uri::Create('stripe/subscriptions/cancel/'); ?>' + subscription.id + '">Start Cancelation</a>';
+                    }
+                    console.log(subscription);
+                    $('#subscriptions table tbody').append('\
+                    <tr>\
+                        <td>' + subscription.id + '</td>\
+                        <td>' + ucwords(subscription.plan.statement_descriptor) + '</td>\
+                        <td>' + ucwords(subscription.status) + '</td>\
+                        <td>$' + subscription.plan.amount / 100 + '</td>\
+                        <td>' + toDate(subscription.current_period_end) + '</td>\
+                        <td>' + cancel_text + '\
+                            <br><a href="<?php echo Uri::Create('stripe/subscriptions/update/'); ?>'+ subscription.id +'/Ketch-Basic-Year">Modify Plan</a>\
+                        </td>\
+                    </tr>')
+                });
+            }
+        });
+        
         $('#edit-profile').click(function()
         {
            $('#update_profile_fields').slideToggle();
@@ -196,8 +292,9 @@
             {
                 $('.select_picture').attr('src', e.target.result);
             }
-
             reader.readAsDataURL(input.files[0]);
         }
     }
 </script>
+<?php
+    Casset::js('prettify/prettify.js');

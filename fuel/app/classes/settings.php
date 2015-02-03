@@ -33,22 +33,29 @@ class Settings
             }
             catch (\CacheNotFoundException $e)
             {
-                $settings =  Model_Setting::query()
-                    ->get();
-                    
-                $get_settings = array();
-                
-                if(empty($settings) === false)
+                try
                 {
-                    foreach($settings as $setting)
+                    $settings = Model_Setting::query()
+                        ->get();
+
+                    $get_settings = array();
+
+                    if(empty($settings) === false)
                     {
-                        $get_settings[$setting->name] = $setting;
+                        foreach($settings as $setting)
+                        {
+                            $get_settings[$setting->name] = $setting;
+                        }
                     }
+
+                    static::$settings = $get_settings;
+
+                    Cache::set('settings', static::$settings);
                 }
-                
-                static::$settings = $get_settings;
-                
-                Cache::set('settings', static::$settings);
+                catch(\Exception $e)
+                {
+                    Migrate::current('default', 'app');
+                }
             }
         }
         
