@@ -44,12 +44,12 @@ echo Asset::css('modules/absplit/main.css');
                 
                 heatmapInstance.addData({ 
                     x: point_x,
-                    y: point.y * ($('#img img').height() /  point.height),
+                    y: point.y,
                     value: count++
                 });
             });
+            
         });
-        
         // TODO - add Pree - Loading Screen
     }
 </script>
