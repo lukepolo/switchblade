@@ -48,26 +48,25 @@ function auth(req, res, next)
 
 function get_screenshot(url, options, res, api_key, user_id)
 {
-    var image_path = null;
     db.screenshots.insert({
 	url: url, 
 	user_id: user_id,
-	screenshot_images_id: null,
+	image_path: null,
 	api_key : api_key
     }, 
     function(err, row)
     { 
 	if(!err)
 	{
-	    screenshot_id = row._id;
-	    image_path = screenshot_folder + screenshot_id + '.jpg';
+	    var screenshot_id = row._id;
+	    var image_path = screenshot_folder + screenshot_id + '.jpg';
 
 	    webshot(url, options, function(err, renderStream) 
 	    {
 		if(!err)
 		{
 		    var file = fs.createWriteStream(image_path, {encoding: 'binary'});
-		    var image_data;
+		    var image_data = null;;
 		    renderStream.on('data', function(data) 
 		    {
 			image_data = data.toString('binary');
@@ -87,46 +86,49 @@ function get_screenshot(url, options, res, api_key, user_id)
 			// Stop the response
 			res.end();
 
-			// lets check to make sure the image is unquie...otherwise its a waste of space
-			var checksum =  crypto.createHash('md5').update(image_data, 'utf8').digest('hex');
-
-			db.screenshot_images.findOne({checksum: checksum}, function(err, row)
+			fs.readFile(image_path, function (err, data)
 			{
-			    if(!err)
+			    var checksum =  crypto.createHash('md5').update(data).digest('hex');
+			    db.screenshot_images.findOne({checksum: checksum}, function(err, row)
 			    {
-				var screenshot_images_id = null;
-				if(row == null)
+				if(!err)
 				{
-				    // Create a new record for the screenshot with the path
-				    db.screenshot_images.insert({
-					checksum: checksum,
-					image: image_path
-				    },
-				    function(err, row)
+				    if(row == null)
 				    {
-					if(!err)
+					// Create a new record for the screenshot with the path
+					db.screenshot_images.insert({
+					    checksum: checksum,
+					    image_path: screenshot_id + '.jpg'
+					},
+					function(err, row)
 					{
-					    // Insert is SYNC (AKA DO NOT MOVE)
-					    updateScreenShot(screenshot_id, row._id);
-					}
-					else
+					    if(!err)
+					    {
+						// Insert is SYNC (AKA DO NOT MOVE)
+						updateScreenShot(screenshot_id, row.image_path);
+					    }
+					    else
+					    {
+						console.log('ERROR : '+ err);
+						res.status(500).send('ERROR '+ err + ', please contact support!');
+					    }
+					});
+				    }
+				    else
+				    {
+					if(screenshot_id != row.image_path+'.jpg')
 					{
-					    console.log('ERROR : '+ err);
-					    res.status(500).send('ERROR '+ err + ', please contact support!');
+					    fs.unlink(image_path);
 					}
-				    });
+					updateScreenShot(screenshot_id, row.image_path);
+				    }
 				}
 				else
 				{
-				    fs.unlink(image_path);
-				    updateScreenShot(screenshot_id, row._id);
+				    console.log('ERROR : '+ err);
+				    res.status(500).send('ERROR '+ err + ', please contact support!');
 				}
-			    }
-			    else
-			    {
-				console.log('ERROR : '+ err);
-				res.status(500).send('ERROR '+ err + ', please contact support!');
-			    }
+			    });
 			});
 		    });
 		}
@@ -187,15 +189,17 @@ app.listen(7778);
 
 
 // Functions
-function updateScreenShot(screenshot_id, row_id)
+function updateScreenShot(screenshot_id, image_path)
 {
+    console.log(screenshot_id);
+    console.log(image_path);
     db.screenshots.findAndModify({
 	query: {
 	    _id: screenshot_id
 	}, 
 	update: {
 	    $set: {
-		screenshot_images_id: row_id
+		image_path: image_path
 	    }
 	},
 	new: true
