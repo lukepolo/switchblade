@@ -50,16 +50,22 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i><span class="menu-item-parent">Dev Menu</span></a>
                  <ul>
                     <li>
-                        <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-slack"></i>Slack</a>
+                        <a target="_blank" href="https://switchblade.slack.com"><i class="fa fa-slack"></i> Slack</a>
                     </li>
                     <li>
-                        <a target="_blank" href="https://bitbucket.org/swBlade/switch-blade-core"><i class="fa fa-bitbucket"></i>BitBucket</a>
+                        <a target="_blank" href="https://github.com/lukepolo/switchblade"><i class="fa fa-github-square"></i> GitHub</a>
                     </li>
                     <li>
-                        <a target="_blank" href="http://bladeswitch.io">JIRA</a>
+                        <a target="_blank" href="http://team.bladeswitch.io"><img style="margin-left:2px;" width="12px" src="<?php echo Uri::Create('assets/img/icons/confluence.png'); ?>"> Confluence</a>
                     </li>
                     <li>
-                        <a target="_blank" href="http://box.bladeswitch.io"><i class="fa fa-dropbox"></i>Share Drive</a>
+                        <a target="_blank" href="http://box.bladeswitch.io"><i class="fa fa-dropbox"></i> Share Drive</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://stripe.com"><i class="fa fa-cc-stripe"></i> Stripe</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://sendgrid.com"><img style="margin-left: 2px;" width="12px" src="<?php echo Uri::Create('assets/img/icons/sendgrid.png'); ?>"> SendGrid</a>
                     </li>
                     <li>
                         <a href="<?php echo Uri::Create('settings'); ?>">Settings</a>
@@ -71,7 +77,7 @@
                         <a href="<?php echo Uri::Create('settings/minify'); ?>"><?php echo Session::Get('minify') === false ? 'Enable' : 'Disable';?> Minify</a>
                     </li>
                     <li>
-                        <a href="http://192.241.236.31/themes/preview/smartadmin/1.5/ajaxversion/#ajax/dashboard.html" target="_blank"><i class="fa fa-css3"></i>SmartAdmin CSS</a>
+                        <a href="http://192.241.236.31/themes/preview/smartadmin/1.5/ajaxversion/#ajax/dashboard.html" target="_blank"><i class="fa fa-css3"></i> SmartAdmin CSS</a>
                     </li>
                 </ul>
             </li>

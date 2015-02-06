@@ -6,7 +6,7 @@ Screen Shots Library
         {
         ?>
             <div class="col-lg-1 crop">
-                <img class="img-responsive" src="<?php echo Uri::Create('assets/img/screenshots/'.$screenshot['image_path']); ?>.jpg">
+                <img class="img-responsive" src="<?php echo Uri::Create('assets/img/screenshots/'.$screenshot['image_path']); ?>">
             </div>
         <?php
         }
