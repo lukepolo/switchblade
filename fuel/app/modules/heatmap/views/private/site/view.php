@@ -1,9 +1,9 @@
 <?php
-echo Asset::css('modules/absplit/main.css'); 
+echo Asset::css('modules/absplit/main.css');
     Casset::js('heatmap.min.js');
 ?>
 <div id="img" style="max-width: 1024px">
-    <img src="<?php echo Uri::Create('assets/img/screenshots/'. $url['image_path'] .'.jpg'); ?>">
+    <img src="<?php echo Uri::Create('assets/img/screenshots/'. $url['image_path']); ?>">
 </div>
 <script>
     var heatmap_data = <?php echo json_encode($heatmap); ?>;
@@ -27,7 +27,7 @@ echo Asset::css('modules/absplit/main.css');
             });
        }
     });
-    
+
     function render_heatmap()
     {
         heatmapInstance = h337.create({
@@ -36,19 +36,19 @@ echo Asset::css('modules/absplit/main.css');
         });
 
         $(heatmap_data).each(function(index, heatmap_object)
-        {   
+        {
             var count = 1;
             $(heatmap_object.data).each(function(index, point)
             {
                 var point_x = ($('#img img').width() / 2) - (point.width / 2 - point.x * (($('#img img').width() / 2) / (point.width / 2)))
-                
-                heatmapInstance.addData({ 
+
+                heatmapInstance.addData({
                     x: point_x,
                     y: point.y,
                     value: count++
                 });
             });
-            
+
         });
         // TODO - add Pree - Loading Screen
     }
