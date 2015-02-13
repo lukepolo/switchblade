@@ -66,9 +66,11 @@ function get_screenshot(url, options, res, api_key)
 	    {
 		if(!err)
 		{
+		   
 		    var image_data = '';
 		    renderStream.on('data', function(data) 
 		    {
+			
                         var chunk = data.toString('binary');
 			image_data = image_data + chunk;
                         
@@ -81,7 +83,10 @@ function get_screenshot(url, options, res, api_key)
 		    {
 			// Stop the response
 			res.end();
-                        saveScreenShot(screenshot._id, image_data);
+			if(image_data != '')
+			{
+			    saveScreenShot(screenshot._id, image_data);
+			}
                         
 		    });
 		}
