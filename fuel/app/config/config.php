@@ -60,7 +60,7 @@ return array(
 	/**
 	 * Callback to use with ob_start(), set this to 'ob_gzhandler' for gzip encoding of output
 	 */
-	 'ob_callback'  => 'ob_gzhandler',
+	 'ob_callback'  => null,
 
 	 'errors'  => array(
 		// Which errors should we show, but continue execution? You can add the following:
@@ -80,7 +80,7 @@ return array(
 	 */
 	 'language'           => 'en', // Default language
 	 'language_fallback'  => 'en', // Fallback language when file isn't available for default language
-	 'locale'             => 'en_US', // PHP set_locale() setting, null to not set
+	 'locale'             => 'en_US.utf8', // PHP set_locale() setting, null to not set
 
 	/**
 	 * Internal string encoding charset
@@ -192,7 +192,7 @@ return array(
 		// Restrict the path that the cookie is available to
 		 'path'        => '/',
 		// Restrict the domain that the cookie is available to
-		 'domain'      => 'switchblade.io',
+		 'domain'      => '*.switchblade.io',
 		// Only transmit cookies over secure connections
 		 'secure'      => true,
 		// Only transmit cookies over HTTP, disabling Javascript access

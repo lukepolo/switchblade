@@ -1,19 +1,20 @@
-var unserialize = require('./unserialize.js');
-var memcache = require('memcache');
-var cookie = require('cookie');
-var os = require('os')
+var unserialize = require('./unserialize.js'),
+redis = require('redis'),
+client = redis.createClient(),
+cookie = require('cookie'),
+os = require('os'),
 
 // HTTPS
-var https = require('https');
-var fs = require('fs');
-var options = {
+https = require('https'),
+fs = require('fs'),
+options = {
     key:    fs.readFileSync('/etc/ssl/switchblade.key'),
     cert:   fs.readFileSync('/etc/ssl/switchblade.crt'),
     ca:     fs.readFileSync('/etc/ssl/COMODORSADomainValidationSecureServerCA.crt')
-};
+},
 
-var server = require('https').createServer(options);
-var io = require('socket.io')(server);
+server = require('https').createServer(options),
+io = require('socket.io')(server);
 
 server.listen(7777);
 
@@ -50,14 +51,10 @@ io.use(function(socket, next)
     {
         // Get the cookies from the headers
         var cookies = cookie.parse(socket.request.headers.cookie);
-        
-        var client = new memcache.Client(11211, "127.0.0.1");
-        client.connect();
-        
-        var session = unserialize.convert(cookies.fuelmid);
-        console.log('Checking');
+        var session = unserialize.convert(cookies.swbrid);
+	
         // Check in the memcache for the session
-        client.get("fuelmid_"+session[0], function(error, result)
+        client.get(session[0], function(error, result)
         {
             if (error)
             {

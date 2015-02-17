@@ -103,7 +103,7 @@ class Controller_Api extends \Controller_Hybrid
    {       
         if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
         {
-            $url = 'https://screenshot.switchblade.io/low/?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
+            $url = 'https://get.ketchurl.com?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
 
             $parsed_url = parse_url($url);
             $fp = fsockopen('ssl://'.$parsed_url['host'], 443, $errno, $errstr, 30);
