@@ -13,7 +13,7 @@ var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'publ
 var delay = 0;
 var render = phantom({
     pool        : 4,           // Change the pool size.
-    timeout     : 5000,        // Set a render timeout in milliseconds.
+    timeout     : 10000,        // Set a render timeout in milliseconds.
     format      : 'jpeg',      // The default output format.
     quality     : 50,          // The default image quality. Only relevant for jpeg format.
     width       : 200,        // Changes the width size.
@@ -63,6 +63,11 @@ function auth(req, res, next)
 
 function get_screenshot(url, options, res, api_key)
 {
+    console.log(url);
+    if (!/^http/.test(url)) 
+    {
+	url = 'http://'+ url;;
+    }
     // Start the screenshot object
     db.screenshots.insert({
 	url: url, 
@@ -73,37 +78,29 @@ function get_screenshot(url, options, res, api_key)
     { 
 	if(!err)
 	{
-	    console.log(url);
             // Using the webshot API Libary create a stream
-	    try
+	    renderStream = render(url, options);
+
+	    var image_data = '';
+	    renderStream.on('data', function(data) 
 	    {
-		renderStream = render(url, options);
+		var chunk = data.toString('binary');
+		image_data = image_data + chunk;
 
-		var image_data = '';
-		renderStream.on('data', function(data) 
-		{
-		    var chunk = data.toString('binary');
-		    image_data = image_data + chunk;
+		// Return to the browser 
+		res.write(chunk, 'binary');
+	    });
 
-		    // Return to the browser 
-		    res.write(chunk, 'binary');
-		});
-
-		// After the image has been completed we need to store it in our mongo db
-		renderStream.on('end', function() 
-		{
-		    // Stop the response
-		    res.end();
-		    if(image_data != '')
-		    {
-			saveScreenShot(screenshot._id, image_data);
-		    }
-		});
-	    }
-	    catch(err)
+	    // After the image has been completed we need to store it in our mongo db
+	    renderStream.on('end', function() 
 	    {
-		console.log('ERROR : '+ err);
-	    }
+		// Stop the response
+		res.end();
+		if(image_data != '')
+		{
+		    saveScreenShot(screenshot._id, image_data);
+		}
+	    });
 	}
 	else
 	{

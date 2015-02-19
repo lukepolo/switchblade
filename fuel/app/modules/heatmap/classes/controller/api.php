@@ -5,13 +5,15 @@ class Controller_Api extends \Controller_Hybrid
 {
     public static function get_code()
     {
+        $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
+        
         // Need to create a mongo heatmap_user to get a unquie ID
         // We can store the users information , like browser ect.
         $mongodb = \Mongo_Db::instance();
        
         $mongodb->where(array(
             'user_id' => \Controller_Rest::$user_id,
-            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host']
+            'domain' => $parsed_url['host']
         ));
         
         $domain = $mongodb->get_one('user_domains');
@@ -20,7 +22,7 @@ class Controller_Api extends \Controller_Hybrid
         {
             // We can group the hosts so we are able to reteieve the info alot faster
             $domain_id = $mongodb->insert('user_domains', array(
-                'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
+                'domain' => $parsed_url['host'],
                 'user_id' => \Controller_Rest::$user_id
             ));
         }
@@ -29,10 +31,11 @@ class Controller_Api extends \Controller_Hybrid
             $domain_id = $domain['_id']->{'$id'};
         }
         
-        $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
-        
+        if(isset($parsed_url['path']) === false)
+        {
+            $parsed_url['path'] = null;
+        }
         $url = trim($parsed_url['host'].$parsed_url['path'], '/');
-        
 
         $user_id = $mongodb->insert('heatmap_users', array(
             'domain_id' => $domain_id,
@@ -103,11 +106,17 @@ class Controller_Api extends \Controller_Hybrid
    {       
         if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
         {
-            $url = 'https://get.ketchurl.com?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
-
+            $url = 'http://get.ketchurl.com?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
+            
             $parsed_url = parse_url($url);
-            $fp = fsockopen('ssl://'.$parsed_url['host'], 443, $errno, $errstr, 30);
-
+            
+            if(isset($parsed_url['path']) === false)
+            {
+                $parsed_url['path'] = null;
+            }
+            
+            $fp = fsockopen($parsed_url['host'], 80, $errno, $errstr, 30);
+            
             $out ="GET ".$parsed_url["path"]."?".$parsed_url['query']." HTTP/1.1\n"; 
             $out .= "Host: ".$parsed_url['host']."\r\n";
             $out .= "Connection: Close\r\n\r\n";

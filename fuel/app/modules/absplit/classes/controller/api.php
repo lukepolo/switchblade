@@ -5,7 +5,6 @@ class Controller_Api extends \Controller_Hybrid
 {
     public static function get_code()
     {
-        return;
         // URL MATCH
         // TODO MOVE TO MONGO
         $experiment = \Model_Absplit_Experiment::query()
