@@ -16,7 +16,7 @@ return [
 	|
 	*/
 
-	'driver' => env('SESSION_DRIVER', 'file'),
+	'driver' => env('SESSION_DRIVER', 'redis'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
 	|
 	*/
 
-	'lifetime' => 120,
+	'lifetime' => 0,
 
 	'expire_on_close' => false,
 
@@ -109,7 +109,7 @@ return [
 	|
 	*/
 
-	'cookie' => 'laravel_session',
+	'cookie' => 'switchblade_rid',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -135,7 +135,7 @@ return [
 	|
 	*/
 
-	'domain' => null,
+	'domain' => '.switchblade.io',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -148,6 +148,6 @@ return [
 	|
 	*/
 
-	'secure' => false,
+	'secure' => true,
 
 ];
