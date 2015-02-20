@@ -16,15 +16,7 @@ desktop.ini
 
 # the composer package lock file and install directory
 /composer.lock
-/fuel/vendor
+/vendor
+/node_modules
 
 # dynamically generated files
-/fuel/app/logs/*/*/*
-/fuel/app/cache/*
-/fuel/app/cache/*/*
-
-/public/assets/cache/*
-/public/assets/img/users/*
-/public/assets/img/screenshots/*
-
-/public/assets/.sass-cache/*

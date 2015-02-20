@@ -1,5 +1,4 @@
 <?php
-
 return [
 
 	/*
@@ -16,7 +15,7 @@ return [
 	|
 	*/
 
-	'driver' => env('SESSION_DRIVER', 'redis'),
+	'driver' => 'redis',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -29,7 +28,8 @@ return [
 	|
 	*/
 
-	'lifetime' => 0,
+	// 1 week
+	'lifetime' => 10080,
 
 	'expire_on_close' => false,
 
@@ -135,7 +135,7 @@ return [
 	|
 	*/
 
-	'domain' => '.switchblade.io',
+	'domain' => null,
 
 	/*
 	|--------------------------------------------------------------------------

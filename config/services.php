@@ -31,7 +31,11 @@ return [
 
 	'stripe' => [
 		'model'  => 'User',
-		'secret' => '',
+		'secret' => env('STRIPE_SECRET'),
 	],
-
+	'google' => [
+	    'client_id' => '528960278580-0ceodaa98qa4kqbrnfc7rd2k1460knv8.apps.googleusercontent.com',
+	    'client_secret' => 'Ddf_LOsXtW7uB8U0JyozfZmP',
+	    'redirect' => 'https://oauth.switchblade.io/auth/callback/google'
+	]
 ];

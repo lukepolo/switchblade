@@ -78,7 +78,7 @@ return [
 	|
 	*/
 
-	'key' => env('APP_KEY', 'SomeRandomString'),
+	'key' => 'tQqp^yqBk)xQ_&Q(JKwCmXagJLs)ZO(R',
 
 	'cipher' => MCRYPT_RIJNDAEL_128,
 
@@ -145,6 +145,18 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+		/*
+		 * Laravel Packages
+		 */
+		'Laravel\Cashier\CashierServiceProvider',
+		'Laravel\Socialite\SocialiteServiceProvider',
+
+		/*
+		 * Third Party Packages
+		 */
+		'Barryvdh\Debugbar\ServiceProvider',
+		'Pingpong\Modules\ModulesServiceProvider'
+
 	],
 
 	/*
@@ -193,6 +205,15 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 
+		/*
+		 * Laravel Facades
+		 */
+		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
+
+		/*
+		 * Third Party Facades
+		 */
+		'Debugbar' => 'Barryvdh\Debugbar\Facade'
 	],
 
 ];
