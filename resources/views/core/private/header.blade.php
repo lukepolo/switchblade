@@ -110,17 +110,17 @@
 				</a>
 			    </li>
 			    <li>
-				<a href="https://jfalotico.switchblade.io/settings">
+				<a href="#">
 				    Settings
 				</a>
 			    </li>
 			    <li>
-				<a href="https://jfalotico.switchblade.io/settings/profiler">
+				<a href="#">
 				    Enable Profiler
 				</a>
 			    </li>
 			    <li>
-				<a href="https://jfalotico.switchblade.io/settings/minify">
+				<a href="#">
 				    Disable Minify
 				</a>
 			    </li>
