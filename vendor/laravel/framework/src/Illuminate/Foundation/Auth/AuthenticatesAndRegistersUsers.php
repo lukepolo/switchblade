@@ -33,7 +33,7 @@ trait AuthenticatesAndRegistersUsers {
 	/**
 	 * Handle a registration request for the application.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Foundation\Http\FormRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postRegister(Request $request)
@@ -71,7 +71,7 @@ trait AuthenticatesAndRegistersUsers {
 	public function postLogin(Request $request)
 	{
 		$this->validate($request, [
-			'email' => 'required|email', 'password' => 'required',
+			'email' => 'required', 'password' => 'required',
 		]);
 
 		$credentials = $request->only('email', 'password');

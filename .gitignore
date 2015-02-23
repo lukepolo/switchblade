@@ -18,5 +18,5 @@ desktop.ini
 /composer.lock
 /vendor
 /node_modules
-
+.env
 # dynamically generated files

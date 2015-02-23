@@ -2861,65 +2861,6 @@
         ]
     },
     {
-        "name": "laravel/cashier",
-        "version": "v3.0.1",
-        "version_normalized": "3.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel/cashier.git",
-            "reference": "1afb3d74906b42e8006bd13f6643c6b43498c279"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel/cashier/zipball/1afb3d74906b42e8006bd13f6643c6b43498c279",
-            "reference": "1afb3d74906b42e8006bd13f6643c6b43498c279",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/filesystem": "~5.0",
-            "illuminate/support": "~5.0",
-            "nesbot/carbon": "~1.0",
-            "php": ">=5.4.0",
-            "stripe/stripe-php": "~1.9",
-            "symfony/http-kernel": "~2.3"
-        },
-        "require-dev": {
-            "illuminate/routing": "~5.0",
-            "illuminate/view": "~5.0",
-            "mockery/mockery": "~0.9",
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2015-02-17 22:29:24",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Laravel\\Cashier\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylorotwell@gmail.com"
-            }
-        ],
-        "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
-        "keywords": [
-            "billing",
-            "laravel",
-            "stripe"
-        ]
-    },
-    {
         "name": "guzzle/guzzle",
         "version": "v3.9.2",
         "version_normalized": "3.9.2.0",
@@ -3286,62 +3227,6 @@
             "http client",
             "rest",
             "web service"
-        ]
-    },
-    {
-        "name": "laravel/socialite",
-        "version": "v2.0.1",
-        "version_normalized": "2.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel/socialite.git",
-            "reference": "7f96a35e8976faea4c282abcd5c196ef8ddfab7c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel/socialite/zipball/7f96a35e8976faea4c282abcd5c196ef8ddfab7c",
-            "reference": "7f96a35e8976faea4c282abcd5c196ef8ddfab7c",
-            "shasum": ""
-        },
-        "require": {
-            "guzzlehttp/guzzle": "~4.0|~5.0",
-            "illuminate/contracts": "~5.0",
-            "illuminate/http": "~5.0",
-            "illuminate/support": "~5.0",
-            "league/oauth1-client": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "require-dev": {
-            "mockery/mockery": "~0.9",
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2015-02-14 01:56:05",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Laravel\\Socialite\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylorotwell@gmail.com"
-            }
-        ],
-        "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
-        "keywords": [
-            "laravel",
-            "oauth"
         ]
     },
     {
@@ -3739,6 +3624,121 @@
             "module",
             "modules",
             "pingpong"
+        ]
+    },
+    {
+        "name": "laravel/socialite",
+        "version": "v2.0.2",
+        "version_normalized": "2.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/socialite.git",
+            "reference": "5ecfde2b908f99d21545a1be385fbd6f78e6444c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/socialite/zipball/5ecfde2b908f99d21545a1be385fbd6f78e6444c",
+            "reference": "5ecfde2b908f99d21545a1be385fbd6f78e6444c",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "~4.0|~5.0",
+            "illuminate/contracts": "~5.0",
+            "illuminate/http": "~5.0",
+            "illuminate/support": "~5.0",
+            "league/oauth1-client": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2015-02-20 20:07:14",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Laravel\\Socialite\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            }
+        ],
+        "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
+        "keywords": [
+            "laravel",
+            "oauth"
+        ]
+    },
+    {
+        "name": "laravel/cashier",
+        "version": "v3.0.2",
+        "version_normalized": "3.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/cashier.git",
+            "reference": "8f8c1f7b088f41b2cd8976b7601659178a381f9c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/cashier/zipball/8f8c1f7b088f41b2cd8976b7601659178a381f9c",
+            "reference": "8f8c1f7b088f41b2cd8976b7601659178a381f9c",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/filesystem": "~5.0",
+            "illuminate/support": "~5.0",
+            "nesbot/carbon": "~1.0",
+            "php": ">=5.4.0",
+            "stripe/stripe-php": "~1.9",
+            "symfony/http-kernel": "~2.3"
+        },
+        "require-dev": {
+            "illuminate/routing": "~5.0",
+            "illuminate/view": "~5.0",
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2015-02-21 18:15:32",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Laravel\\Cashier\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            }
+        ],
+        "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
+        "keywords": [
+            "billing",
+            "laravel",
+            "stripe"
         ]
     }
 ]
