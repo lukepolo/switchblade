@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'Support@SwitchBlade.io', 'name' => 'SwitchBlade Support'],
 
     /*
     |--------------------------------------------------------------------------

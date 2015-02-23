@@ -80,12 +80,6 @@ class AuthController extends Controller {
                     ));
                 }
             }
-
 	    return redirect('home');
-	}
-
-	public function getLogin()
-	{
-	    return view('auth.login');
 	}
 }
