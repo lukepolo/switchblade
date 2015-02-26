@@ -154,7 +154,8 @@ return [
 	 * Third Party Packages...
 	 */
 	'Barryvdh\Debugbar\ServiceProvider',
-	'Pingpong\Modules\ModulesServiceProvider'
+	'Pingpong\Modules\ModulesServiceProvider',
+	'Jenssegers\Mongodb\MongodbServiceProvider',
     ],
 
     /*
@@ -210,6 +211,8 @@ return [
 	/*
 	 * Third Party Facades
 	 */
-	'Debugbar' => 'Barryvdh\Debugbar\Facade'
+	'Debugbar'  => 'Barryvdh\Debugbar\Facade',
+	'Module'    => 'Pingpong\Modules\Facades\Module',
+	'Moloquent' => 'Jenssegers\Mongodb\Model',
     ],
 ];

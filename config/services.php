@@ -1,5 +1,14 @@
 <?php
 
+if(isset($_SERVER['HTTP_HOST']) === true)
+{
+    $host = $_SERVER['HTTP_HOST'];
+}
+else
+{
+    $host = '';
+}
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -40,6 +49,6 @@ return [
     'twitter' => [
 	'client_id' => 'DxbUf9Dn6KhUuPDqLvvfdMpD4',
 	'client_secret' => 'FCxCL6nRTgCveGVSbVosPEvY0CeX49EOrMOOrBet04yhz7QEfe',
-	'redirect' => $_SERVER['HTTP_HOST'].'/auth/callback/twitter'
+	'redirect' => $host.'/auth/callback/twitter'
     ]
 ];

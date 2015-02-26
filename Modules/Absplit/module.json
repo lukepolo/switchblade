@@ -1,0 +1,15 @@
+{
+    "name": "Absplit",
+    "alias": "absplit",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "providers": [
+        "Modules\\Absplit\\Providers\\AbsplitServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

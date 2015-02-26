@@ -26,6 +26,8 @@ return array(
     'Pingpong\\Generators' => array($vendorDir . '/pingpong/generators/src'),
     'PhpSpec' => array($vendorDir . '/phpspec/phpspec/src'),
     'Laravel\\Cashier\\' => array($vendorDir . '/laravel/cashier/src'),
+    'Jenssegers\\Mongodb' => array($vendorDir . '/jenssegers/mongodb/src'),
+    'Jenssegers\\Eloquent' => array($vendorDir . '/jenssegers/mongodb/src'),
     'JakubOnderka\\PhpConsoleHighlighter' => array($vendorDir . '/jakub-onderka/php-console-highlighter/src'),
     'JakubOnderka\\PhpConsoleColor' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),

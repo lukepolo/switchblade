@@ -55,7 +55,15 @@ return [
 	    'collation' => 'utf8_unicode_ci',
 	    'prefix'    => '',
 	    'strict'    => false,
-	]
+	],
+	'mongodb' => array(
+	    'driver'   => 'mongodb',
+	    'host'     => 'localhost',
+	    'port'     => 27017,
+	    'username' => 'username',
+	    'password' => 'password',
+	    'database' => 'database'
+	),
     ],
 
     /*
