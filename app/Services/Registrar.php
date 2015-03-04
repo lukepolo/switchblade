@@ -1,8 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\User;
-use App\UserProviders;
+use App\Model\User;
+use App\Model\UserProviders;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
@@ -17,9 +17,10 @@ class Registrar implements RegistrarContract
     public function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:5',
         ]);
     }
 
@@ -34,7 +35,8 @@ class Registrar implements RegistrarContract
         if(isset($data['provider']) === false)
         {
             $user = User::create([
-                'name' => $data['name'],
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
             ]);
@@ -42,7 +44,9 @@ class Registrar implements RegistrarContract
         else
         {
             $user = User::create([
-                'name' => $data['name'],
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'profile_img' => $data['profile_img'],
                 'email' => empty($data['email']) === false ? $data['email'] : $data['nickname'].'@'.$data['provider'].'.com',
                 'password' => bcrypt((string)$data['provider_id']),
             ]);

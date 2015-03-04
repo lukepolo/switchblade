@@ -11,6 +11,11 @@ $router->group(['middleware' => 'auth'], function()
 {
     // For now we want them to always login
     Route::get('/', 'HomeController@index');
+    
+    // Profile Routes
+    Route::get('profile', 'Auth\UserController@getProfile');
+    Route::post('profile', 'Auth\UserController@postProfile');
+    Route::post('profile/image', 'Auth\UserController@postProfileImage');
 
     Route::get('logout', 'Auth\AuthController@getLogout');
 

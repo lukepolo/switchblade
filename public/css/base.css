@@ -14,3 +14,20 @@ html,
 body {
     background-color: #F1F1F1;
 }
+
+.profile-pic > img {
+    border-radius: 0%;
+    position: relative;
+    border: 5px solid #fff;
+    top: -30px;
+    left: 10px;
+    display: inline-block;
+    text-align: right;
+    z-index: 4;
+    max-width: 100px;
+    margin-bottom: -30px;
+}
+
+.profile-pic {
+    text-align: right;
+}

@@ -143,6 +143,11 @@ return [
 	'App\Providers\ConfigServiceProvider',
 	'App\Providers\EventServiceProvider',
 	'App\Providers\RouteServiceProvider',
+        
+        /*
+         *  Extened Service Providers
+         */
+        'App\Providers\HtmlServiceProvider',
 
 	/*
 	 * Laravel Packages...
@@ -156,6 +161,7 @@ return [
 	'Barryvdh\Debugbar\ServiceProvider',
 	'Pingpong\Modules\ModulesServiceProvider',
 	'Jenssegers\Mongodb\MongodbServiceProvider',
+        
     ],
 
     /*
@@ -214,5 +220,7 @@ return [
 	'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 	'Module'    => 'Pingpong\Modules\Facades\Module',
 	'Moloquent' => 'Jenssegers\Mongodb\Model',
+        'Html'      => 'Illuminate\Html\HtmlFacade',
+        'Form'      => 'Illuminate\Html\FormFacade',
     ],
 ];

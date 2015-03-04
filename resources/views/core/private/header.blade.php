@@ -9,16 +9,6 @@
 	    </button>
 	    <a class="navbar-brand" href="#">SwitchBlade</a>
 	</div>
-	@if (count($errors) > 0)
-	    <div class="alert alert-danger">
-		<strong>Whoops!</strong> There were some problems with your input.<br><br>
-		<ul>
-		    @foreach ($errors->all() as $error)
-			<li>{{ $error }}</li>
-		    @endforeach
-		</ul>
-	    </div>
-	@endif
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav">
 		@if (Auth::check())
@@ -124,6 +114,16 @@
 				    Disable Minify
 				</a>
 			    </li>
+                                 <li>
+                                <a target="_blank" href="http://laravel.com/docs/master">
+                                    Laravel 5 Docs
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="https://mattstauffer.co/blog/laravel-5.0-form-requests">
+                                    Laravel 5 Blog
+                                </a>
+                            </li>
 			</ul>
 		    </li>
 		@endif
@@ -133,9 +133,21 @@
 		    <!--<li><a href="/auth/login">Login</a></li>-->
 		@else
 		    <li class="dropdown">
-			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+                        
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <img class="profile-picture" style="width:25px;" src="{{ Auth::user()->profile_img }}"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}<span class="caret"></span>
+                        </a>
 			<ul class="dropdown-menu" role="menu">
-			    <li><a href="/auth/logout">Logout</a></li>
+                            <li>
+                                <a href="/profile">
+                                    Profile
+                                </a>
+                            </li>
+			    <li>
+                                <a href="/auth/logout">
+                                    Logout
+                                </a>
+                            </li>
 			</ul>
 		    </li>
 		@endif
