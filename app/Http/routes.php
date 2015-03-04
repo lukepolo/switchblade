@@ -9,6 +9,11 @@ Route::controllers([
 // Redirects to Login Page
 $router->group(['middleware' => 'auth'], function()
 {
+    // Controllers Go Here
+    Route::controllers([
+	'payment' => 'PaymentController',
+    ]);
+    
     // For now we want them to always login
     Route::get('/', 'HomeController@index');
     
@@ -19,10 +24,7 @@ $router->group(['middleware' => 'auth'], function()
 
     Route::get('logout', 'Auth\AuthController@getLogout');
 
-    // Controllers Go Here
-    Route::controllers([
 
-    ]);
 });
 
 // Single Routes

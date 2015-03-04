@@ -149,6 +149,34 @@
                     alert(error.Error);
                 });
             });
+            
+            $.ajax({
+                url: '{{ url('payment/invoices') }}',
+                type: 'GET',
+                success: function(payments)
+                {
+                    console.log(payments);
+                    $.each(payments.data, function(index, payment)
+                    {
+                        if(payment.refunded)
+                        {
+                            var refund_text = 'Refunded';
+                        }
+                        else
+                        {
+                            var refund_text = '<a href="#' + payment.id + '">Start Refund</a>';
+                        }
+                        $('#payments table tbody').append('\
+                        <tr>\
+                            <td>' + payment.id + '</td>\
+                            <td>' + ucwords(payment.statement_descriptor) + '</td>\
+                            <td>$' + payment.amount / 100+ '</td>\
+                            <td>' + toDate(payment.created) + '</td>\
+                            <td>' + refund_text + '</td>\
+                        </tr>')
+                    });
+                }
+            });
         });
 
         function readURL(input)
@@ -165,4 +193,5 @@
             }
         }
     </script>
+</form>
 @stop
