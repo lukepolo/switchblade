@@ -37,11 +37,11 @@ class PaymentController extends Controller
             
             foreach($invoice->subscriptions() as $line_item)
             {
-                $invoices[$invoice->id]['invoiceItems'][$line_item->id]['plan'] = $line_item->__get('plan')->statement_descriptor;
-                $invoices[$invoice->id]['invoiceItems'][$line_item->id]['name'] = $line_item->getStripeLine();
-                $invoices[$invoice->id]['invoiceItems'][$line_item->id]['start_date'] = $line_item->startDateString();
-                $invoices[$invoice->id]['invoiceItems'][$line_item->id]['end_date'] = $line_item->endDateString();
-                $invoices[$invoice->id]['invoiceItems'][$line_item->id]['dollars'] = $line_item->total();
+                $invoices[$invoice->id]['items'][$line_item->id]['plan'] = $line_item->__get('plan')->statement_descriptor;
+                $invoices[$invoice->id]['items'][$line_item->id]['name'] = $line_item->getStripeLine();
+                $invoices[$invoice->id]['items'][$line_item->id]['start_date'] = $line_item->startDateString();
+                $invoices[$invoice->id]['items'][$line_item->id]['end_date'] = $line_item->endDateString();
+                $invoices[$invoice->id]['items'][$line_item->id]['dollars'] = $line_item->total();
             }
             
             $invoices[$invoice->id]['discount'] = $invoice->discount();

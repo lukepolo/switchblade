@@ -1,8 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Model\User;
-use App\Model\UserProviders;
+use App\Models\User;
+use App\Models\UserProviders;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
@@ -58,7 +58,10 @@ class Registrar implements RegistrarContract
                 'provider' => $data['provider'],
             ));
         }
-
+	
+	$user->api_key = \Hash::make($user->id);
+	$user->save();
+	
 	\Auth::login($user);
 	return $user;
     }

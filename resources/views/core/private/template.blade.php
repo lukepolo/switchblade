@@ -40,6 +40,7 @@
         <!-- Scripts -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
         <script src="/js/prettify/prettify.js"></script>
+	<script src="/js/custom_functions.js"></script>
         <script type="text/javascript">
             $(document).ready(function()
             {

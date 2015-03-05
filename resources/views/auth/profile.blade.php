@@ -105,7 +105,7 @@
     <code class="language-js">
     &lt;script type="text/javascript">
         (function(g,c,e,f,a,b,d){window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
-        swb('auth','APIKEY HERE');
+        swb('auth','{{ Auth::user()->api_key }}');
         swb('get_mods');    
     &lt;/script></code>
                 </pre>
@@ -153,25 +153,31 @@
             $.ajax({
                 url: '{{ url('payment/invoices') }}',
                 type: 'GET',
-                success: function(payments)
+                success: function(invoices)
                 {
-                    console.log(payments);
-                    $.each(payments.data, function(index, payment)
+                    $.each(invoices, function(invoice_id, invoice)
                     {
-                        if(payment.refunded)
+                        if(invoice.refunded)
                         {
                             var refund_text = 'Refunded';
                         }
                         else
                         {
-                            var refund_text = '<a href="#' + payment.id + '">Start Refund</a>';
+                            var refund_text = '<a href="#' + invoice_id + '">Start Refund</a>';
                         }
+                        
+                        // Show all the invoice items
+                        $.each(invoice.items, function(index, item)
+                        {
+                            plan = item.plan;
+                        });
+                        
                         $('#payments table tbody').append('\
                         <tr>\
-                            <td>' + payment.id + '</td>\
-                            <td>' + ucwords(payment.statement_descriptor) + '</td>\
-                            <td>$' + payment.amount / 100+ '</td>\
-                            <td>' + toDate(payment.created) + '</td>\
+                            <td>' + invoice_id + '</td>\
+                            <td>' + ucwords(plan) + '</td>\
+                            <td>$' + invoice.dollars + '</td>\
+                            <td>' + invoice.date + '</td>\
                             <td>' + refund_text + '</td>\
                         </tr>')
                     });
@@ -193,5 +199,15 @@
             }
         }
     </script>
+    {!! Form::open(array('url' => url('payment/subscribe'))) !!}
+        <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_CnzLQclPLDvRDirFJPVKMYQl"
+            data-amount="2000"
+            data-name="Demo Site"
+            data-description="2 widgets ($20.00)"
+            data-image="https://lh6.googleusercontent.com/-P0TiaIJ9Mek/AAAAAAAAAAI/AAAAAAAAJs4/NJKMzC7iZg8/photo.jpg?sz=50">
+        </script>
+    {!! Form::close() !!}
 </form>
 @stop
