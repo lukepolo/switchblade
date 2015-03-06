@@ -11,6 +11,30 @@ var elixir = require('laravel-elixir');
  |
  */
 
+var paths = {
+    'bootstrap': 'resources/vendor/bootstrap-sass-official/assets'
+};
+
 elixir(function(mix) {
-    mix.less('app.less');
+    mix.stylesIn(
+	'resources/css', 
+	'public/css/app.css'
+    );
+    
+    elixir(function(mix) {
+	mix.sass(
+	    "app.scss", 
+	    'public/css/bootstrap.css',
+	    {
+		includePaths: [
+		    paths.bootstrap + 'stylesheets/'
+		]
+	    }
+	)
+    });
+
+    mix.scripts([
+	'custom_functions.js',
+	'prettify/prettify.js'
+    ], 'public/js/app.js');
 });

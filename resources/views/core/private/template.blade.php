@@ -7,9 +7,6 @@
         <title></title>
 
         <link href="/css/app.css" rel="stylesheet">
-        <link href="/css/base.css" rel="stylesheet">
-        <link href="/css/prettify.css" rel="stylesheet">
-        
 
         <!-- Fonts -->
         <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -38,9 +35,7 @@
 	    @yield('content')
 	</div>
         <!-- Scripts -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
-        <script src="/js/prettify/prettify.js"></script>
-	<script src="/js/custom_functions.js"></script>
+        <script src="/js/app.js"></script>
         <script type="text/javascript">
             $(document).ready(function()
             {
@@ -48,7 +43,7 @@
                 $(function() {
                     $.ajaxSetup({
                         headers: {
-                            'X-XSRF-TOKEN': "{{ $_COOKIE['XSRF-TOKEN'] }}"
+                            'X-XSRF-TOKEN': "{{ isset($_COOKIE['XSRF-TOKEN']) ? $_COOKIE['XSRF-TOKEN'] : '' }}"
                         }
                     });
                 });

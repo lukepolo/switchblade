@@ -4,11 +4,17 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"type": "project",
+	"repositories": [
+	    {
+		"type": "vcs",
+		"url": "https://github.com/lukepolo/cashier"
+	    }
+	],
 	"require": {
 		"laravel/framework": "5.0.*",
                 "predis/predis": "~1.1@dev",
 		"laravel/socialite": "~2.0",
-		"laravel/cashier": "~3.0",
+		"laravel/cashier": "dev-fork",
 		"barryvdh/laravel-debugbar": "~2.0",
 		"jenssegers/mongodb": "~2.1",
 		"pingpong/modules": "2.0.*@dev",

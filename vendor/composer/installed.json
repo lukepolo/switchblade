@@ -3321,125 +3321,6 @@
         ]
     },
     {
-        "name": "laravel/cashier",
-        "version": "v3.0.4",
-        "version_normalized": "3.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel/cashier.git",
-            "reference": "b17a86e22de95baea172664d03c52673cf2ae247"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel/cashier/zipball/b17a86e22de95baea172664d03c52673cf2ae247",
-            "reference": "b17a86e22de95baea172664d03c52673cf2ae247",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/filesystem": "~5.0",
-            "illuminate/support": "~5.0",
-            "nesbot/carbon": "~1.0",
-            "php": ">=5.4.0",
-            "stripe/stripe-php": "~1.9",
-            "symfony/http-kernel": "~2.3"
-        },
-        "require-dev": {
-            "illuminate/routing": "~5.0",
-            "illuminate/view": "~5.0",
-            "mockery/mockery": "~0.9",
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2015-02-25 15:46:15",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Laravel\\Cashier\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylorotwell@gmail.com"
-            }
-        ],
-        "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
-        "keywords": [
-            "billing",
-            "laravel",
-            "stripe"
-        ]
-    },
-    {
-        "name": "jenssegers/mongodb",
-        "version": "v2.1.0",
-        "version_normalized": "2.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jenssegers/laravel-mongodb.git",
-            "reference": "ca1a9292bf4831d7bb7d901ceeeac5ac4534cf56"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/ca1a9292bf4831d7bb7d901ceeeac5ac4534cf56",
-            "reference": "ca1a9292bf4831d7bb7d901ceeeac5ac4534cf56",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/container": "5.0.*",
-            "illuminate/database": "5.0.*",
-            "illuminate/events": "5.0.*",
-            "illuminate/support": "5.0.*",
-            "php": ">=5.4.0"
-        },
-        "require-dev": {
-            "mockery/mockery": "*",
-            "orchestra/testbench": "3.0.*",
-            "satooshi/php-coveralls": "*"
-        },
-        "suggest": {
-            "jenssegers/mongodb-sentry": "Add Sentry support to Laravel-MongoDB",
-            "jenssegers/mongodb-session": "Add MongoDB session support to Laravel-MongoDB"
-        },
-        "time": "2015-02-10 16:54:51",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Jenssegers\\Mongodb": "src/",
-                "Jenssegers\\Eloquent": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jens Segers",
-                "homepage": "http://jenssegers.be"
-            }
-        ],
-        "description": "A MongoDB based Eloquent model and Query builder for Laravel 4",
-        "keywords": [
-            "database",
-            "eloquent",
-            "laravel",
-            "model",
-            "mongo",
-            "mongodb"
-        ]
-    },
-    {
         "name": "laravel/framework",
         "version": "v5.0.13",
         "version_normalized": "5.0.13.0",
@@ -3863,5 +3744,126 @@
             "logging",
             "psr-3"
         ]
+    },
+    {
+        "name": "jenssegers/mongodb",
+        "version": "v2.1.1",
+        "version_normalized": "2.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jenssegers/laravel-mongodb.git",
+            "reference": "850bc18ec8129256a7e84f006c76734f7b6d2e27"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/850bc18ec8129256a7e84f006c76734f7b6d2e27",
+            "reference": "850bc18ec8129256a7e84f006c76734f7b6d2e27",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/container": "5.0.*",
+            "illuminate/database": "5.0.*",
+            "illuminate/events": "5.0.*",
+            "illuminate/support": "5.0.*",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "*",
+            "orchestra/testbench": "3.0.*",
+            "satooshi/php-coveralls": "*"
+        },
+        "suggest": {
+            "jenssegers/mongodb-sentry": "Add Sentry support to Laravel-MongoDB",
+            "jenssegers/mongodb-session": "Add MongoDB session support to Laravel-MongoDB"
+        },
+        "time": "2015-03-02 17:07:46",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Jenssegers\\Mongodb": "src/",
+                "Jenssegers\\Eloquent": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jens Segers",
+                "homepage": "http://jenssegers.be"
+            }
+        ],
+        "description": "A MongoDB based Eloquent model and Query builder for Laravel 4",
+        "keywords": [
+            "database",
+            "eloquent",
+            "laravel",
+            "model",
+            "mongo",
+            "mongodb"
+        ]
+    },
+    {
+        "name": "laravel/cashier",
+        "version": "dev-fork",
+        "version_normalized": "dev-fork",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/lukepolo/cashier.git",
+            "reference": "b17a86e22de95baea172664d03c52673cf2ae247"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/lukepolo/cashier/zipball/b17a86e22de95baea172664d03c52673cf2ae247",
+            "reference": "b17a86e22de95baea172664d03c52673cf2ae247",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/filesystem": "~5.0",
+            "illuminate/support": "~5.0",
+            "nesbot/carbon": "~1.0",
+            "php": ">=5.4.0",
+            "stripe/stripe-php": "~1.9",
+            "symfony/http-kernel": "~2.3"
+        },
+        "require-dev": {
+            "illuminate/routing": "~5.0",
+            "illuminate/view": "~5.0",
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2015-02-25 15:46:15",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Laravel\\Cashier\\": "src/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            }
+        ],
+        "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
+        "keywords": [
+            "billing",
+            "laravel",
+            "stripe"
+        ],
+        "support": {
+            "source": "https://github.com/lukepolo/cashier/tree/v3.0.4"
+        }
     }
 ]

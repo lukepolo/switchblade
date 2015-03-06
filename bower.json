@@ -1,0 +1,19 @@
+{
+    "name": "SwitchBlade",
+    "dependencies": {
+	"bootstrap-sass-official": "~3.3.1"
+    },
+    "version": "1",
+    "homepage": "https://github.com/lukepolo/switchblade",
+    "authors": [
+	"Luke Policinski <Luke@LukePOLO.com>"
+    ],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+	"**/.*",
+	"node_modules",
+	"bower_components",
+	"tests"
+    ]
+}
