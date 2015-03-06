@@ -12,7 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 var paths = {
-    'bootstrap': 'resources/vendor/bootstrap-sass-official/assets'
+    'bootstrap': 'resources/vendor/bootstrap-sass-official/assets/'
 };
 
 elixir(function(mix) {
@@ -23,13 +23,16 @@ elixir(function(mix) {
     
     elixir(function(mix) {
 	mix.sass(
-	    "app.scss", 
+	    'app.scss', 
 	    'public/css/bootstrap.css',
 	    {
 		includePaths: [
-		    paths.bootstrap + 'stylesheets/'
+		    paths.bootstrap + 'stylesheets'
 		]
 	    }
+	).copy(
+	    paths.bootstrap + 'fonts/bootstrap/**',
+	    'public/fonts'
 	)
     });
 
