@@ -1,45 +1,26 @@
 var elixir = require('laravel-elixir');
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Less
- | file for our application, as well as publishing vendor resources.
- |
- */
-
+var bower_path = "./vendor/bower_components";
 var paths = {
-    'sass' : 'sass/',
-    'bootstrap': 'vendor/bootstrap-sass-official/assets/',
-    'jquery': 'vendor/jquery/'
+  'jquery'     : bower_path + "/jquery/dist",
+  'bootstrap'  : bower_path + "/bootstrap-sass-official/assets",
+  'fontawesome': bower_path + "/fontawesome"
 };
 
-elixir(function(mix) {
-    
-    mix.sass(
-	paths.sass + 'app.scss', 
-	'/public/css/app.css',
-	{
-	    includePaths: [
-		paths.bootstrap + 'stylesheets/'
-	    ]
-	},
-	'resources'
-    );
-    
-    mix.copy(
-	paths.bootstrap + 'fonts/bootstrap/**',
-	'public/fonts'
-    );
-    
-    mix.scripts(
-	[
-	    paths.bootstrap + 'javascripts/bootstrap.js'
-	],
-	'public/js/app.js',
-	'resources'
-    );
+elixir(function (mix) 
+{
+    mix.sass("app.scss", "public/assets/css", {
+	includePaths: [
+	    paths.bootstrap + '/stylesheets',
+	    paths.fontawesome + '/scss'
+	]
+    });
+
+    mix.scripts("app.js", "public/assets/js/app.js", "resources/assets/js");
+    mix.scripts([
+	paths.jquery + '/jquery.min.js',
+	paths.bootstrap + '/javascripts/bootstrap.min.js'
+    ], 'public/assets/js/dependencies.js', '.');
+
+    mix.copy(paths.fontawesome + '/fonts', 'public/assets/fonts');
 });
