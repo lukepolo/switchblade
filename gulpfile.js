@@ -12,32 +12,34 @@ var elixir = require('laravel-elixir');
  */
 
 var paths = {
-    'bootstrap': 'resources/vendor/bootstrap-sass-official/assets/'
+    'sass' : 'sass/',
+    'bootstrap': 'vendor/bootstrap-sass-official/assets/',
+    'jquery': 'vendor/jquery/'
 };
 
 elixir(function(mix) {
-    mix.stylesIn(
-	'resources/css', 
-	'public/css/app.css'
+    
+    mix.sass(
+	paths.sass + 'app.scss', 
+	'/public/css/app.css',
+	{
+	    includePaths: [
+		paths.bootstrap + 'stylesheets/'
+	    ]
+	},
+	'resources'
     );
     
-    elixir(function(mix) {
-	mix.sass(
-	    'app.scss', 
-	    'public/css/bootstrap.css',
-	    {
-		includePaths: [
-		    paths.bootstrap + 'stylesheets'
-		]
-	    }
-	).copy(
-	    paths.bootstrap + 'fonts/bootstrap/**',
-	    'public/fonts'
-	)
-    });
-
-    mix.scripts([
-	'custom_functions.js',
-	'prettify/prettify.js'
-    ], 'public/js/app.js');
+    mix.copy(
+	paths.bootstrap + 'fonts/bootstrap/**',
+	'public/fonts'
+    );
+    
+    mix.scripts(
+	[
+	    paths.bootstrap + 'javascripts/bootstrap.js'
+	],
+	'public/js/app.js',
+	'resources'
+    );
 });
