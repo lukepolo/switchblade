@@ -13,9 +13,9 @@ return array(
     $vendorDir . '/react/promise/src/functions_include.php',
     $vendorDir . '/danielstjules/stringy/src/Create.php',
     $vendorDir . '/psy/psysh/src/Psy/functions.php',
-    $vendorDir . '/illuminate/html/helpers.php',
     $vendorDir . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
     $vendorDir . '/laravel/framework/src/Illuminate/Support/helpers.php',
+    $vendorDir . '/illuminate/html/helpers.php',
     $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Random.php',
     $vendorDir . '/barryvdh/laravel-debugbar/src/helpers.php',
 );
