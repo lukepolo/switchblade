@@ -16,5 +16,6 @@ return array(
     $vendorDir . '/illuminate/html/helpers.php',
     $vendorDir . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
     $vendorDir . '/laravel/framework/src/Illuminate/Support/helpers.php',
+    $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Random.php',
     $vendorDir . '/barryvdh/laravel-debugbar/src/helpers.php',
 );

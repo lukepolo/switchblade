@@ -154,6 +154,7 @@ return [
 	 */
 	'Laravel\Cashier\CashierServiceProvider',
 	'Laravel\Socialite\SocialiteServiceProvider',
+        'Collective\Remote\RemoteServiceProvider',
 
 	/*
 	 * Third Party Packages...
@@ -213,6 +214,7 @@ return [
 	 * Laravel Facades
 	 */
 	'Socialize' => 'Laravel\Socialite\Facades\Socialite',
+        'SSH' => 'Collective\Remote\RemoteFacade',
 
 	/*
 	 * Third Party Facades
