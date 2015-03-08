@@ -13,7 +13,7 @@ return array(
     'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'Pingpong\\Modules\\' => array($vendorDir . '/pingpong/modules'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
-    'Modules\\' => array($baseDir . '/Modules'),
+    'Modules\\' => array($baseDir . '/modules'),
     'League\\OAuth1\\' => array($vendorDir . '/league/oauth1-client/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
     'Laravel\\Socialite\\' => array($vendorDir . '/laravel/socialite/src'),
