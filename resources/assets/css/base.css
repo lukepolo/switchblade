@@ -31,3 +31,7 @@ body {
 .profile-pic {
     text-align: right;
 }
+
+.profile-picture {
+    display:none;
+}
