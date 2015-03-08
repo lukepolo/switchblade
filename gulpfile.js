@@ -1,18 +1,18 @@
 var elixir = require('laravel-elixir');
 var bower_path = './vendor/bower_components/';
 var paths = {
-    'css' : './resources/assets/css/',
     'js' : './resources/assets/js/',
     'jquery' : bower_path + "jquery/dist/",
     'bootstrap' : bower_path + "bootstrap-sass-official/assets/",
     'fontawesome' : bower_path + "fontawesome/"
 };
 
+
+
 elixir(function (mix) 
 {
     mix.sass("app.scss", "public/assets/css", {
 	includePaths: [
-	    paths.css,
 	    paths.bootstrap + 'stylesheets',
 	    paths.fontawesome + 'scss'
 	]
