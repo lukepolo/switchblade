@@ -35,6 +35,7 @@
 	    @yield('content')
 	</div>
         <!-- Scripts -->
+        @include('core/private/node')
         <script src="/assets/js/all.js"></script>
         <script type="text/javascript">
             $(document).ready(function()

@@ -7,8 +7,6 @@ var paths = {
     'fontawesome' : bower_path + "fontawesome/"
 };
 
-
-
 elixir(function (mix) 
 {
     mix.sass("app.scss", "public/assets/css", {

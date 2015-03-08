@@ -13,7 +13,7 @@
 	    <ul class="nav navbar-nav">
 		@if (Auth::check())
 		    <li>
-			<a href="#">
+			<a href="{{ url('absplit/dashboard') }}">
 			    <i class="fa fa-code"></i>
 			    A/B Tester
 			</a>
@@ -104,17 +104,7 @@
 				    Settings
 				</a>
 			    </li>
-			    <li>
-				<a href="#">
-				    Enable Profiler
-				</a>
-			    </li>
-			    <li>
-				<a href="#">
-				    Disable Minify
-				</a>
-			    </li>
-                                 <li>
+                            <li>
                                 <a target="_blank" href="http://laravel.com/docs/master">
                                     Laravel 5 Docs
                                 </a>
