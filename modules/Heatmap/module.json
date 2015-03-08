@@ -1,0 +1,15 @@
+{
+    "name": "Heatmap",
+    "alias": "heatmap",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "providers": [
+        "Modules\\Heatmap\\Providers\\HeatmapServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

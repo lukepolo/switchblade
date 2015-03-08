@@ -18,5 +18,7 @@ desktop.ini
 /composer.lock
 /vendor
 .env
+npm-debug.log
+
 # dynamically generated files
 /public/img/profile_images
