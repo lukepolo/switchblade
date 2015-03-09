@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddCashierColumns' => $baseDir . '/database/migrations/2015_02_20_154104_add_cashier_columns.php',
+    'CreateAbsplitExperimentDatasTable' => $baseDir . '/database/migrations/2015_03_09_200439_create_absplit__experiment__datas_table.php',
+    'CreateAbsplitExperimentsTable' => $baseDir . '/database/migrations/2015_03_09_200433_create_absplit__experiments_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateSettingsTable' => $baseDir . '/database/migrations/2015_03_09_200151_create_settings_table.php',
     'CreateUserProvidersTable' => $baseDir . '/database/migrations/2015_02_21_002009_create_user_providers_table.php',
