@@ -19,11 +19,7 @@ class HtmlServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerHtmlBuilder();
-
         $this->registerFormBuilder();
-
-        $this->app->alias('html', 'App\Extensions\HtmlBuilder');
-        $this->app->alias('form', 'App\Extensions\FormBuilder');
     }
 
     /**

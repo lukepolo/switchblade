@@ -8,9 +8,9 @@ class ImageRequest extends FormRequest
     public function rules()
     {
         return [
-        ];  
+        ];
     }
-    
+
     // We dont really care about the rules its just required
     protected function passesAuthorization()
     {
@@ -30,13 +30,13 @@ class ImageRequest extends FormRequest
                     if(config('app.debug'))
                     {
                         throw new HttpResponseException($this->response(
-                            array('Error: '.$e->getMessage())
+                            ['Error: '.$e->getMessage()]
                         ));
                     }
                     else
                     {
                         throw new HttpResponseException($this->response(
-                            array('Error' => 'The image could not be uploaded, please contact support.')
+                            ['Error' => 'The image could not be uploaded, please contact support.']
                         ));
                     }
                 }
@@ -44,14 +44,14 @@ class ImageRequest extends FormRequest
             else
             {
                 throw new HttpResponseException($this->response(
-                    array('Error' => 'Your image is not valid, cannot upload type: '. $file->getMimeType())
+		    ['Error' => 'Your image is not valid, cannot upload type: '. $file->getMimeType()]
                 ));
             }
         }
         else
         {
             throw new HttpResponseException($this->response(
-                array('Error' => 'Your image could not be uploaded : Unknown Reason.')
+                ['Error' => 'Your image could not be uploaded : Unknown Reason.']
             ));
         }
     }

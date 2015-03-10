@@ -8,7 +8,8 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 // Models
 use App\Models\UserProviders;
 
-class AuthController extends Controller 
+use App\Services\Settings;
+class AuthController extends Controller
 {
 
     use AuthenticatesAndRegistersUsers;
@@ -37,10 +38,10 @@ class AuthController extends Controller
 
             parse_str($url['query'], $get_array);
 
-            $get_array['state'] =  http_build_query(array(
+            $get_array['state'] =  http_build_query([
                 'token' => $get_array['state'],
                 'domain' => $_SERVER['HTTP_HOST']
-            ));
+            ]);
 
             // set it to the current session
             \Session::put('state', $get_array['state']);
@@ -73,9 +74,9 @@ class AuthController extends Controller
                 $name_parts = explode(' ',  $user->getName());
                 $first_name = array_shift($name_parts);
                 $last_name = array_pop($name_parts);
-                
+
                 // Create User
-                $user = $this->registrar->create(array(
+                $user = $this->registrar->create([
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'profile_img' => $user->getAvatar(),
@@ -83,7 +84,7 @@ class AuthController extends Controller
                     'provider' => $provider,
                     'provider_id' => $user->id,
                     'nickname' => $user->getNickname()
-                ));
+                ]);
             }
         }
         return redirect(url('/'));

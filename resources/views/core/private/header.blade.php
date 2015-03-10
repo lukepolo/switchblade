@@ -13,7 +13,7 @@
 	    <ul class="nav navbar-nav">
 		@if (Auth::check())
 		    <li>
-			<a href="{{ url('absplit/dashboard') }}">
+			<a href="{{ action('\Modules\Absplit\Http\Controllers\AbsplitController@index') }}">
 			    <i class="fa fa-code"></i>
 			    A/B Tester
 			</a>
@@ -31,7 +31,7 @@
 			</a>
 		    </li>
 		    <li>
-			<a href="#">
+			<a href="{{ action('\Modules\Screenshot\Http\Controllers\ScreenshotController@index') }}">
 			    <i class="fa fa-desktop"></i>
 			    Ketch Screen
 			</a>
@@ -100,7 +100,7 @@
 				</a>
 			    </li>
 			    <li>
-				<a href="#">
+				<a href="{{ action('SettingsController@getIndex') }}">
 				    Settings
 				</a>
 			    </li>
@@ -123,7 +123,7 @@
 		    <!--<li><a href="/auth/login">Login</a></li>-->
 		@else
 		    <li class="dropdown">
-                        
+
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <img class="profile-picture" style="width:25px;" src="{{ Auth::user()->profile_img }}"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}<span class="caret"></span>
                         </a>

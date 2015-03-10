@@ -3,11 +3,14 @@
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\View;
 
-class AbsplitController extends Controller {
-
-	public function index()
-	{
-		return View::make('absplit::index');
-	}
-	
+class AbsplitController extends Controller
+{
+    public function index()
+    {
+	return View::make('absplit::index');
+    }
+    public function getDashboard()
+    {
+	return View::make('absplit::index');
+    }
 }

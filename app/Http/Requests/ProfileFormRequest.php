@@ -15,7 +15,7 @@ class ProfileFormRequest extends FormRequest
         {
             $unquie = '';
         }
-       
+
         if(\Input::get('current_password') != '' || \Input::get('new_password') != '')
         {
             // We must checked if the password is the same
@@ -32,7 +32,7 @@ class ProfileFormRequest extends FormRequest
             else
             {
                 throw new HttpResponseException($this->response(
-                    array('Error' => 'Your current password does not match what we have on our records!')
+                    ['Error' => 'Your current password does not match what we have on our records!']
 		));
             }
         }
@@ -42,7 +42,7 @@ class ProfileFormRequest extends FormRequest
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
                 'email' => 'required|email|max:255'.$unquie,
-            ];  
+            ];
         }
     }
 
@@ -56,6 +56,6 @@ class ProfileFormRequest extends FormRequest
         {
             return false;
         }
-        
+
     }
 }

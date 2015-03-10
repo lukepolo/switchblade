@@ -1,6 +1,25 @@
 <?php
 
-Route::group(['prefix' => 'absplit', 'namespace' => 'Modules\Absplit\Http\Controllers'], function()
+if(Request::root() == env('ABSPLIT_URL'))
 {
-	Route::get('/', 'AbsplitController@index');
+    $prefix = '';
+}
+else
+{
+    $prefix = 'absplit';
+}
+
+// Public Routes
+Route::group(['prefix' => $prefix, 'namespace' => 'Modules\Absplit\Http\Controllers'], function()
+{
+    Route::get('/', 'AbsplitController@index');
+});
+
+// Private Routes
+// TODO - add middleware to check if subscribed!
+Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modules\Absplit\Http\Controllers'], function()
+{
+    Route::controllers([
+	'/' => 'AbsplitController',
+    ]);
 });

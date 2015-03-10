@@ -143,7 +143,7 @@ return [
 	'App\Providers\ConfigServiceProvider',
 	'App\Providers\EventServiceProvider',
 	'App\Providers\RouteServiceProvider',
-        
+
         /*
          *  Extened Service Providers
          */
@@ -162,7 +162,12 @@ return [
 	'Barryvdh\Debugbar\ServiceProvider',
 	'Pingpong\Modules\ModulesServiceProvider',
 	'Jenssegers\Mongodb\MongodbServiceProvider',
-        
+
+	/*
+	 * Custom Service Providers
+	 */
+	'App\Providers\SettingsServiceProvider'
+
     ],
 
     /*
@@ -224,5 +229,10 @@ return [
 	'Moloquent' => 'Jenssegers\Mongodb\Model',
         'Html'      => 'Illuminate\Html\HtmlFacade',
         'Form'      => 'Illuminate\Html\FormFacade',
+
+	/*
+	 * Custom Facades
+	 */
+	'Settings' => 'App\Facades\Settings'
     ],
 ];

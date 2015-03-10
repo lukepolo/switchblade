@@ -32,21 +32,21 @@ class FormBuilder extends \Illuminate\Html\FormBuilder
         $merge = compact('type', 'value', 'id');
 
         // DIFFERS FROM ORGINAL
-        if(isset($options['class']) === false)
+        if($type != 'checkbox' && $type != 'radio' && isset($options['class']) === false)
         {
             $options['class'] = 'form-control';
         }
-        
+
         if(isset($options['placeholder']) === false)
         {
             $options['placeholder'] = ucwords(str_replace('_', ' ', $options['name']));
         }
-        
+
         $options = array_merge($options, $merge);
 
         return '<input'.$this->html->attributes($options).'>';
     }
-   
+
     /**
      * Create a textarea input field.
      *

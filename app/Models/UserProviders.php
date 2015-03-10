@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserProviders extends Model
 {
-
-    protected $table = 'user_providers';
-    protected $fillable = array('user_id', 'provider', 'provider_id');
+    protected $fillable = ['user_id', 'provider', 'provider_id'];
 
     public function user()
     {

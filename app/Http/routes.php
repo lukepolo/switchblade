@@ -7,24 +7,23 @@ Route::controllers([
 
 // Only Loggged IN
 // Redirects to Login Page
-$router->group(['middleware' => 'auth'], function()
+Route::group(['middleware' => 'auth'], function()
 {
     // Controllers Go Here
     Route::controllers([
 	'payment' => 'PaymentController',
+	'settings' => 'SettingsController'
     ]);
-    
+
     // For now we want them to always login
     Route::get('/', 'HomeController@index');
-    
+
     // Profile Routes
     Route::get('profile', 'Auth\UserController@getProfile');
     Route::post('profile', 'Auth\UserController@postProfile');
     Route::post('profile/image', 'Auth\UserController@postProfileImage');
 
     Route::get('logout', 'Auth\AuthController@getLogout');
-
-
 });
 
 // Single Routes
