@@ -18,7 +18,7 @@ class PaymentController extends Controller
 
         if($user->subscribed() === false)
         {
-            $user->subscription($test_subscription)->create(\Input::get('stripeToken'));
+            $user->subscription($test_subscription)->create(\Request::input('stripeToken'));
         }
         else
         {

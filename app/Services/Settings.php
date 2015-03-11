@@ -11,7 +11,6 @@ class Settings
     {
 	static::$settings = \Cache::rememberForever('settings', function()
 	{
-	    echo 'NOT CACHED'; die;
 	    foreach(modelSettings::get() as $setting)
 	    {
 		$settings[$setting->name] = $setting->data;

@@ -7,7 +7,7 @@ class ProfileFormRequest extends FormRequest
 {
     public function rules()
     {
-        if(\Auth::user()->email != \Input::get('email'))
+        if(\Auth::user()->email != \Request::input('email'))
         {
             $unquie = '|unique:users';
         }
@@ -16,10 +16,10 @@ class ProfileFormRequest extends FormRequest
             $unquie = '';
         }
 
-        if(\Input::get('current_password') != '' || \Input::get('new_password') != '')
+        if(\Request::input('current_password') != '' || \Request::input('new_password') != '')
         {
             // We must checked if the password is the same
-            if(\Hash::check(\Input::get('current_password'), \Auth::user()->getAuthPassword()))
+            if(\Hash::check(\Request::input('current_password'), \Auth::user()->getAuthPassword()))
             {
                 return [
                     'first_name' => 'required|max:255',

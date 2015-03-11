@@ -24,9 +24,17 @@
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
-                        @foreach ($errors->all() as $error)
+                        @foreach ($errors->any() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
+                    </ul>
+                </div>
+            @endif
+	    @if (Session::has('success'))
+                <div class="alert alert-success">
+                    <strong>Success!</strong><br><br>
+                    <ul>
+			{{ Session::get('success') }}
                     </ul>
                 </div>
             @endif

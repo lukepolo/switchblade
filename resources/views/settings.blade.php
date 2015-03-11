@@ -16,15 +16,14 @@
 				?>
 				    <div class="col-sm-offset-2 col-sm-10">
 					<div class="checkbox">
-					    <label
+					    <label>
 						<?php
-						    echo Form::hidden($setting->name, "false", array('class' => 'col-sm-10'));
-
+						    echo Form::hidden($setting->id, "0", array('class' => 'col-sm-10'));
 						    if($setting->data == 0)
 						    {
 							$setting->data = false;
 						    }
-						    echo Form::checkbox($setting->name, $setting->data, $setting->data);
+						    echo Form::checkbox($setting->id, true, $setting->data);
 						    echo ucwords($setting->name);
 						?>
 					    </label>
@@ -36,6 +35,11 @@
 		    ?>
 		</div>
 	    @endforeach
+	    <div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+		    <button type="submit" class="btn btn-success">Update</button>
+		</div>
+	    </div>
 	{!! Form::close() !!}
     </div>
 @endsection

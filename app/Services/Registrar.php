@@ -6,7 +6,6 @@ use App\Models\UserProviders;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 use Illuminate\Http\Exception\HttpResponseException;
-use Illuminate\Support\MessageBag;
 
 class Registrar implements RegistrarContract
 {
@@ -18,6 +17,8 @@ class Registrar implements RegistrarContract
      */
     public function validator(array $data)
     {
+	Dump(\Settings::get('registration'));
+	die;
 	if(\Settings::get('registration'))
 	{
 	    return Validator::make($data, [
@@ -29,10 +30,7 @@ class Registrar implements RegistrarContract
 	}
 	else
 	{
-	    $messageBag = new MessageBag;
-	    $messageBag->add('error', 'Registration is Disabled');
-
-	    throw new HttpResponseException(redirect()->back()->withInput()->with('errors', $messageBag));
+	    throw new HttpResponseException(redirect()->back()->withInput()->withErrors('Registration is Disabled!'));
 	}
     }
 
@@ -56,6 +54,7 @@ class Registrar implements RegistrarContract
 	}
 	else
 	{
+	    \Session::flash('success', 'You successfully connected your '.ucwords($data['provider']).' account!');
 	    $user = User::create([
 		'first_name' => $data['first_name'],
 		'last_name' => $data['last_name'],
