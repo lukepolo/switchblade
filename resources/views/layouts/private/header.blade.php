@@ -13,7 +13,7 @@
 	    <ul class="nav navbar-nav">
 		@if (Auth::check())
 		    <li>
-			<a href="{{ action('\Modules\Absplit\Http\Controllers\AbsplitController@index') }}">
+			<a href="{{ action('\Modules\Absplit\Http\Controllers\AbsplitController@getDashboard') }}">
 			    <i class="fa fa-code"></i>
 			    A/B Tester
 			</a>
@@ -31,7 +31,7 @@
 			</a>
 		    </li>
 		    <li>
-			<a href="{{ action('\Modules\Screenshot\Http\Controllers\ScreenshotController@index') }}">
+			<a href="{{ action('\Modules\Screenshot\Http\Controllers\ScreenshotController@getDashboard') }}">
 			    <i class="fa fa-desktop"></i>
 			    Ketch Screen
 			</a>

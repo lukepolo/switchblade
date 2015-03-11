@@ -1,4 +1,4 @@
-@extends('absplit::layouts.master')
+@extends('absplit::layouts.public')
 
 @section('content')
 
@@ -7,4 +7,5 @@
 	<p>
 		This view is loaded from module: {!! config('absplit.name') !!}
 	</p>
+
 @stop

@@ -10,7 +10,7 @@ class ScreenshotController extends Controller {
 	return View::make('screenshot::index');
     }
 
-    public function getPrices()
+    public function getDashboard()
     {
 	return View::make('screenshot::index');
     }

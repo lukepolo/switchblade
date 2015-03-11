@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title></title>
+        <title>{{ $title }}</title>
 
         <link href="/assets/css/app.css" rel="stylesheet">
 	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
         <script src="/assets/js/jquery.min.js"></script>
     </head>
     <body>
-	@include('core/private/header')
+	@include('layouts.private.header')
 	<div class="container">
             @if (count($errors) > 0)
                 <div class="alert alert-danger">
@@ -41,7 +41,7 @@
 	    @yield('content')
 	</div>
         <!-- Scripts -->
-        @include('core/private/node')
+        @include('layouts.private.node')
         <script src="/assets/js/all.js"></script>
         <script type="text/javascript">
             $(document).ready(function()

@@ -1,6 +1,6 @@
 <?php namespace Modules\Absplit\Http\Controllers;
 
-use Illuminate\Routing\Controller;
+use \App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 
 class AbsplitController extends Controller
@@ -11,6 +11,6 @@ class AbsplitController extends Controller
     }
     public function getDashboard()
     {
-	return View::make('absplit::index');
+	return View::make('absplit::dashboard');
     }
 }

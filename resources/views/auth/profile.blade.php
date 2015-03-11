@@ -1,4 +1,4 @@
-@extends('core/private/template')
+@extends('layouts.private.template')
 @section('content')
     <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="well well-light well-sm no-margin no-padding">
@@ -26,7 +26,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <i class="icon-append fa fa-envelope"></i>    
+                                    <i class="icon-append fa fa-envelope"></i>
                                 </div>
                                 {!! Form::text('email', Auth::user()->email) !!}
                             </div>
@@ -106,7 +106,7 @@
     &lt;script type="text/javascript">
         (function(g,c,e,f,a,b,d){window[a]=function(){window[a].q.push(arguments)};window[a].q=[];window[a].t=+new Date;b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
         swb('auth','{{ Auth::user()->api_key }}');
-        swb('get_mods');    
+        swb('get_mods');
     &lt;/script></code>
                 </pre>
             </div>
@@ -117,7 +117,7 @@
         $(document).ready(function()
         {
             prettyPrint();
-            
+
             $('#edit-profile').click(function()
             {
                $('#update_profile_fields').slideToggle();
@@ -149,7 +149,7 @@
                     alert(error.Error);
                 });
             });
-            
+
             $.ajax({
                 url: '{{ url('payment/invoices') }}',
                 type: 'GET',
@@ -165,13 +165,13 @@
                         {
                             var refund_text = '<a href="#' + invoice_id + '">Start Refund</a>';
                         }
-                        
+
                         // Show all the invoice items
                         $.each(invoice.items, function(index, item)
                         {
                             plan = item.plan;
                         });
-                        
+
                         $('#payments table tbody').append('\
                         <tr>\
                             <td>' + invoice_id + '</td>\
@@ -187,11 +187,11 @@
 
         function readURL(input)
         {
-            if (input.files && input.files[0]) 
+            if (input.files && input.files[0])
             {
                 var reader = new FileReader();
 
-                reader.onload = function (e) 
+                reader.onload = function (e)
                 {
                     $('.profile-picture').attr('src', e.target.result);
                 }

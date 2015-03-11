@@ -1,4 +1,4 @@
-@extends('core/private/template')
+@extends('layouts.private.template')
 @section('content')
     <div class="row well well-light well-sm">
 	<h1>Edit Site Settings</h1>
