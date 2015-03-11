@@ -20,6 +20,9 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Modules\Absplit\Http\Controll
 Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modules\Absplit\Http\Controllers'], function()
 {
     Route::controllers([
+	'proxy' => 'ProxyController',
 	'/' => 'AbsplitController',
     ]);
+
+    Route::get('proxy/asset/(:any)', 'ProxyController@getAsset');
 });

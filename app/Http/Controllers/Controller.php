@@ -15,5 +15,6 @@ abstract class Controller extends BaseController
 	// Sets the Title, based on the controller
 	$name = preg_replace('/Controller@.*/', '', str_replace(\Route::getCurrentRoute()->getAction()["namespace"].'\\', '', \Route::currentRouteAction()));
 	\View::share('title', 'Switch Blade | '.$name);
+	\View::share('container_class', 'container');
     }
 }

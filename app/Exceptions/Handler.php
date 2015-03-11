@@ -38,7 +38,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        
         if ($this->isHttpException($e))
         {
             return $this->renderHttpException($e);
@@ -48,13 +47,13 @@ class Handler extends ExceptionHandler
         {
             return $this->renderExceptionWithWhoops($e);
         }
-        
+
 	return parent::render($request, $e);
     }
-    
+
     /**
      * Render an exception using Whoops.
-     * 
+     *
      * @param  \Exception $e
      * @return \Illuminate\Http\Response
      */
@@ -69,5 +68,5 @@ class Handler extends ExceptionHandler
             $e->getHeaders()
         );
     }
-    
+
 }
