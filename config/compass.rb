@@ -5,7 +5,7 @@ environment = :development
 http_path = "/"
 #Compile Paths
 css_dir = "./public/assets/css"
-images_dir = "./public/assets/images"
+images_dir = "./resources/assets/images"
 
 sass_dir = "./resources/assets/sass"
 javascripts_dir = "./resources/assets/js"

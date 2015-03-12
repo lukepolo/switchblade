@@ -1,82 +1,93 @@
 var gulp = require('gulp'),
+compass = require('gulp-compass'),
+gutil = require('gulp-util'),
+chalk = require('chalk'),
+//autoprefixer = require('gulp-autoprefixer'),
 concat = require('gulp-concat'),
 uglify = require('gulp-uglify'),
-rename = require('gulp-rename'),
-compass = require('gulp-compass'),
-minifyCSS = require('gulp-minify-css'),
 imagemin = require('gulp-imagemin'),
-notify = require('gulp-notify'),
-clean = require('gulp-clean'),
-filesize = require('gulp-filesize');
+pngquant = require('imagemin-pngquant'),
 elixir = require('laravel-elixir'),
 bower_path = './vendor/bower_components/',
+
 paths = {
+    'sass': './resources/assets/sass/',
+    'css': './public/assets/css/',
+    'img': './resources/assets/img/',
     'js' : './resources/assets/js/',
     'jquery' : bower_path + "jquery/dist/",
     'bootstrap' : bower_path + "bootstrap-sass-official/assets/",
     'fontawesome' : bower_path + "fontawesome/"
 };
 
-// Laravel E
+// Minify JS
+elixir.extend("minify_js", function() 
+{
+    gulp.task('minify_js', function() 
+    {
+	gutil.log('Changes Found :', '\'' + chalk.cyan('Scripts') + '\'...');
+	gulp.src([
+	    paths.js+ 'prettify/prettify.js',
+	    paths.js+ '**',
+	    paths.bootstrap + 'javascripts/bootstrap.min.js'
+	],
+	{
+	    base: './'
+	})
+	.pipe(concat('all.js')) 
+	.pipe(uglify())
+	.pipe(gulp.dest('public/assets/js'));
+    });   
+    this.registerWatcher("minify_js", "**/*.js");
+    return this.queueTask("minify_js");
+});
+
+// Run Compass 
+elixir.extend("minify_css", function() 
+{
+    gulp.task('minify_css', function() 
+    {
+	gutil.log('Changes Found :', '\'' + chalk.cyan('SASS') + '\'...');
+	gulp.src([paths.sass+'*'])
+	.pipe(compass({
+	    css: paths.css,
+	    sass: paths.sass,
+	    image: paths.img,
+	    logging  : false,
+	    comments : false,
+	    style    : 'expanded'
+	}))
+	.pipe(gulp.dest('public/assets/css'))
+	
+    });
+    return this.queueTask("minify_css");
+});
+
+// Run Compass 
+elixir.extend("minify_img", function() 
+{
+    gulp.task('minify_img', function()
+    {
+	gutil.log('Changes Found :', '\'' + chalk.cyan('Images') + '\'...');
+	
+	return gulp.src(paths.img+'*')
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('public/assets/img'));
+    });
+    
+    return this.queueTask("minify_img");
+});
+
+// Copy Assets from Vendors
 elixir(function (mix) 
 {
-    mix.scripts(
-	paths.jquery + 'jquery.min.js', 
-	"public/assets/js/jquery.min.js",
-	'.'
-    );
-    
-    mix.scripts([
-	// Needs to load first!
-	paths.js+ 'prettify/prettify.js',
-	paths.js+ '**',
-	paths.bootstrap + 'javascripts/bootstrap.min.js'
-    ], 'public/assets/js', '.');
-
+    mix.copy(paths.jquery + 'jquery.min.js', "public/assets/js/jquery.min.js");
     mix.copy(paths.fontawesome + '/fonts', 'public/assets/fonts');
-});
-
-
-gulp.task('scripts', function() {
-    return gulp.src('src/js/*.js')
-        .pipe(concat('main.js')) 
-        .pipe(gulp.dest('build/dev/js'))
-        .pipe(filesize())
-        .pipe(uglify())
-        .pipe(gulp.dest('build/production/js'))
-        .pipe(filesize())
-        .pipe(notify({ message: 'JavaScript task complete' }));
-});
-
-gulp.task('compass', function() {
-    return gulp.src(['src/sass/**/*.scss'])
-        .pipe(compass({
-            css: 'src/css',
-            sass: 'src/sass',
-            image: 'src/images'
-        }))
-        .pipe(gulp.dest('build/dev/css'))
-        .pipe(minifyCSS())
-        .pipe(gulp.dest('build/production/css'))
-        .pipe(notify({ message: 'Compass task complete' }));
-});
-
-gulp.task('images', function() {
-    return gulp.src('src/images/**/*')
-        .pipe(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true }))
-        .pipe(gulp.dest('build/dev/img'))
-        .pipe(gulp.dest('build/production/img'))
-        .pipe(notify({ message: 'Images task complete' }));
-});
-
-gulp.task('watch', function() {
-    gulp.watch('src/js/*.js', ['scripts']);
-    gulp.watch('src/sass/**/*.scss', ['compass']);
-    gulp.watch('src/images/**/*', ['images']);
-});
-
-
-gulp.task('clean', function() {
-    return gulp.src(['build/*'], {read: false})
-        .pipe(clean());
+    mix.minify_js();
+    mix.minify_css();
+    mix.minify_img();
 });

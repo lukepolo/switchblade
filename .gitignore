@@ -19,10 +19,9 @@ desktop.ini
 /vendor
 .env
 npm-debug.log
-/node_modules
 
 # dynamically generated files
 /public/img/profile_images
 
-# sass cache
+# Sass Files
 .sass-cache
