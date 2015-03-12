@@ -3,7 +3,6 @@
 @section('content')
     <?php
 //	echo Asset::css('loading.css');
-//	echo Asset::css('modules/absplit/main.css');
     ?>
 
     <script type="text/javascript">
@@ -58,7 +57,7 @@
 			<div class='tetromino box4'></div>
 		    </span>
 		    <div class="tab-pane active" id="site-viewer">
-			<iframe id="site-editor" class="iframe-edit" src="{{ action('\Modules\Absplit\Http\Controllers\ProxyController@getIndex', ['id' => $experiment->id]) }}>"></iframe>
+			<iframe id="site-editor" class="iframe-edit" src="{{ action('\Modules\Absplit\Http\Controllers\ProxyController@getIndex', ['id' => $experiment->id]) }}"></iframe>
 		    </div>
 		</div>
 		<!-- end content -->

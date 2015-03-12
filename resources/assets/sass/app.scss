@@ -1,4 +1,8 @@
+@import "compass";
 @import "bootstrap";
 @import "font-awesome";
-@import "prettify";
-@import "base";
+@import "partials/prettify";
+@import "partials/base";
+
+@import "partials/absplit";
+@import "partials/loading";

@@ -50,10 +50,7 @@ class ProxyController extends Controller
 
 	if($url_parsed['scheme'] != 'https')
 	{
-	    if($this->getCheckSSL($url_parsed['host']))
-	    {
-		$url_parsed = parse_url('https://'.$url_parsed['host']);
-	    }
+	    $url_parsed = parse_url($this->getCheckSSL($url));
 	}
 
         if(isset($url_parsed['path']) === false)
@@ -318,7 +315,7 @@ class ProxyController extends Controller
 
     public function getCheckSSL($url)
     {
-	$cURL = curl_init('https://'.$url);
+	$cURL = curl_init('https://'.parse_url($url)['host']);
 	curl_setopt($cURL, CURLOPT_RETURNTRANSFER, 0);
 	curl_setopt($cURL, CURLOPT_NOBODY, true);
         curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
@@ -331,7 +328,11 @@ class ProxyController extends Controller
 
         if($status == 200)
         {
-	    return response('true');
-        }
+	    return curl_getinfo($cURL, CURLINFO_EFFECTIVE_URL);
+	}
+	else
+	{
+	    return false;
+	}
     }
 }

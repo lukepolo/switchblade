@@ -246,6 +246,1093 @@ prettyPrint:e=e=function(a,d){function e(){for(var b=V.PR_SHOULD_USE_CONTINUATIO
 P(e,250):"function"===typeof a&&a()}for(var b=d||document.body,i=b.ownerDocument||document,b=[b.getElementsByTagName("pre"),b.getElementsByTagName("code"),b.getElementsByTagName("xmp")],j=[],m=0;m<b.length;++m)for(var l=0,n=b[m].length;l<n;++l)j.push(b[m][l]);var b=r,c=Date;c.now||(c={now:function(){return+new Date}});var p=0,t,q=/\blang(?:uage)?-([\w.]+)(?!\S)/,f=/\bprettyprint\b/,w=/\bprettyprinted\b/,y=/pre|xmp/i,u=/^code$/i,g=/^(?:pre|code|xmp)$/i,k={};e()}};typeof define==="function"&&define.amd&&
 define("google-code-prettify",[],function(){return X})})();return e}();R||P(Q,0)})();}()
 
+jQuery.fn.getPath = function () 
+{
+    // We must have somthing as an input
+    if (this.length == 1)
+    {
+        var path, node = this;
+        
+        // Checks to see if the node has an ID, if it does we just use that!
+        if (node[0].id)
+        {
+            return "#" + node[0].id;
+        }
+        
+        // While a node has some length we have to add it the tree
+        while (node.length) 
+        {
+            // Node is in a single array
+            var realNode = node[0],
+            name = realNode.localName;
+            if (!name) 
+            {
+                break;
+            }
+            
+            // Lowercase for formatting
+            name = name.toLowerCase();
+            var parent = node.parent();
+            // Get all the siblings
+            var siblings = parent.children(name);
+            
+            // If they have a sibling we will have to find which the current node is
+            if (siblings.length > 1) 
+            {
+                name += ':eq(' + siblings.index(realNode) + ')';
+            }
+            // Path is complete
+            path = name + (path ? ' > ' + path : '');
+            
+            // The parent is now the new node , loop till done
+            node = parent;
+        }
+        return path;
+    }
+};
+// Adds Changes to our list of changes 
+function add_changes(path, type, apply_function, revert_function)
+{
+    console.log('adding changes!');
+    // It can happen if they move quickly and the JS cannot keep up with the user
+    // We also don't need to repeat any of the same apply functions if they type to fast
+    if(apply_function == revert_function || ($(pending_changes_history[variation_id]).last()[0] && $(pending_changes_history[variation_id]).last()[0].apply_function == apply_function))
+    {
+        return;
+    }
+    else
+    {
+        // Remove any classes that being with absplit-
+        if($.isArray(apply_function) == false && $.isArray(revert_function) == false)
+        {
+            absplit_classes = 'absplit\-.+?\b';
+            apply_function = apply_function.replace(new RegExp('('+absplit_classes+'$)',"gi"), "");
+            revert_function = revert_function.replace(new RegExp('('+absplit_classes+'$)',"gi"), "");
+        }
+        
+        // We need to modify our code if we have a diff history index
+        if(pending_changes_history_index[variation_id])
+        {
+            $(pending_changes_history[variation_id]).slice(pending_changes_history_index[variation_id]).each(function(index, data)
+            {
+                // remove from pending_changes array
+                delete pending_changes[variation_id][data.path][data.type];
+            });
+
+            // remove all history beyond the index
+            pending_changes_history[variation_id] = pending_changes_history[variation_id].splice(0, pending_changes_history_index[variation_id]);
+            pending_changes_history_index[variation_id] = null;
+        }
+
+        // name space created? 
+        if (!pending_changes[variation_id])
+        {
+            pending_changes[variation_id] = {};
+        }
+
+        if (!pending_changes[variation_id][path])
+        {
+            pending_changes[variation_id][path] = {};
+        }
+
+        pending_changes[variation_id][path][type] = {
+            path : path,
+            apply_function: apply_function,
+            revert_function: revert_function,
+            pending : true,
+            code_editor: true
+        };
+
+        if(!pending_changes_history[variation_id])
+        {
+            pending_changes_history[variation_id] = new Array();
+        }
+        pending_changes_history[variation_id].push({
+            path : path,
+            type: type,
+            apply_function: apply_function,
+            revert_function: revert_function,
+            pending: true
+        });
+
+       apply_changes();
+    }
+}
+
+function apply_changes()
+{
+    // Re-append all changes
+    $('#code_holder .note-editable').html('<generated_code></genderated_code>');
+    if(pending_changes[variation_id])
+    {
+        $(pending_changes[variation_id]).each(function(index, path_object)
+        {
+            $.each(path_object, function(path, type_object)
+            {
+                $.each(type_object, function(type, data)
+                {
+                    if($.isArray(data.apply_function) == false)
+                    {
+                        iframe_window.eval(data.apply_function);
+                        if(data.code_editor == true)
+                        {
+                            $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+data.apply_function);
+                        }
+                    }
+                    else
+                    {
+                        $.each(data.apply_function, function(index, apply_function)
+                        {
+                            iframe_window.eval(apply_function);
+                            if(data.code_editor == true)
+                            {
+                                $('#code_holder .note-editable generated_code').text($('#code_holder .note-editable').text().trim()+'\n'+apply_function);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    }
+}
+
+function undo_changes()
+{
+    if(pending_changes_history[variation_id])
+    {
+        $(pending_changes_history[variation_id].reverse()).each(function(index, data)
+        {
+            if($.isArray(data.revert_function) == false)
+            {
+                iframe_window.eval(data.revert_function);
+            }
+            else
+            {
+                $.each(data.revert_function, function(index, revert_function)
+                {
+                    iframe_window.eval(revert_function);
+                });
+            }
+        });
+        pending_changes_history[variation_id].reverse();
+    }
+}
+
+function set_history_index()
+{
+    if(pending_changes_history_index[variation_id] == null)
+    {
+        pending_changes_history_index[variation_id] = pending_changes_history[variation_id].length;
+    }
+}
+
+// Move forward in thehistory list
+$(document).on('click', '#redo-change', function()
+{
+    set_history_index();
+    if(pending_changes_history_index[variation_id] < pending_changes_history[variation_id].length)
+    {
+        history_to_current(pending_changes_history_index[variation_id]++, true);
+    }
+});
+
+// Move backward in thehistory list
+$(document).on('click', '#undo-change', function()
+{
+    set_history_index();
+    if((pending_changes_history_index[variation_id] -1) > -1)
+    {
+        history_to_current(--pending_changes_history_index[variation_id], false);
+    }
+});
+
+function history_to_current(history_index, forward)
+{
+    if(forward)
+    {
+        var rev_history = $(pending_changes_history[variation_id])[history_index];
+        if(pending_changes[variation_id][rev_history.path][rev_history.type].apply_function)
+        {
+            pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.apply_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.revert_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+        }
+    }
+    else
+    {
+        var rev_history = $(pending_changes_history[variation_id])[history_index];
+        if(pending_changes[variation_id][rev_history.path][rev_history.type].apply_function)
+        {
+            pending_changes[variation_id][rev_history.path][rev_history.type].apply_function = rev_history.revert_function;
+            pending_changes[variation_id][rev_history.path][rev_history.type].revert_function = rev_history.apply_function;
+            if(history_index == 0)
+            {
+                // dont show in the code editor
+                pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = false;
+            }
+            else
+            {
+                pending_changes[variation_id][rev_history.path][rev_history.type].code_editor = true;
+            }
+        }
+    }
+    apply_changes();
+}
+
+// When pressing cancel we need to remove all pending changes!
+$(document).on('click', '.cancel', function()
+{
+    // Remove all pending 
+    $(pending_changes[variation_id]).each(function(index, path_object)
+    {
+        $.each(path_object, function(path, type_object)
+        {
+            $.each(type_object, function(type, data)
+            {
+                if(data.pending == true)
+                {
+                    // find oldest pending history
+                    $(pending_changes_history[variation_id]).each(function(index, data_history)
+                    {
+                        if(data_history.path == path && data_history.type == type && data_history.pending == true)
+                        {
+                            if($.isArray(data_history.revert_function) == false)
+                            {
+                                iframe_window.eval(data_history.revert_function);
+                            }
+                            else
+                            {
+                                $.each(data_history.revert_function, function(index, revert_function)
+                                {
+                                    iframe_window.eval(revert_function);
+                                });
+                            }
+                            return false;
+                        }
+                    });
+                    delete pending_changes[variation_id][path][type];
+                }
+            });
+        });
+    });
+
+    // Set all histroy pending to false
+    $(pending_changes_history[variation_id]).each(function(index, data_history)
+    {
+        if(data_history.pending == true)
+        {
+            data_history.pending = false;
+        }
+    });
+
+    destroy_move_drag();
+    apply_changes();
+    close_menu();
+    
+    $('body', iframe_doc).removeClass('absplit_moveto absplit_swap');
+    $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+    
+    if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
+    {
+        $('#absplit-element-menu').show();
+    }
+    $(this).closest('.jarviswidget').hide();
+});
+
+// Save all changes to the variation
+$(document).on('click', '.save', function()
+{
+    save();
+    $(this).closest('.jarviswidget').find('.jarviswidget-delete-btn').click();
+});
+
+function save()
+{
+    // Remove all pending 
+    $(pending_changes[variation_id]).each(function(index, path_object)
+    {
+        $.each(path_object, function(path, type_object)
+        {
+            $.each(type_object, function(type, data)
+            {
+                data.pending = false;
+            });
+        });
+    });
+    
+    // Save it to the database
+    $.ajax({
+        url: window.location.origin+'/absplit/experiment/save',
+        type: 'post',
+        data: {
+            experiment_id: experiment_id,
+            changes :pending_changes,
+            history: pending_changes_history
+        }
+    }).error(function(data)
+    {
+        $('#content .alert').remove();
+        $('#content').prepend('<div class="alert alert-danger"></div>').find('.alert').html(data.responseText)
+    });
+    
+    destroy_move_drag();
+    apply_changes();
+}
+// GLOBAL Variables
+var iframe_doc;
+var iframe_element;
+var element_tree = {
+    parent: null,
+    child: null
+};
+var pending_changes = {};
+var pending_changes_history = {};
+
+var pending_changes_history_index = {};
+var variation_count;
+var menu_height = 120;
+var orginal_style;
+
+// TODO
+// THIS WONT WORK - TRY AGAIN DUMBASS
+var swap_count = 0;
+var move_count = 0;
+
+// Holds all the types of elements  
+// TODO - need a function to check if it exists because it will become undefined if we dont 
+var element_tags = {
+    p: "Paragraph",
+    div: "Division",
+    h1: "Heading",
+    h2: "Heading",
+    h3: "Heading",
+    h4: "Heading",
+    h5: "Heading",
+    h6: "Heading",
+    a: "Link",
+    ul: "Unordered List",
+    ol: "Ordered List",
+    li: "List Item",
+    blockquote: "Blockquote",
+    hr: "Horizontal Rule",
+    img: "Image",
+    i: "Italics",
+    b: "Bold",
+    title: "Title",
+    form: "Form",
+    input: "Input",
+    select: "Selector",
+    option: "Select Option",
+    font: "Font",
+    table: "Table",
+    tr: "Table Row",
+    td: "Table Division",
+    th: "Table Heading",
+    thead: "Table Header",
+    tbody: "Table Body",
+    tfooter: "Table Footer",
+    header: "Header",
+    footer: "Footer",
+    body: "Body",
+    small: "Small Text",
+    pre: "Preformated Text",
+    strike: "Striked Text",
+    sub: "Subscript",
+    frame: "Frame",
+    iframe: "IFrame",
+    textarea: "Textarea"
+};
+
+// Gets the class list of the current element
+function get_class_list(wrap, seperator)
+{
+    var class_list = '';
+    var classes = $(iframe_element).attr('class').split(/\s+/);
+    $.each(classes, function(index, item)
+    {
+        if (!item.match(/absplit-/))
+        {
+            class_list = class_list + item + seperator; 
+        }
+    });
+
+    if (class_list)
+    {
+        // trim the seperator
+        class_list = class_list.replace(new RegExp('('+seperator+'$)',"g"), "");
+        if (wrap)
+        {
+            class_list = " " + wrap + '="' + class_list + '"';
+        }
+    }
+
+    return class_list;
+}
+
+// Get an element respect to the iframe based on current x / y coords
+function absplit_get_element(mouse_x, mouse_y)
+{
+    // We must make sure that the element is realtive to the iframe / fix left and top
+    if($(iframe_doc).scrollTop() > 0)
+    {
+        mouse_y = mouse_y - $(iframe_doc).scrollTop();
+    }
+    if($(iframe_doc).scrollLeft() > 0 )
+    {
+        mouse_x = mouse_x - $(iframe_doc).scrollLeft();
+    }
+
+    return iframe_doc.elementFromPoint(mouse_x, mouse_y);
+}
+
+var min_height = 215;
+// When we resize the window we need to make sure the iframe element is correct
+$(window).on('resize scroll', function()
+{
+    $('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
+    $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
+    if (iframe_element)
+    {
+        absplit_widget_positions();
+    }
+});
+
+// Getting the iframe_document / and Show loading screen till we are ready
+$('#site-editor').load(function()
+{
+    $('.iframe-edit').height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
+    $(this).show();
+
+    $('.tetrominos').hide();
+    // Check to see if we can determine elements by elementFromPoint
+    if (!document.elementFromPoint)
+    {
+        // Bummer
+        alert('Your browser is incompatiable, features may not work as inteneded');
+    }
+    iframe_window = $('#site-editor')[0].contentWindow;
+    iframe_doc = $('#site-editor').contents()[0];
+    
+    $(iframe_doc).on('click', '.absplit_moveto .absplit_secondary_border', function()
+    {
+        var path = $(iframe_element).getPath();
+        move_count++;
+        
+        apply_revert = '$("' + path + '").' + $('#absplit-moveto-editor input:checked').val() + '("' + $('.absplit_secondary_border', iframe_doc).getPath() + '").attr("data-absplit-move", "'+move_count+'");';
+
+        if($(iframe_element).prev().length)
+        {
+            // we want to append
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).prev().getPath() +'")';
+        }
+        if($(iframe_element).next().length)
+        {
+            // we want to prepend
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').prependTo("'+ $(iframe_element).next().getPath() +'")';
+        }
+        else
+        {
+            // fuck it , get their parent and append 
+            revert_function = '$(\'[data-absplit-move="'+move_count+'"]\').appendTo("'+ $(iframe_element).parent().getPath() +'")';
+        }
+        
+        $('body', iframe_doc).removeClass('absplit_moveto');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(path, 'moveto', apply_revert, revert_function);
+    });
+    
+    $(iframe_doc).on('click', '.absplit_swap .absplit_secondary_border', function()
+    {
+        
+        var swap_item_path = $(iframe_element).getPath();
+        var swap_with_path = $('.absplit_secondary_border', iframe_doc).getPath();
+        
+        // the apply and revert function are going to be the same cause they deal with paths
+        swap_count++;
+        
+        apply_revert = new Array(
+            'var clone_1 = $("'+ swap_item_path +'").clone().attr("data-absplit-swap", "'+swap_count+'a");',
+            'var clone_2 = $("'+ swap_with_path +'").clone().attr("data-absplit-swap", "'+swap_count+'b");',
+            '$("'+ swap_with_path +'").after(clone_1);',
+            '$("'+ swap_item_path +'").replaceWith(clone_2);',
+            '$("'+ swap_with_path +'").remove();'
+        );
+
+        revert_function = new Array(
+            'var clone_1 = $(\'[data-absplit-swap="'+swap_count+'a"]\').clone().attr("data-absplit-swap", "");',
+            'var clone_2 = $(\'[data-absplit-swap="'+swap_count+'b"]\').clone().attr("data-absplit-swap", "");',
+            '$(\'[data-absplit-swap="1a"]\').after(clone_2);',
+            '$(\'[data-absplit-swap="1b"]\').replaceWith(clone_1);',
+            '$(\'[data-absplit-swap="1a"]\').remove()'
+        );
+
+        $('body', iframe_doc).removeClass('absplit_swap');
+        $('.absplit_secondary_border', iframe_doc).removeClass('absplit_secondary_border');
+        
+        add_changes(swap_item_path, 'swap', apply_revert, revert_function);
+    });
+});
+
+// Shows the code editor
+$(document).on('click', '.code_holder_open', function()
+{
+    $('#code_holder').show();
+});
+
+// We need this for the parent right away
+$('.iframe-edit').parent().height($(window).height() - $('header').height() - $('.page-footer').height() - min_height);
+
+// Remove all all default hidden html tags withing summer note 
+$('#code_holder .note-editable').html('');
+// MAIN SYSTEM MENU
+function absplit_menu(element)
+{
+    // Store element globally
+    iframe_element = element;
+    
+    // We dont want the default menu classes
+    $('#absplit-element-menu .ui-menu-title').removeClass('ui-widget-content ui-menu-divider');
+
+    // Gets the element tag to display a name for the user
+    var element_tag = $(iframe_element).prop('tagName').toLowerCase();
+    var element_text = element_tags[element_tag] + ' <'+ element_tag + get_class_list('class', ' ') + '>';
+
+    // Shows or hides the replace link in the menu
+    if(element_tag == 'img')
+    {
+        $('#replace_img').show();
+    }
+    else
+    {
+        $('#replace_img').hide();
+    }
+
+    // Shows or hides the "link" link in the menu
+    if(element_tag == 'a' || element_tag == 'img')
+    {
+        $('#link').show();
+    }
+    else
+    {
+        $('#link').hide();
+    }
+
+    // Build and add selecting trees to navigate easily 
+    build_tree('parent');
+    build_tree('child');
+
+    // Set the menu title
+    $('#absplit-element-menu .ui-menu-title').text(element_text).attr('title', element_text);
+
+    // Hide rest of widgets
+    $('.widget-templates').hide();
+    
+    // Show the main menu
+    $('#absplit-element-menu').menu().show();
+    
+    absplit_widget_menu_position();
+}
+
+// Builds child / parent tree for the type given
+function build_tree(type)
+{
+    // This emptys and places a default placeholder for showing all connected elements
+    $('#select_'+type).empty().html('\
+        <li id="no_'+type+'" class="ui-menu-item" role="presentation">\
+            <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem">No '+ ucwords(type) +' Elements</a>\
+        </li>\
+    ');
+
+    // Two differnt types of selectors, need to get the eval of the function
+    if(type == 'parent')
+    {
+        var map_func = "$(iframe_element).parents()";
+    }
+    else
+    {
+        var map_func = "$(iframe_element).children()";
+    }
+
+    // Builds the element tree 
+    var count = 0;
+    
+    element_tree[type] = new Array();
+    // Find all the childre of parents
+    eval(map_func).map(function() 
+    {
+        // We dont want them to select HTML or BODY
+        if(this.tagName != 'HTML' && this.tagName != 'BODY')
+        {
+            // TODO - change this to a class instead
+            // remove the no connections
+            $('#no_'+type).remove();
+            
+            // Push the element into the tree array
+            element_tree[type].push(this);
+
+            // If the element has an ID show it
+            if(this.id)
+            {
+                var element_id = ' #'+this.id;
+            }
+            else
+            {
+                element_id = '';
+            }
+            
+            // Append to the menu visually
+            $('#select_'+type).append('\
+                <li class="ui-menu-item" role="presentation">\
+                    <a href="javascript:void(0);" class="ui-corner-all" tabindex="-1" role="menuitem" data-type="' + type + '" data-id="' + count + '">'+ element_tags[this.tagName.toLowerCase()]+ " &lt;" + this.tagName.toLowerCase() + element_id + "&gt;" +'</a>\
+                </li>\
+            ');
+            count++;
+        }
+    });
+}
+
+// Quickly close all menus
+function close_menu()
+{
+    $('#absplit-close').click();
+}
+
+// Resets all menu / widget positions next to element
+function absplit_widget_positions()
+{
+    $('.widget-templates:not(#absplit-element-menu, #code_holder):visible').addClass('screen_center').draggable(
+    {
+        handle: '.drag', 
+        cursor: "move",
+        iframeFix: true,
+        containment: "#content",
+        start: function()
+        {
+            $('.widget-templates').removeClass('screen_center');
+        }
+    });
+}
+
+// Moves the widgets to the center 
+function absplit_widget_menu_position()
+{
+    // TODO
+    // detect if off page - dont allow
+    $('#absplit-element-menu').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+        // TODO - check bottom - top
+    // wrote a function , need to determine which way to adjust though , probalby write another function
+    // Checks to see if the menu is outside of the view
+    var left_pos = $(window).width() - $('#absplit-element-menu').position().left;
+    if(left_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', $('#absplit-editor').width() - 350);
+    }
+
+    // Checks to see if the menu is outside of the view
+    var right_pos = $('#absplit-element-menu').position().left;
+    if(right_pos < 250)
+    {
+        $('#absplit-element-menu').css('left', 350);
+    }
+}
+
+$('#absplit-close').on('click', function()
+{
+    $('#absplit-element-menu').hide();
+});
+
+$(document).on('mouseenter', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')]);
+});
+
+$(document).on('click', '#select_parent li a, #select_child li a', function()
+{
+    iframe_window.add_absplit_border(element_tree[$(this).data('type')][$(this).data('id')])
+    absplit_menu(element_tree[$(this).data('type')][$(this).data('id')]); 
+});
+
+// Pressing the close button on the widgets will close current element
+$('.jarviswidget-delete-btn').on('click', function()
+{
+    close_menu();
+    if($(this).closest('.jarviswidget').attr('id') !=  'code_holder')
+    {
+        $('.cancel').first().click();
+        $('#absplit-element-menu').show();
+    }
+    $(this).closest('.jarviswidget').hide();
+});
+
+function destroy_move_drag()
+{
+    $('.ui-resizeable-overlay', iframe_doc).remove();
+    $('.ui-resizable', iframe_doc).draggable("destroy");
+    $('.ui-resizable', iframe_doc).resizable("destroy");
+}
+// Live Preview Changes
+$(document).on('keyup change', '.jarviswidget input:visible, #absplit-html-edit .note-editor', function(e)
+{
+    var path = $(iframe_element).getPath();
+    switch($(this).closest('.jarviswidget').attr('id'))
+    {
+        case 'absplit-classes':
+            // We dont want keyup for this , we want on change!
+            if(e.type != 'keyup')
+            {
+                add_changes(path, 'classes', "$('" + path + "').attr('class', '" + $(this).val().replace(/,/g, ' ') + "');", "$('" + path + "').attr('class', '" + get_class_list(null, ' ') + "');");
+            }
+        break;
+        case 'absplit-css':
+            add_changes(path, 'css:'+$(this).data('get'), "$('" + path + "').css('" + $(this).data('get') + "','" + $(this).val() +"');", "$('" + path + "').css('" + $(this).data('get') + "','" + $(path, iframe_doc).css($(this).data('get')) +"');");
+        break;
+        case 'absplit-html-edit':
+            add_changes(path, 'html', "$('" + path + "').html(" + JSON.stringify($(this).prev().code()) +");", "$('" + path + "').html(" + JSON.stringify($(iframe_element)[0].outerHTML) +");");
+        break;
+        case 'absplit-link-editor':
+            
+            if($(iframe_element).attr('src') != 'undefined')
+            {
+                add_changes(path, 'src', "$('" + path + "').attr('src', '" + $(this).val() +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
+            }
+            else
+            {
+                add_changes(path, 'href', "$('" + path + "').attr('href', '" + $(this).val() +"');", "$('" + path + "').attr('href', '" + $(iframe_element).attr('href') +"');");
+            }
+        break;
+        case 'absplit-img-editor':
+            // wait for the upload to complete
+            $.each(event.target.files, function(index, file) 
+            {
+                var reader = new FileReader();
+
+                reader.onload = function(event)
+                {  
+                    data = event.target.result;
+                    $('#img_preview').attr('src', data);
+                    file_data = data;
+                    add_changes(path, 'src', "$('" + path + "').attr('src', '" + file_data +"');", "$('" + path + "').attr('src', '" + $(iframe_element).attr('src') +"');");
+                };  
+
+                reader.readAsDataURL(file);
+            });
+        break;
+        default:
+            console.log('NO EVENT - '+ $(this).closest('.jarviswidget').attr('id'));
+        break;
+    }
+});
+// Adds a new variation
+$(document).on('click', '#add_variation', function()
+{
+    // TODO - PHP needs to generate a variation_id!
+    if(!variation_count)
+    {
+        variation_count = $('#variation_list li').length - 1;
+    }
+    else
+    {
+        variation_count++;
+    }
+
+    $('#variation_list .active').removeClass('active');
+
+    $('#variation_list li:eq(1)').before(
+        '<li data-variation-id="' + variation_count + '" class="active">\
+            <a data-toggle="tab" href="#">\
+                <i class="variation-type fa fa-desktop"></i> \
+                <i class="fa fa-close"></i>\
+                <span class="variation-title">Variation '+ variation_count +'</span> \
+                <i class="variation-title-edit fa fa-pencil" style="font-size:12px"></i>\
+            </a>\
+        </li>'
+    );
+
+    $('#variation_list li.active').click();
+});
+
+// Chnages to a differnt variation and applys its changes in the pending changes
+$(document).on('click', '#variation_list li', function()
+{
+    $('.cancel').first().click();
+    close_menu();
+    // UNDO ALL Changes first
+    undo_changes();
+    
+    variation_id = $('#variation_list li.active').data('variation-id');
+    $('.absplit-border', iframe_doc).removeClass('absplit-border');
+    
+    apply_changes();
+});
+
+// TODO - make it functional 
+// Changes the document to a mobile document 
+$(document).on('click', '#variation_list .active .variation-type', function()
+{
+    $(this).toggleClass('fa-desktop fa-mobile');
+});
+
+// Removes a variation
+$(document).on('click', '#variation_list .fa.fa-close', function()
+{
+    $(this).closest('li').remove();
+    if(!$('#variation_list .active'))
+    {
+        $('#variation_list li:eq(1) a').click();
+    }
+});
+
+// Starts ending the title of the variation
+$(document).on('click', '.variation-title-edit', function()
+{       
+    $(this).prev().attr('contenteditable', true).focus();
+    $(this).prev().selectText();
+});
+
+// Stops editing the title of the variation
+$(document).on('keydown blur', '.variation-title', function(e)
+{
+    if(e.which == 27 || e.which == 13 || e.type == 'focusout')
+    {
+        e.preventDefault();
+        $(this).attr('contenteditable', false);
+        window.getSelection().removeAllRanges();
+    }
+});
+// Shows the HTML editor
+function absplit_html_editor()
+{
+    // Add the base to our template!
+    if($('base').length == 0)
+    {
+        $('head').append('<base href="'+base_url+'">');
+    }
+    $('.widget-templates').hide();
+    $('#absplit-html-edit').show();
+
+    $('#absplit-html-edit .note-editable').html(iframe_element.outerHTML.replace('absplit-border',''));
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Shows the goal creator
+function absplit_goal_creator()
+{
+    $('.widget-templates').hide();
+    $('#absplit-goal-creator').show();
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Shows the img editor 
+function absplit_img_editor()
+{
+    $('.widget-templates').hide();
+    $('#absplit-img-editor').show();
+
+    $('#absplit-img-editor input').val('');
+    $('#absplit-img-editor #img_preview').attr('src', '');
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Shows the link editor
+function absplit_link_editor()
+{
+    $('.widget-templates').hide();
+    $('#absplit-link-editor').show();
+
+    if(iframe_element.src != null)
+    {
+        var link = iframe_element.src;
+    }
+    else
+    {
+        var link = iframe_element.href;
+    }
+
+    $('#absplit-link-editor .link').val(link);
+
+    $('#absplit-link-editor .alt').val(iframe_element.alt);
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Shows the Classes editor
+function absplit_classes_editor()
+{
+    $('.widget-templates').hide();
+    $('#absplit-classes').show();
+
+    default_classes = get_class_list(null, ',');
+
+    $("#class_selector").val(default_classes.split(',')).trigger("change");
+    $("#class_selector").select2({placeholder: 'Select or Enter a Class', tags:default_classes.split(',')});
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Shows the CSS editor
+function absplit_css_editor()
+{
+    $('.widget-templates').hide();
+    $('#absplit-css').show();
+
+    // Build the CSS Values
+    $('#css_widget input').each(function()
+    {
+        $(this).val($(iframe_element).css($(this).data('get')));
+    });
+
+    // Reset positions
+    absplit_widget_positions();
+}
+
+// Trigger states allows the user to view a state that they usually cannnot do other wise
+// ex. hovering without actually hovering over the element
+$(document).on('click', '#trigger_states a', function()
+{
+    // TODO a better way than just doing the parent?
+    // TODO - allow for JS hovers? 
+//        iframe_window.$(iframe_element).trigger('mouseover').off();
+    $(iframe_element, iframe_doc).addClass('absplit-'+ $(this).data('type'));
+    $(iframe_element, iframe_doc).parent().addClass('absplit-'+ $(this).data('type'));
+    $(iframe_element, iframe_doc).toggleClass('absplit-locked');
+    $(iframe_element, iframe_doc).parent().toggleClass('absplit-locked');
+});
+
+// Removes the element from the dom
+$(document).on('click', '#remove_element', function()
+{
+    var path = $(iframe_element).getPath();
+
+    add_changes(path, 'visibility', "$('" + path + "').css('visibility', 'hidden');", "$('" + path + "').css('visibility', 'visible');");
+    
+    // Close menu
+    close_menu();
+    save();
+});
+
+// Drag and Resize
+$(document).on('click', '#resize_move', function()
+{
+    orginal_style = $(iframe_element).attr('style');
+    
+    $('#absplit-resize-editor').show();
+    absplit_widget_positions();
+    
+    $(iframe_element, iframe_doc).resizable({
+        handles: "n, e, s, w, ne, se, sw, nw"
+    }).draggable({
+        start: function() 
+        {
+            $('#absplit-resize-editor').hide();
+        },   
+        stop: function() 
+        {
+            var path = $(iframe_element).getPath();
+            
+            $('#absplit-resize-editor').show();
+            
+            $('#absplit-resize-editor').removeClass('screen_center');
+            $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');
+            
+            if($('#absplit-resize-editor').is(':offscreen'))
+            {
+                $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
+            }
+            
+            add_changes(path, 'offset', "$('" + path + "').css('top', '" + $(iframe_element).css('top') + "').css('left', '" + $(iframe_element).css('left') + "').css('position', '" + $(iframe_element).css('position') + "').css('width', '" + $(iframe_element).css('width') + "').css('height', '" + $(iframe_element).css('height') + "')", "$('" + path + "').attr('style', '" + orginal_style + "');");
+        }   
+    });
+    
+    $('#absplit-resize-editor').removeClass('screen_center');
+    $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', 10 + $('#site-editor').offset().left + $(iframe_element).offset().left + $(iframe_element).width()+'px');       
+    
+    if($('#absplit-resize-editor').is(':offscreen'))
+    {
+        $('#absplit-resize-editor').css('top', $('#site-editor').offset().top - menu_height + $(iframe_element).offset().top - $(iframe_doc).scrollTop()+'px').css('left', $(window).width() - $('#absplit-resize-editor').width());
+    }
+            
+    $('.ui-resizable', iframe_doc).append('<div class="ui-resizeable-overlay"></div>');
+    close_menu();
+});
+
+$(document).bind('keydown', function(event) 
+{
+    if($('.ui-resizable', iframe_doc).length)
+    {
+        switch(event.which) {
+            case 37: 
+                $(iframe_element).animate(
+                    {
+                        left: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+                break;
+            case 39:
+                $(iframe_element).animate(
+                    {
+                        left: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 38:
+                $(iframe_element).animate(
+                    {
+                        top: '-=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+            case 40:
+                 $(iframe_element).animate(
+                    {
+                        top: '+=1'
+                    },
+                    0,
+                    function(){}
+                );
+            break;
+        }
+    }
+});
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR SWAP IN THE MENU.JS
+// TODO - DON't ALLOW SWAP WITH CHILDREN >>> WILL FUCK UP THE DOM
+$(document).on('click', '#swap_element', function()
+{
+    $('#absplit-swap-editor').show();
+    close_menu();
+    swap_item = iframe_element;
+    
+    $(iframe_element).getPath();
+    
+    $('body', iframe_doc).addClass('absplit_swap');
+});
+
+// THERE IS A ON CLICK FUNCTION REGISTERED FOR MOVE TO IN THE MENU.JS
+$(document).on('click', '#move_to', function(e)
+{
+    $('#absplit-moveto-editor').show();
+    close_menu();
+    
+    move_item = iframe_element;
+    
+    $('body', iframe_doc).addClass('absplit_moveto');
+});
 /*!
  * Bootstrap v3.3.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.

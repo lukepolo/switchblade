@@ -1,0 +1,117 @@
+#redo-undo .widget-icon {
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+#variation_list .fa.fa-close{ 
+    position: absolute;
+    top: -10px;
+    left: -5px 
+}
+.fa  {
+    cursor: pointer;
+}
+
+#site-editor {
+    display: none;
+}
+
+.ui-menu-item {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.iframe-edit {
+    width:100%;
+}
+#absplit-editor .tab-content .tab-pane {
+    height:100%;
+}
+.note-editable * {
+    max-width: 80%;
+}
+
+#code_holder .note-editable {
+    white-space: pre-wrap;
+}
+
+.jarviswidget .drag i {
+    margin-left: 10px;
+    vertical-align: text-top;
+}
+
+#absplit-element-menu .ui-menu-title {
+    cursor: inherit;
+}
+
+#code_holder {
+    display: none;
+}
+#code_holder {
+    position: fixed;
+    bottom: -55px;
+    right: 60px;
+    left: 60px;
+    z-index : 1000000;
+}
+
+.code_holder_open .active,
+.code_holder_open {
+    position: absolute !important;
+    top: inherit !important;
+    left: inherit !important;
+    bottom: -1px !important;
+    right:60px !important;
+    height:25px;
+    width:100px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    /*        YAH FIND WHAT THIS SHOULD BE*/
+    z-index : 1000000;
+}
+.form-horizontal {
+    margin-left:-50px;
+}
+
+#absplit-css .form-group {
+    margin-right: 0;
+}
+
+#absplit-css {
+    min-width: 800px !important;
+}
+
+.input:-webkit-autofill {
+    background-color: red;
+}
+
+#absplit-css .form-horizontal {
+    margin-top: 30px;
+}
+
+.colorpicker {
+    padding-left: 10px;
+}
+.ui-menu-title {
+     text-decoration: none;
+     display: block;
+     padding: 2px .4em;
+     line-height: 1.5;
+     min-height: 0;
+     font-weight: 400;
+     font-size: inherit;
+     text-overflow: ellipsis;
+     white-space: nowrap; 
+     overflow: hidden;
+     cursor: all-scroll;
+ }
+ .ui-menu-icons .ui-menu-item a {
+     padding-left: 6px;
+ }
+.note-editor {
+    padding: 13px !important;
+}
+
+.absplit-resize-helper {
+    border: 2px dotted #00F;
+}
