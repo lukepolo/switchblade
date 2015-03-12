@@ -2,19 +2,20 @@ var gulp = require('gulp'),
 compass = require('gulp-compass'),
 gutil = require('gulp-util'),
 chalk = require('chalk'),
-//autoprefixer = require('gulp-autoprefixer'),
 concat = require('gulp-concat'),
 uglify = require('gulp-uglify'),
 imagemin = require('gulp-imagemin'),
 pngquant = require('imagemin-pngquant'),
 elixir = require('laravel-elixir'),
+
 bower_path = './vendor/bower_components/',
+resources_path = './resources/';
 
 paths = {
-    'sass': './resources/assets/sass/',
     'css': './public/assets/css/',
-    'img': './resources/assets/img/',
-    'js' : './resources/assets/js/',
+    'sass': resources_path+'assets/sass/',
+    'img': resources_path+'assets/img/',
+    'js' : resources_path+'assets/js/',
     'jquery' : bower_path + "jquery/dist/",
     'bootstrap' : bower_path + "bootstrap-sass-official/assets/",
     'fontawesome' : bower_path + "fontawesome/"
@@ -25,7 +26,6 @@ elixir.extend("minify_js", function()
 {
     gulp.task('minify_js', function() 
     {
-	gutil.log('Changes Found :', '\'' + chalk.cyan('Scripts') + '\'...');
 	gulp.src([
 	    paths.js+ 'prettify/prettify.js',
 	    paths.js+ '**',
@@ -38,16 +38,23 @@ elixir.extend("minify_js", function()
 	.pipe(uglify())
 	.pipe(gulp.dest('public/assets/js'));
     });   
-    this.registerWatcher("minify_js", "**/*.js");
-    return this.queueTask("minify_js");
+    
+    if(command == 'watch')
+    {
+	gutil.log('Starting', '\'' + chalk.cyan('watch-js') + '\'...');
+	return this.registerWatcher("minify_js", resources_path+"**/*.js");
+    }
+    else
+    {
+	return this.queueTask("minify_js");
+    }
 });
 
-// Run Compass 
+// Minify CSS
 elixir.extend("minify_css", function() 
 {
     gulp.task('minify_css', function() 
     {
-	gutil.log('Changes Found :', '\'' + chalk.cyan('SASS') + '\'...');
 	gulp.src([paths.sass+'*'])
 	.pipe(compass({
 	    css: paths.css,
@@ -60,17 +67,24 @@ elixir.extend("minify_css", function()
 	.pipe(gulp.dest('public/assets/css'))
 	
     });
-    return this.queueTask("minify_css");
+    
+    if(command == 'watch')
+    {
+	gutil.log('Starting', '\'' + chalk.cyan('watch-sass') + '\'...');
+	return this.registerWatcher("minify_css", resources_path+"**/*.scss");
+    }
+    else
+    {
+	return this.queueTask("minify_css")
+    }
 });
 
-// Run Compass 
-elixir.extend("minify_img", function() 
+// Minify Images
+elixir.extend("minify_img", function(command) 
 {
     gulp.task('minify_img', function()
     {
-	gutil.log('Changes Found :', '\'' + chalk.cyan('Images') + '\'...');
-	
-	return gulp.src(paths.img+'*')
+	gulp.src(paths.img+'*')
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
@@ -79,15 +93,27 @@ elixir.extend("minify_img", function()
         .pipe(gulp.dest('public/assets/img'));
     });
     
-    return this.queueTask("minify_img");
+    if(command == 'watch')
+    {
+	gutil.log('Starting', '\'' + chalk.cyan('watch-images') + '\'...');
+	return this.registerWatcher("minify_js", resources_path+"**/*.js");
+	return this.registerWatcher("minify_img", paths.img+'*');
+    }
+    else
+    {
+	return this.queueTask("minify_img");
+    }
 });
 
-// Copy Assets from Vendors
 elixir(function (mix) 
 {
-    mix.copy(paths.jquery + 'jquery.min.js', "public/assets/js/jquery.min.js");
-    mix.copy(paths.fontawesome + '/fonts', 'public/assets/fonts');
-    mix.minify_js();
-    mix.minify_css();
-    mix.minify_img();
+    command = process.argv.slice(2)[0];
+    gutil.log('Command:', '\'' + chalk.cyan(command) + '\'...');
+
+    // Copy Assets from Vendors
+    mix.copy(paths.jquery + 'jquery.min.js', "public/assets/js/jquery.min.js")
+    .copy(paths.fontawesome + '/fonts', 'public/assets/fonts')
+    .minify_js(command)
+    .minify_css(command)
+    .minify_img(command);
 });
