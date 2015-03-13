@@ -96,8 +96,7 @@ class ProxyController extends Controller
 
 	// Strip their .css files and .js files and replace with our URL
 	$html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.$asset_url.'?url=$5$6', $html);
-echo $html;
-die;
+	
 	$html = $html."
         <style>
             .absplit-border {

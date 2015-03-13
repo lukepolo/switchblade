@@ -1,12 +1,8 @@
 @extends('layouts.private.template')
 
 @section('content')
-    <?php
-//	echo Asset::css('loading.css');
-    ?>
-
     <script type="text/javascript">
-	    // Add the base to our template!
+	// Add the base to our template!
 	var base_url = "<?php echo $base_url; ?>";
 	// TODO - this will be set in PHP
 	var variation_id = 1;
@@ -91,22 +87,18 @@
       <!-- end widget content -->
     </div>
     <!-- end widget div -->
-    <?php
-	// Including all the widgets
-//	echo \View::Forge('private/widgets/menu');
-//	echo \View::Forge('private/widgets/html_editor');
-//	echo \View::Forge('private/widgets/link_editor');
-//	echo \View::Forge('private/widgets/img_editor');
-//	echo \View::Forge('private/widgets/class_editor');
-//	echo \View::Forge('private/widgets/css_editor');
-//	echo \View::Forge('private/widgets/goal_creator');
-//	echo \View::Forge('private/widgets/resize_editor');
-//	echo \View::Forge('private/widgets/swap_editor');
-//	echo \View::Forge('private/widgets/moveto_editor');
 
-//	Casset::js('modules/absplit/*');
+    @include('absplit::widgets.class_editor')
+    @include('absplit::widgets.css_editor')
+    @include('absplit::widgets.goal_creator')
+    @include('absplit::widgets.html_editor')
+    @include('absplit::widgets.img_editor')
+    @include('absplit::widgets.link_editor')
+    @include('absplit::widgets.menu')
+    @include('absplit::widgets.moveto_editor')
+    @include('absplit::widgets.resize_editor')
+    @include('absplit::widgets.swap_editor')
 
-    ?>
     <script type="text/javascript">
 	$(document).ready(function()
 	{

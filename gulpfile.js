@@ -12,15 +12,19 @@ bower_path = './vendor/bower_components/',
 resources_path = './resources/';
 
 paths = {
+    // App Paths
     'css_public': './public/assets/css/',
     'js_public' : './public/assets/js/',
     'fonts_public' : './public/assets/fonts/',
     'sass': resources_path+'assets/sass/',
-    'img': resources_path+'assets/img/',
+    'sass_partials': resources_path+'assets/sass/partials/',
     'js' : resources_path+'assets/js/',
+    'img': resources_path+'assets/img/',
+    // Vendor Paths
     'jquery' : bower_path + "jquery/dist/",
     'bootstrap' : bower_path + "bootstrap-sass-official/assets/",
-    'fontawesome' : bower_path + "fontawesome/"
+    'fontawesome' : bower_path + "fontawesome/",
+    'summernote'  : bower_path + "summernote/"
 };
 
 // Minify JS
@@ -29,15 +33,16 @@ elixir.extend("minify_js", function()
     gulp.task('minify_js', function() 
     {
 	gulp.src([
+	    paths.bootstrap + 'javascripts/bootstrap.min.js',
+	    paths.summernote + 'dist/summernote.min.js',
 	    paths.js+ 'prettify/prettify.js',
-	    paths.js+ '**',
-	    paths.bootstrap + 'javascripts/bootstrap.min.js'
+	    paths.js+ '**'
 	],
 	{
 	    base: './'
 	})
 	.pipe(concat('all.js')) 
-	.pipe(uglify())
+//	.pipe(uglify())
 	.pipe(gulp.dest('public/assets/js'));
     });   
     
@@ -67,7 +72,6 @@ elixir.extend("minify_css", function()
 	    style    : 'expanded'
 	}))
 	.pipe(gulp.dest('public/assets/css'))
-	
     });
     
     if(command == 'watch')
@@ -115,6 +119,7 @@ elixir(function (mix)
     // Copy Assets from Vendors
     mix.copy(paths.jquery + 'jquery.min.js', paths.js_public+'jquery.min.js')
     .copy(paths.jquery + 'jquery.min.map', paths.js_public+'jquery.min.map')
+    .copy(paths.summernote + 'dist/summernote.css', paths.sass_partials+'_summernote.scss')
     .copy(paths.fontawesome + '/fonts', paths.fonts_public)
     .minify_js(command)
     .minify_css(command)

@@ -42,7 +42,7 @@ function absplit_menu(element)
     $('.widget-templates').hide();
     
     // Show the main menu
-    $('#absplit-element-menu').menu().show();
+    $('#absplit-element-menu').show();
     
     absplit_widget_menu_position();
 }
