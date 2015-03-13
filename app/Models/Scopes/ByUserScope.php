@@ -17,7 +17,16 @@ class ByUserScope implements ScopeInterface
     */
    public function apply(Builder $builder, Model $model)
    {
-	$builder->where('user_id', '=', \Auth::user()->id);
+
+	if(class_exists('app') === true)
+	{
+	    $user = \App::make('user');
+	    $builder->where('user_id', '=', $user->id);
+	}
+	else
+	{
+	    $builder->where('user_id', '=', \Auth::user()->id);
+	}
    }
 
     /**

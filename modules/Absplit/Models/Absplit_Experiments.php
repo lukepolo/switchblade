@@ -12,4 +12,9 @@ class Absplit_Experiments extends Model {
 	'absplit_experiment_settings_id' ,
 	'absplit_experiment_data_id'
     ];
+
+    public function data()
+    {
+	return $this->hasOne('\Modules\Absplit\Models\Absplit_Experiment_Data');
+    }
 }

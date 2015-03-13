@@ -113,7 +113,7 @@
     // Gets all nesscary JS files & Appends Them
     var get_mods = function()
     {
-        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/mods.json");
+        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/v1/mods");
     }
     
     var pageview = function()

@@ -5,8 +5,7 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
-// Only Loggged IN
-// Redirects to Login Page
+// Only Loggged IN - Redirects to Login Page if not logged in
 Route::group(['middleware' => 'auth'], function()
 {
     // Controllers Go Here
@@ -25,6 +24,13 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('logout', 'Auth\AuthController@getLogout');
 });
+
+// Restful Routes
+Route::group(array('prefix' => 'api/v1'), function()
+{
+    Route::resource('mods', 'API\V1\ModsController');
+});
+
 
 // Single Routes
 

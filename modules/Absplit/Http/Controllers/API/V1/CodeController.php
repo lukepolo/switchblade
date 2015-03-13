@@ -1,29 +1,26 @@
-<?php namespace Modules\Absplit\Http\Controllers;
+<?php namespace Modules\Absplit\Http\Controllers\API\V1;
 
-use \App\Http\Controllers\Controller;
+use \App\Http\Controllers\RestController;
 use Modules\Absplit\Models\Absplit_Experiments;
 
-class ApiController extends Controller
+class CodeController extends RestController
 {
-    static function get_code()
+    public static function getMods()
     {
+	$user = \App::make('user');
+
         // URL MATCH
-        // TODO MOVE TO MONGO
-	echo 'test'; die;
-        $experiment = \Model_Absplit_Experiment::query()
-            ->related('absplit_experiment_datum')
-            ->where('user_id', \Controller_Rest::$user_id)
-            ->where('url', trim($_SERVER['HTTP_REFERER'], '/'))
+        $experiment = Absplit_Experiments::where('url', trim($_SERVER['HTTP_REFERER'], '/'))
             ->where('active', 1)
-            ->get_one();
+            ->first();
 
         if(empty($experiment) === false)
         {
             // TODO
             // We need to check to see which vaiation they should get
-            if(isset($experiment->absplit_experiment_datum->js) === true)
+            if(isset($experiment->data->js) === true)
             {
-                $experiment_data = json_decode($experiment->absplit_experiment_datum->js);
+                $experiment_data = json_decode($experiment->data->js);
                 $variation = 1;
                 $js_code = [];
                 foreach($experiment_data->$variation as $variation => $data)
