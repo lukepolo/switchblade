@@ -7,7 +7,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class Controller {
 
-	
 	/**
 	 * The middleware registered on the controller.
 	 *

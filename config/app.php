@@ -229,6 +229,7 @@ return [
 	'Moloquent' => 'Jenssegers\Mongodb\Model',
         'Html'      => 'Illuminate\Html\HtmlFacade',
         'Form'      => 'Illuminate\Html\FormFacade',
+	'Moloquent'       => 'Jenssegers\Mongodb\Model',
 
 	/*
 	 * Custom Facades
