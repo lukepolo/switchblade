@@ -22,6 +22,7 @@ paths = {
     'img': resources_path+'assets/img/',
     // Vendor Paths
     'jquery' : bower_path + 'jquery/dist/',
+    'jquery_ui' : bower_path + 'jquery-ui/',
     'bootstrap' : bower_path + 'bootstrap-sass-official/assets/',
     'fontawesome' : bower_path + 'fontawesome/',
     'summernote'  : bower_path + 'summernote/'
@@ -33,6 +34,7 @@ elixir.extend('minify_js', function()
     gulp.task('minify_js', function() 
     {
 	gulp.src([
+	    paths.jquery_ui + 'jquery-ui.min.js',
 	    paths.bootstrap + 'javascripts/bootstrap.min.js',
 	    paths.summernote + 'dist/summernote.min.js',
 	    paths.js+ 'prettify/prettify.js',
@@ -119,6 +121,8 @@ elixir(function (mix)
     // Copy Assets from Vendors
     mix.copy(paths.jquery + 'jquery.min.js', paths.js_public+'jquery.min.js')
     .copy(paths.jquery + 'jquery.min.map', paths.js_public+'jquery.min.map')
+    .copy(paths.jquery_ui + 'themes/base/jquery-ui.min.css', paths.sass_partials+'_jquery-ui-min.scss')
+    .copy(paths.jquery_ui + 'themes/base/images', paths.img)
     .copy(paths.summernote + 'dist/summernote.css', paths.sass_partials+'_summernote.scss')
     .copy(paths.fontawesome + '/fonts', paths.fonts_public)
     .minify_js(command)
