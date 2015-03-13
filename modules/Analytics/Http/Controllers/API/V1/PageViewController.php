@@ -29,5 +29,7 @@ class PageViewController extends RestController
             'user_id' => $user->id,
             'time' => time()
 	]);
+
+	return \response()->json();
     }
 }

@@ -118,7 +118,7 @@
     
     var pageview = function()
     {
-        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/analytics/api/pageview");
+        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/v1/pageview");
     }
     
     var absplit = function(data)
