@@ -21,14 +21,14 @@ paths = {
     'js' : resources_path+'assets/js/',
     'img': resources_path+'assets/img/',
     // Vendor Paths
-    'jquery' : bower_path + "jquery/dist/",
-    'bootstrap' : bower_path + "bootstrap-sass-official/assets/",
-    'fontawesome' : bower_path + "fontawesome/",
-    'summernote'  : bower_path + "summernote/"
+    'jquery' : bower_path + 'jquery/dist/',
+    'bootstrap' : bower_path + 'bootstrap-sass-official/assets/',
+    'fontawesome' : bower_path + 'fontawesome/',
+    'summernote'  : bower_path + 'summernote/'
 };
 
 // Minify JS
-elixir.extend("minify_js", function() 
+elixir.extend('minify_js', function() 
 {
     gulp.task('minify_js', function() 
     {
@@ -42,23 +42,23 @@ elixir.extend("minify_js", function()
 	    base: './'
 	})
 	.pipe(concat('all.js')) 
-//	.pipe(uglify())
+	.pipe(uglify())
 	.pipe(gulp.dest('public/assets/js'));
     });   
     
     if(command == 'watch')
     {
 	gutil.log('Starting', '\'' + chalk.cyan('watch-js') + '\'...');
-	return this.registerWatcher("minify_js", resources_path+"**/*.js");
+	return this.registerWatcher('minify_js', resources_path+'**/*.js');
     }
     else
     {
-	return this.queueTask("minify_js");
+	return this.queueTask('minify_js');
     }
 });
 
 // Minify CSS
-elixir.extend("minify_css", function() 
+elixir.extend('minify_css', function() 
 {
     gulp.task('minify_css', function() 
     {
@@ -77,16 +77,16 @@ elixir.extend("minify_css", function()
     if(command == 'watch')
     {
 	gutil.log('Starting', '\'' + chalk.cyan('watch-sass') + '\'...');
-	return this.registerWatcher("minify_css", resources_path+"**/*.scss");
+	return this.registerWatcher('minify_css', resources_path+'**/*.scss');
     }
     else
     {
-	return this.queueTask("minify_css")
+	return this.queueTask('minify_css')
     }
 });
 
 // Minify Images
-elixir.extend("minify_img", function(command) 
+elixir.extend('minify_img', function(command) 
 {
     gulp.task('minify_img', function()
     {
@@ -102,12 +102,12 @@ elixir.extend("minify_img", function(command)
     if(command == 'watch')
     {
 	gutil.log('Starting', '\'' + chalk.cyan('watch-images') + '\'...');
-	return this.registerWatcher("minify_js", resources_path+"**/*.js");
-	return this.registerWatcher("minify_img", paths.img+'*');
+	return this.registerWatcher('minify_js', resources_path+'**/*.js');
+	return this.registerWatcher('minify_img', paths.img+'*');
     }
     else
     {
-	return this.queueTask("minify_img");
+	return this.queueTask('minify_img');
     }
 });
 
