@@ -6,6 +6,7 @@ http_path = "/"
 #Compile Paths
 css_dir = "./public/assets/css"
 images_dir = "./resources/assets/images"
+sourcemap = (environment == :production) ? false : true
 
 sass_dir = "./resources/assets/sass"
 javascripts_dir = "./resources/assets/js"

@@ -12,7 +12,9 @@ bower_path = './vendor/bower_components/',
 resources_path = './resources/';
 
 paths = {
-    'css': './public/assets/css/',
+    'css_public': './public/assets/css/',
+    'js_public' : './public/assets/js/',
+    'fonts_public' : './public/assets/fonts/',
     'sass': resources_path+'assets/sass/',
     'img': resources_path+'assets/img/',
     'js' : resources_path+'assets/js/',
@@ -57,7 +59,7 @@ elixir.extend("minify_css", function()
     {
 	gulp.src([paths.sass+'*'])
 	.pipe(compass({
-	    css: paths.css,
+	    css: paths.css_public,
 	    sass: paths.sass,
 	    image: paths.img,
 	    logging  : false,
@@ -111,8 +113,9 @@ elixir(function (mix)
     gutil.log('Command:', '\'' + chalk.cyan(command) + '\'...');
 
     // Copy Assets from Vendors
-    mix.copy(paths.jquery + 'jquery.min.js', "public/assets/js/jquery.min.js")
-    .copy(paths.fontawesome + '/fonts', 'public/assets/fonts')
+    mix.copy(paths.jquery + 'jquery.min.js', paths.js_public+'jquery.min.js')
+    .copy(paths.jquery + 'jquery.min.map', paths.js_public+'jquery.min.map')
+    .copy(paths.fontawesome + '/fonts', paths.fonts_public)
     .minify_js(command)
     .minify_css(command)
     .minify_img(command);
