@@ -1,7 +1,6 @@
 <?php namespace Modules\Absplit\Http\Controllers;
 
 use \App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
 use Modules\Absplit\Models\Absplit_Experiments;
 
 class ProxyController extends Controller
@@ -93,11 +92,12 @@ class ProxyController extends Controller
         $html = preg_replace('/url\((?!\/\/)(\/|\'\/|"\/)(.*?)(\'|"|\))/i', 'url('.$url_parsed['scheme'].':'.$url_host.$url_parsed['path'].'$1$2$3', $html);
 
 	// Fix any // that should render as HTTPS since they already opted into that case
-        $html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(\/\/)(.*?)(\'|")/i' , '<$1$2$3=$4https://$6$7', $html);
+        $html = preg_replace('/(\'|")(\/\/)(.*?)(\'|")/i' , '$1https://$3$4', $html);
 
 	// Strip their .css files and .js files and replace with our URL
 	$html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.$asset_url.'?url=$5$6', $html);
-
+echo $html;
+die;
 	$html = $html."
         <style>
             .absplit-border {
@@ -134,6 +134,7 @@ class ProxyController extends Controller
         // TODO - ADD JQUERY BUT NO COCONFLICT VERSION!
         // ADD JS FILE
 
+	// We need to build our custom JQuery module that only does the features we need it to!
         $html = $html.'
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -271,10 +272,8 @@ class ProxyController extends Controller
 
         $file = curl_exec($cURL);
 
-
         $http_status = curl_getinfo($cURL, CURLINFO_HTTP_CODE);
-
-        $contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
+	$contentType = curl_getinfo($cURL, CURLINFO_CONTENT_TYPE);
         curl_close($cURL);
 
         if($http_status == 200)
@@ -300,8 +299,8 @@ class ProxyController extends Controller
                 $real_path = preg_replace('/(.*\/).*/i','$1', $parsed_url['path']);
 
                 // Fix urls with relative paths
-                // https://www.regex101.com/r/eS7gP8/14
-                $file = preg_replace('/url\((?:(\/|\.\.|[a-zA-Z]))(?!\/h|\/w)(.*?)(?:\))/i',  'url('.$asset_url.'?url='.$parsed_url['host'].$real_path.'$1$2)' , $file);
+                // https://www.regex101.com/r/eS7gP8/16
+                $file = preg_replace('/url\((?!h|\/\/)(?:(\/|\.\.|[a-zA-Z]))(.*?)(?:\))/i',  'url('.$asset_url.'?url='.$parsed_url['host'].$real_path.'$1$2)' , $file);
             }
             header('Content-Type: '.$contentType);
             echo $file;

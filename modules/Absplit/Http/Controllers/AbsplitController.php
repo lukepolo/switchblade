@@ -1,7 +1,6 @@
 <?php namespace Modules\Absplit\Http\Controllers;
 
 use \App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
 use Modules\Absplit\Models\Absplit_Experiments;
 
 class AbsplitController extends Controller
