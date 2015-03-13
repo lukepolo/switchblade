@@ -60,8 +60,7 @@ return [
 	    'driver'   => 'mongodb',
 	    'host'     => 'localhost',
 	    'port'     => 27017,
-//	    'username' => 'switchblade',
-//	    'password' => '=b.!urDQ4NDF{h',
+	    'password' => '=b.!urDQ4NDF{h',
 	    'database' => env('DB_DATABASE', 'switchblade_dev_laravel')
 	),
     ],
