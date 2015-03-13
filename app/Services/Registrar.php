@@ -17,8 +17,6 @@ class Registrar implements RegistrarContract
      */
     public function validator(array $data)
     {
-	Dump(\Settings::get('registration'));
-	die;
 	if(\Settings::get('registration'))
 	{
 	    return Validator::make($data, [
