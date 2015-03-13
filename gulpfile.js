@@ -1,10 +1,11 @@
 var gulp = require('gulp'),
 compass = require('gulp-compass'),
 gutil = require('gulp-util'),
-chalk = require('chalk'),
 concat = require('gulp-concat'),
 uglify = require('gulp-uglify'),
+sourcemaps = require('gulp-sourcemaps'),
 imagemin = require('gulp-imagemin'),
+chalk = require('chalk'),
 pngquant = require('imagemin-pngquant'),
 elixir = require('laravel-elixir'),
 
@@ -44,8 +45,15 @@ elixir.extend('minify_js', function()
 	    base: './'
 	})
 	.pipe(concat('all.js')) 
-	.pipe(uglify())
-	.pipe(gulp.dest('public/assets/js'));
+	.pipe(sourcemaps.init())
+	// ONLY IN PRODUCTION
+	// TODO
+	//.pipe(uglify())
+	.pipe(sourcemaps.write('/',
+	{
+	    sourceMappingURLPrefix: '\\'
+	}))
+	.pipe(gulp.dest(paths.js_public));
     });   
     
     if(command == 'watch')
