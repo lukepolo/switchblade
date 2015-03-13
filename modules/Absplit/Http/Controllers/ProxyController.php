@@ -332,7 +332,7 @@ class ProxyController extends Controller
 	}
 	else
 	{
-	    return false;
+	    return $url;
 	}
     }
 }
