@@ -17,6 +17,11 @@ class VerifyCsrfToken extends BaseVerifier
      */
     public function handle($request, Closure $next)
     {
+	// TODO - JWT
+	if(\Request::has('key'))
+	{
+	    return $next($request);
+	}
 	return parent::handle($request, $next);
     }
 }

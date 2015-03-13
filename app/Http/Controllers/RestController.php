@@ -19,7 +19,7 @@ abstract class RestController extends BaseController
     {
 	if(\Request::has('key'))
 	{
-	    $user = User::where('api_key', '=', \Input::get('key'))->first();
+	    $user = User::where('api_key', '=', \Request::input('key'))->first();
 	    if(empty($user))
 	    {
 		\App::abort(401, 'Unauthorized User.');

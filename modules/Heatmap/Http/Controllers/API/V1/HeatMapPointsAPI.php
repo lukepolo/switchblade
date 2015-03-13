@@ -1,37 +1,30 @@
-<?php namespace Modules\Heatmap\Http\Controllers;
+<?php namespace Modules\Heatmap\Http\Controllers\API\V1;
 
-use \App\Http\Controllers\Controller;
+use \App\Http\Controllers\RestController;
+use \App\Models\Mongo\Domain;
+use Modules\Heatmap\Models\Mongo\HeatmapUsers;
+use Modules\Heatmap\Models\Mongo\HeatmapPoints;
 
-class ApiController extends Controller
+class HeatMapPointsAPI extends RestController
 {
-    public static function get_code()
+    public static function getCode()
     {
-	echo 'convert to laravel'; die;
-        $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
+	$user = \App::make('user');
 
-        // Need to create a mongo heatmap_user to get a unquie ID
-        // We can store the users information , like browser ect.
-        $mongodb = \Mongo_Db::instance();
-
-        $mongodb->where(array(
-            'user_id' => \Controller_Rest::$user_id,
-            'domain' => $parsed_url['host']
-        ));
-
-        $domain = $mongodb->get_one('user_domains');
+        $domain = Domain::where('user_id', '=', $user->id)
+	    ->where('domain', '=', parse_url($_SERVER['HTTP_REFERER'])['host'])
+	    ->first();
 
         if(empty($domain) === true)
         {
             // We can group the hosts so we are able to reteieve the info alot faster
-            $domain_id = $mongodb->insert('user_domains', array(
-                'domain' => $parsed_url['host'],
-                'user_id' => \Controller_Rest::$user_id
-            ));
+            $domain = Domain::create([
+		'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
+                'user_id' => $user->id
+	    ]);
         }
-        else
-        {
-            $domain_id = $domain['_id']->{'$id'};
-        }
+
+        $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
 
         if(isset($parsed_url['path']) === false)
         {
@@ -39,21 +32,21 @@ class ApiController extends Controller
         }
         $url = trim($parsed_url['host'].$parsed_url['path'], '/');
 
-        $user_id = $mongodb->insert('heatmap_users', array(
-            'domain_id' => $domain_id,
+        $heatmap_user = HeatmapUsers::create([
+	    'domain_id' => $domain->id,
             'url' => $url,
-            'user_id' => \Controller_Rest::$user_id,
+            'user_id' => $user->id,
             'time' => time(),
-        ));
+	]);
 
         // generate user image
-        Controller_Api::get_screenshot($url, $user_id);
+        HeatMapPointsAPI::get_screenshot($url, $user->id);
 
         // CUSTOM JS back to the user
         return array(
             'function' => 'apply_script',
             'data' => array(
-                'url' => \Uri::Create('assets/js/heatmap.min.js'),
+                'url' => asset('assets/js/heatmap.js'),
                 'callback' => "callback = function()
                 {
                     var heat_data = new Array();
@@ -70,11 +63,11 @@ class ApiController extends Controller
                         {
                             $.ajax({
                                 type: 'POST',
-                                url: '".\Uri::Create('heatmap/api/add_heatpoint')."',
+                                url: '".url('api/v1/heatmap/point')."',
                                 data: {
                                     key:'".\Input::Get('key')."',
                                     point_data: heat_data,
-                                    user: '".$user_id."'
+                                    user: '".$heatmap_user->id."'
                                 }
                             });
                             heat_data = new Array();
@@ -85,30 +78,25 @@ class ApiController extends Controller
         );
     }
 
-    public function action_add_heatpoint()
+    public function store()
     {
-        // Get an instance
-        $mongodb = \Mongo_Db::instance();
+	$user = \App::make('user');
 
-        $mongodb->where(array(
-            'user_id' => \Controller_Rest::$user_id,
-            'domain' => parse_url($_SERVER['HTTP_REFERER'])['host']
-        ));
+        HeatmapPoints::create([
+	    'user_id' => $user->id,
+            'data' => \Request::input('point_data'),
+            'user' => \Request::input('user')
+	]);
 
-        $domain = $mongodb->get_one('user_domains');
-
-        $mongodb->insert('heatmap', array(
-            'user_id' => \Controller_Rest::$user_id,
-            'data' => \Input::POST('point_data'),
-            'user' => \Input::POST('user')
-        ));
+	return response()->json();
     }
 
    public static function get_screenshot($url, $user_id)
    {
+	$user = \App::make('user');
         if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
         {
-            $url = 'http://get.ketchurl.com?url='.$url.'&apikey='.\Controller_Rest::$api_key.'&user_id='.$user_id;
+            $url = 'http://get.ketchurl.com?url='.$url.'&apikey='.$user->api_key.'&user_id='.$user_id;
 
             $parsed_url = parse_url($url);
 

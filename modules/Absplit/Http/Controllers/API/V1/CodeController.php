@@ -5,7 +5,7 @@ use Modules\Absplit\Models\Absplit_Experiments;
 
 class CodeController extends RestController
 {
-    public static function getMods()
+    public static function getCode()
     {
 	$user = \App::make('user');
 

@@ -26,7 +26,8 @@ paths = {
     'jquery_ui' : bower_path + 'jquery-ui/',
     'bootstrap' : bower_path + 'bootstrap-sass-official/assets/',
     'fontawesome' : bower_path + 'fontawesome/',
-    'summernote'  : bower_path + 'summernote/'
+    'summernote'  : bower_path + 'summernote/',
+    'heatmap' : bower_path + 'heatmap.js.bower'
 };
 
 // Minify JS
@@ -133,6 +134,7 @@ elixir(function (mix)
     .copy(paths.jquery_ui + 'themes/base/images', paths.img)
     .copy(paths.summernote + 'dist/summernote.css', paths.sass_partials+'_summernote.scss')
     .copy(paths.fontawesome + '/fonts', paths.fonts_public)
+    .copy(paths.heatmap + '/src/heatmap.js', paths.js_public+'heatmap.js')
     .minify_js(command)
     .minify_css(command)
     .minify_img(command);
