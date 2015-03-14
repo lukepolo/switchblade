@@ -2,26 +2,14 @@ var express = require('express');
 var HttpStatus = require('http-status-codes');
 var mongojs = require('mongojs');
 var crypto = require('crypto');
-var phantom = require('phantom-render-stream');
+var webshot = require('webshot');
 var fs = require('fs');
 var resemble = require('node-resemble-js');
 var app = express();
 var db = mongojs.connect("mongodb://127.0.0.1:27017/switchblade_dev", ["users", "screenshots", "screenshot_images"]);
 
+var delay = 100;
 var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'public/assets/img/screenshots/';
-
-var delay = 0;
-var render = phantom({
-    pool        : 4,           // Change the pool size.
-    timeout     : 10000,        // Set a render timeout in milliseconds.
-    format      : 'jpeg',      // The default output format.
-    quality     : 50,          // The default image quality. Only relevant for jpeg format.
-    width       : 200,        // Changes the width size.
-    height      : 100,         // Changes the height size.
-    retries     : 1,           // How many times to try a render before giving up.
-    phantomFlags: ['--ignore-ssl-errors=true'], // Defaults to []. Command line flags passed to phantomjs.
-    maxRenders  : 20           // How many renders can a phantom process make before being restarted.
-});
 
 function auth(req, res, next)
 {
@@ -63,11 +51,6 @@ function auth(req, res, next)
 
 function get_screenshot(url, options, res, api_key)
 {
-    console.log(url);
-    if (!/^http/.test(url)) 
-    {
-	url = 'http://'+ url;;
-    }
     // Start the screenshot object
     db.screenshots.insert({
 	url: url, 
@@ -79,26 +62,33 @@ function get_screenshot(url, options, res, api_key)
 	if(!err)
 	{
             // Using the webshot API Libary create a stream
-	    renderStream = render(url, options);
-
-	    var image_data = '';
-	    renderStream.on('data', function(data) 
+	    webshot(url, options, function(err, renderStream) 
 	    {
-		var chunk = data.toString('binary');
-		image_data = image_data + chunk;
-
-		// Return to the browser 
-		res.write(chunk, 'binary');
-	    });
-
-	    // After the image has been completed we need to store it in our mongo db
-	    renderStream.on('end', function() 
-	    {
-		// Stop the response
-		res.end();
-		if(image_data != '')
+		if(!err)
 		{
-		    saveScreenShot(screenshot._id, image_data);
+		    var image_data = '';
+		    renderStream.on('data', function(data) 
+		    {
+                        var chunk = data.toString('binary');
+			image_data = image_data + chunk;
+                        
+                        // Return to the browser 
+			res.write(chunk, 'binary');
+		    });
+
+                    // After the image has been completed we need to store it in our mongo db
+		    renderStream.on('end', function() 
+		    {
+			// Stop the response
+			res.end();
+                        saveScreenShot(screenshot._id, image_data);
+                        
+		    });
+		}
+		else
+		{
+		    console.log('ERROR : '+ err);
+		    res.status(500).send('ERROR '+ err + ', please contact support!');
 		}
 	    });
 	}
@@ -112,15 +102,42 @@ function get_screenshot(url, options, res, api_key)
 
 app.use(auth);
 
-app.get('/', function(req, res) 
+app.get('/hi', function(req, res) 
 {
     var options = {
-	quality : 85,
-	delay: !req.query.delay ? delay : req.query.delay
+    shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
     };
     get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
 });
 
+app.get('/', function(req, res) 
+{
+    var options = {
+        shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
+});
+
+app.get('/low', function(req, res) 
+{
+    var options = {
+        shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
+});
+ 
 app.listen(7778);
 
 function saveScreenShot(screenshot_id, image_data)
