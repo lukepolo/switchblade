@@ -10,19 +10,7 @@ class HeatMapPointsAPI extends RestController
     public static function getCode()
     {
 	$user = \App::make('user');
-
-        $domain = Domain::where('user_id', '=', $user->id)
-	    ->where('domain', '=', parse_url($_SERVER['HTTP_REFERER'])['host'])
-	    ->first();
-
-        if(empty($domain) === true)
-        {
-            // We can group the hosts so we are able to reteieve the info alot faster
-            $domain = Domain::create([
-		'domain' => parse_url($_SERVER['HTTP_REFERER'])['host'],
-                'user_id' => $user->id
-	    ]);
-        }
+	$domain = \Domains::getDomain($user);
 
         $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
 
@@ -40,7 +28,7 @@ class HeatMapPointsAPI extends RestController
 	]);
 
         // generate user image
-        HeatMapPointsAPI::get_screenshot($url, $user->id);
+	\Screenshots::getScreenshot($url, $user);
 
         // CUSTOM JS back to the user
         return array(
@@ -90,29 +78,4 @@ class HeatMapPointsAPI extends RestController
 
 	return response()->json();
     }
-
-   public static function get_screenshot($url, $user_id)
-   {
-	$user = \App::make('user');
-        if(getHostByName(getHostName()) != $_SERVER['REMOTE_ADDR'])
-        {
-            $url = 'http://get.ketchurl.com?url='.$url.'&apikey='.$user->api_key.'&user_id='.$user_id;
-
-            $parsed_url = parse_url($url);
-
-            if(isset($parsed_url['path']) === false)
-            {
-                $parsed_url['path'] = null;
-            }
-
-            $fp = fsockopen($parsed_url['host'], 80, $errno, $errstr, 30);
-
-            $out ="GET ".$parsed_url["path"]."?".$parsed_url['query']." HTTP/1.1\n";
-            $out .= "Host: ".$parsed_url['host']."\r\n";
-            $out .= "Connection: Close\r\n\r\n";
-
-            fwrite($fp, $out);
-            fclose($fp);
-        }
-   }
 }

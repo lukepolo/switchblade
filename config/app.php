@@ -166,7 +166,8 @@ return [
 	/*
 	 * Custom Service Providers
 	 */
-	'App\Providers\SettingsServiceProvider'
+	'App\Providers\SettingsServiceProvider',
+	'App\Providers\DomainsServiceProvider'
 
     ],
 
@@ -234,6 +235,12 @@ return [
 	/*
 	 * Custom Facades
 	 */
-	'Settings' => 'App\Facades\Settings'
+	'Settings' => 'App\Facades\Settings',
+	'Domains' => 'App\Facades\Domains',
+
+	/*
+	 * Modules Facades
+	 */
+	'Screenshots' => 'Modules\Screenshot\Facades\Screenshots'
     ],
 ];
