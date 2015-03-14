@@ -1,4 +1,6 @@
-<?php namespace App\Providers;
+<?php
+
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -57,6 +59,6 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-            return array('html', 'form');
+	return array('html', 'form');
     }
 }

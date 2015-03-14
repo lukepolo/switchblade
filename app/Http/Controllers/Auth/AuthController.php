@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php
+
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
@@ -65,7 +67,6 @@ class AuthController extends Controller
 
             if(empty($user_provider) === false)
             {
-
                 // force login with the user
                 \Auth::login($user_provider->user);
             }

@@ -15,5 +15,4 @@ trait ByUser
     {
         static::addGlobalScope(new ByUserScope);
     }
-
 }

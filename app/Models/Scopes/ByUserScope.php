@@ -17,7 +17,6 @@ class ByUserScope implements ScopeInterface
     */
    public function apply(Builder $builder, Model $model)
    {
-
 	if(class_exists('app') === true)
 	{
 	    $user = \App::make('user');
