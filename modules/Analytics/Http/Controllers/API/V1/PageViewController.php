@@ -1,4 +1,6 @@
-<?php namespace Modules\Analytics\Http\Controllers\API\V1;
+<?php
+
+namespace Modules\Analytics\Http\Controllers\API\V1;
 
 use \App\Http\Controllers\RestController;
 use \App\Models\Mongo\Domain;

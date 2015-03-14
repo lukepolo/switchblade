@@ -1,4 +1,6 @@
-<?php namespace Modules\Absplit\Models;
+<?php
+
+namespace Modules\Absplit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,4 +1,6 @@
-<?php namespace Modules\Absplit\Http\Controllers\API\V1;
+<?php
+
+namespace Modules\Absplit\Http\Controllers\API\V1;
 
 use \App\Http\Controllers\RestController;
 use Modules\Absplit\Models\Absplit_Experiments;

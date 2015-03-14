@@ -1,4 +1,6 @@
-<?php namespace Modules\Absplit\Http\Controllers;
+<?php
+
+namespace Modules\Absplit\Http\Controllers;
 
 use \App\Http\Controllers\Controller;
 use Modules\Absplit\Models\Absplit_Experiments;
@@ -96,7 +98,7 @@ class ProxyController extends Controller
 
 	// Strip their .css files and .js files and replace with our URL
 	$html = preg_replace('/<(link|script)(.*)(href|src)=(\'|")(?!\/\/)(.*)(\'|")/i' , '<$1$2$3=$4'.$asset_url.'?url=$5$6', $html);
-	
+
 	$html = $html."
         <style>
             .absplit-border {
