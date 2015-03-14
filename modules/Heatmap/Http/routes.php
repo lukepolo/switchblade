@@ -26,5 +26,5 @@ Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modu
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'Modules\Heatmap\Http\Controllers'], function()
 {
-    Route::resource('heatmap/point', 'API\V1\HeatMapPointsAPI');
+    Route::resource('heatmap/point', 'API\V1\HeatmapPointsAPI');
 });

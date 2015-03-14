@@ -5,7 +5,7 @@ namespace Modules\Absplit\Http\Controllers\API\V1;
 use \App\Http\Controllers\RestController;
 use Modules\Absplit\Models\Absplit_Experiments;
 
-class CodeController extends RestController
+class AbsplitAPI extends RestController
 {
     public static function getCode()
     {

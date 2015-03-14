@@ -6,7 +6,7 @@ use \App\Http\Controllers\RestController;
 use \App\Models\Mongo\Domain;
 use  \Modules\Analytics\Models\Mongo\PageViews;
 
-class PageViewController extends RestController
+class PageViewAPI extends RestController
 {
     public function index()
     {

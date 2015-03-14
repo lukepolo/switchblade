@@ -26,5 +26,5 @@ Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modu
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'Modules\Analytics\Http\Controllers'], function()
 {
-    Route::resource('pageview', 'API\V1\PageViewController');
+    Route::resource('pageview', 'API\V1\PageViewAPI');
 });
