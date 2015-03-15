@@ -10,10 +10,8 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 // Models
 use App\Models\UserProviders;
 
-use App\Services\Settings;
 class AuthController extends Controller
 {
-
     use AuthenticatesAndRegistersUsers;
 
     /**
@@ -25,6 +23,7 @@ class AuthController extends Controller
      */
     public function __construct(Guard $auth, Registrar $registrar)
     {
+	parent::__construct();
         $this->auth = $auth;
         $this->registrar = $registrar;
     }

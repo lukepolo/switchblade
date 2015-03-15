@@ -13,6 +13,6 @@ class AnalyticsController extends Controller
 
     public function getDashboard()
     {
-	echo 'test'; die;
+	return view('analytics::dashboard');
     }
 }

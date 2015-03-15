@@ -162,6 +162,7 @@ return [
 	'Barryvdh\Debugbar\ServiceProvider',
 	'Pingpong\Modules\ModulesServiceProvider',
 	'Jenssegers\Mongodb\MongodbServiceProvider',
+	'Irazasyed\LaravelGAMP\LaravelGAMPServiceProvider',
 
 	/*
 	 * Custom Service Providers
@@ -231,6 +232,7 @@ return [
         'Html'      => 'Illuminate\Html\HtmlFacade',
         'Form'      => 'Illuminate\Html\FormFacade',
 	'Moloquent'       => 'Jenssegers\Mongodb\Model',
+	'GAMP'  => 'Irazasyed\LaravelGAMP\Facades\GAMP',
 
 	/*
 	 * Custom Facades
