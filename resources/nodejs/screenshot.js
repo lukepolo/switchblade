@@ -20,7 +20,8 @@ screenshot_revisions = db.collection('screenshot_revisions'),
 
 // 1 Hour
 cache_time = 3600 * 1000,
-
+// %
+max_diff = 15,
 delay = 100,
 
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
@@ -28,12 +29,16 @@ screenshot_folder = base_path + 'public/assets/img/screenshots/';
 app.use(auth);
 app.get('/', function(req, res) 
 {
-    var options = {
+    var options = 
+    {
         shotSize: {
             height: 'all',
             quality : 85
         },
-        renderDelay: !req.query.delay ? delay : req.query.delay
+        renderDelay: !req.query.delay ? delay : req.query.delay,
+	phantomConfig: {
+	    'ignore-ssl-errors': 'true'
+	}
     };
     
     // if we do not pass cache false, then we assume they want a cache
@@ -109,7 +114,14 @@ function getScreenshot(user_id, url, options, res)
 	    {
 		// Stop the response
 		res.end();
-		checkScreenShot(user_id, url, image_data);
+		if(image_data)
+		{
+		    checkScreenShot(user_id, url, image_data);
+		}
+		else
+		{
+		    console.log('Failed to grab screenshot');
+		}
 	    });
 	}
 	else
@@ -152,7 +164,7 @@ function checkScreenShot(user_id, url, image_data)
 				{
 				    temp.cleanup();
 				    console.log(data.misMatchPercentage);
-				    if(data.misMatchPercentage > 10)
+				    if(data.misMatchPercentage > max_diff)
 				    {
 					createScreenShotRevision(user_id, url, image_data);
 				    }
