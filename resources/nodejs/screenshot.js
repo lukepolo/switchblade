@@ -6,6 +6,7 @@ require('dotenv').config({
 var port = process.env.SCREENSHOT_PORT,
 express = require('express'),
 mongojs = require('mongojs'),
+temp = require('temp').track(),
 webshot = require('webshot'),
 fs = require('fs'),
 resemble = require('node-resemble-js'),
@@ -36,7 +37,7 @@ app.get('/', function(req, res)
     };
     
     // if we do not pass cache false, then we assume they want a cache
-    if(typeof req.cache == 'undefined')
+    if(typeof req.query.cache == 'undefined')
     {
 	getCachedVersion(req.user_id, req.query.url, options, res);
     }
@@ -137,16 +138,38 @@ function checkScreenShot(user_id, url, image_data)
             {
 		console.log('Now Check to see how simliar they are, otherwise create a revision');
 		
-		fs.writeFile('/tmp/screenshots/test.jpg', image_data, 'binary', function (err) 
+		temp.open({suffix: '.jpg'}, function(err, file)
 		{
-		    resemble('/tmp/screenshots/test.jpg').compareTo(screenshot_folder+screenshot_revision._id+'.jpg').onComplete(function(data)
+		    console.log(file.path);
+		    if (!err) 
 		    {
-			if(data.misMatchPercentage > 10)
+			fs.writeFile(file.path, image_data, 'binary');
+			fs.close(file.fd, function(err)
 			{
-			    createScreenShotRevision(url, image_data);
-			}
-			createScreenShot(user_id, url);
-		    });
+			    if(!err)
+			    {
+				resemble(file.path).compareTo(screenshot_folder+screenshot_revision._id+'.jpg').onComplete(function(data)
+				{
+				    temp.cleanup();
+				    console.log(data.misMatchPercentage);
+				    if(data.misMatchPercentage > 10)
+				    {
+					createScreenShotRevision(url, image_data);
+				    }
+				    createScreenShot(user_id, url);
+				});
+			    }
+			    else
+			    {
+				console.log('ERROR : '+ err)
+			    }
+			});
+		    }
+		    else
+		    {
+			console.log('ERROR : '+ err);
+		    }
+		  
 		});
             }
         }
