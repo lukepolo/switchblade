@@ -48,7 +48,7 @@ return [
 	'mysql' => [
 	    'driver'    => 'mysql',
 	    'host'      => 'localhost',
-	    'database'  => env('DB_DATABASE', 'switchblade_dev'),
+	    'database'  => env('DATABASE', 'switchblade_dev'),
 	    'username'  => 'switchblade',
 	    'password'  => '!MolyPOX!',
 	    'charset'   => 'utf8',
@@ -61,7 +61,7 @@ return [
 	    'host'     => 'localhost',
 	    'port'     => 27017,
 	    'password' => '=b.!urDQ4NDF{h',
-	    'database' => env('DB_DATABASE', 'switchblade_dev')
+	    'database' => env('DATABASE', 'switchblade_dev')
 	),
     ],
 

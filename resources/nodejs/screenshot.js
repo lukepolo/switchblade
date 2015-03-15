@@ -1,10 +1,16 @@
-var express = require('express'),
+var base_path = __dirname.replace('resources/nodejs', '');
+require('dotenv').config({
+    path: base_path+'.env'
+});
+
+var port = process.env.SCREENSHOT_PORT,
+express = require('express'),
 mongojs = require('mongojs'),
 crypto = require('crypto'),
 webshot = require('webshot'),
 fs = require('fs'),
 app = express(),
-db = mongojs('switchblade_dev'),
+db = mongojs(process.env.DATABASE),
 
 // define collections here
 users = db.collection('users'),
@@ -13,7 +19,7 @@ screenshot_images = db.collection('screenshot_images'),
 
 delay = 100,
 
-screenshot_folder = __dirname.replace('resources/nodejs','') + 'public/assets/img/screenshots/';
+screenshot_folder = base_path + 'public/assets/img/screenshots/';
 
 function auth(req, res, next)
 {

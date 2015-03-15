@@ -1,6 +1,9 @@
-require('dotenv').load();
-var port = process.env.SERVER_NODE_PORT;
+var base_path = __dirname.replace('resources/nodejs', '');
+require('dotenv').config({
+    path: base_path+'.env'
+});
 
+var port = process.env.SERVER_PORT,
 unserialize = require('./unserialize.js'),
 redis = require('redis'),
 client = redis.createClient(),
