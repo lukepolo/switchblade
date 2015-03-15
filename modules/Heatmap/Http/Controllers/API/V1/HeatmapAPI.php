@@ -29,8 +29,6 @@ class HeatmapAPI extends RestController
         $heatmap_user = HeatmapUsers::create([
 	    'domain_id' => $domain->id,
             'url' => $url,
-            'user_id' => $user->id,
-            'time' => time(),
 	]);
 
         // CUSTOM JS back to the user

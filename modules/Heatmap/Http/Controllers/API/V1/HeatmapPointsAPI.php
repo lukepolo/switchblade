@@ -14,9 +14,8 @@ class HeatmapPointsAPI extends RestController
 	$user = \App::make('user');
 
         HeatmapPoints::create([
-	    'user_id' => $user->id,
-            'data' => \Request::input('point_data'),
-            'user' => \Request::input('user')
+	    'heatmap_user' => \Request::input('user'),
+            'data' => \Request::input('point_data')
 	]);
 
 	return response()->json();

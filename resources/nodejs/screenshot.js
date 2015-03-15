@@ -6,20 +6,47 @@ require('dotenv').config({
 var port = process.env.SCREENSHOT_PORT,
 express = require('express'),
 mongojs = require('mongojs'),
-crypto = require('crypto'),
 webshot = require('webshot'),
 fs = require('fs'),
+resemble = require('node-resemble-js'),
 app = express(),
 db = mongojs(process.env.DATABASE),
 
 // define collections here
 users = db.collection('users'),
 screenshots = db.collection('screenshots'),
-screenshot_images = db.collection('screenshot_images'),
+screenshot_revisions = db.collection('screenshot_revisions'),
+
+// 1 Hour
+cache_time = 3600 * 1000,
 
 delay = 100,
 
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
+
+app.use(auth);
+app.get('/', function(req, res) 
+{
+    var options = {
+        shotSize: {
+            height: 'all',
+            quality : 85
+        },
+        renderDelay: !req.query.delay ? delay : req.query.delay
+    };
+    
+    // if we do not pass cache false, then we assume they want a cache
+    if(typeof req.cache == 'undefined')
+    {
+	getCachedVersion(req.user_id, req.query.url, options, res);
+    }
+    else
+    {
+	getScreenshot(req.user_id, req.query.url, options, res);
+    }
+});
+ 
+app.listen(7778);
 
 function auth(req, res, next)
 {
@@ -59,46 +86,29 @@ function auth(req, res, next)
     }
 };
 
-function get_screenshot(url, options, res, user_id)
+function getScreenshot(user_id, url, options, res)
 {
-    // Start the screenshot object
-    screenshots.insert({
-	url: url, 
-	image_path: null,
-	user_id : user_id
-    },
-    function(err, screenshot)
-    { 
+    // Using the webshot API Libary create a stream
+    webshot(url, options, function(err, renderStream) 
+    {
 	if(!err)
 	{
-            // Using the webshot API Libary create a stream
-	    webshot(url, options, function(err, renderStream) 
+	    var image_data = '';
+	    renderStream.on('data', function(data) 
 	    {
-		if(!err)
-		{
-		    var image_data = '';
-		    renderStream.on('data', function(data) 
-		    {
-                        var chunk = data.toString('binary');
-			image_data = image_data + chunk;
-                        
-                        // Return to the browser 
-			res.write(chunk, 'binary');
-		    });
+		var chunk = data.toString('binary');
+		image_data = image_data + chunk;
 
-                    // After the image has been completed we need to store it in our mongo db
-		    renderStream.on('end', function() 
-		    {
-			// Stop the response
-			res.end();
-                        saveScreenShot(screenshot._id, image_data);
-		    });
-		}
-		else
-		{
-		    console.log('ERROR : '+ err);
-		    res.end();
-		}
+		// Return to the browser 
+		res.write(chunk, 'binary');
+	    });
+
+	    // After the image has been completed we need to store it in our mongo db
+	    renderStream.on('end', function() 
+	    {
+		// Stop the response
+		res.end();
+		checkScreenShot(user_id, url, image_data);
 	    });
 	}
 	else
@@ -109,89 +119,35 @@ function get_screenshot(url, options, res, user_id)
     });
 }
 
-app.use(auth);
-
-app.get('/hi', function(req, res) 
+function checkScreenShot(user_id, url, image_data)
 {
-    var options = {
-    shotSize: {
-            height: 'all',
-            quality : 85
-        },
-        renderDelay: !req.query.delay ? delay : req.query.delay
-    };
-    get_screenshot(req.query.url, options, res, req.user_id);
-});
-
-app.get('/', function(req, res) 
-{
-    var options = {
-        shotSize: {
-            height: 'all',
-            quality : 85
-        },
-        renderDelay: !req.query.delay ? delay : req.query.delay
-    };
-    get_screenshot(req.query.url, options, res, req.user_id);
-});
-
-app.get('/low', function(req, res) 
-{
-    var options = {
-        shotSize: {
-            height: 'all',
-            quality : 85
-        },
-        renderDelay: !req.query.delay ? delay : req.query.delay
-    };
-    get_screenshot(req.query.url, options, res, req.user_id);
-});
- 
-app.listen(7778);
-
-function saveScreenShot(screenshot_id, image_data)
-{
-    var checksum =  crypto.createHash('md5').update(image_data).digest('hex');
-    screenshot_images.findOne({checksum: checksum}, function(err, screenshot)
+    // get the domain
+    screenshot_revisions.findOne({
+	url: url
+    }, function(err, screenshot_revision)
     {
         if(!err)
         {
-            if(screenshot === null)
+            if(screenshot_revision === null)
             {
-                // Create a new record for the screenshot with the path
-                screenshot_images.insert({
-                    checksum: checksum,
-                    image_path: screenshot_id + '.jpg'
-                },
-                function(err, screenshot_image)
-                {
-                    if(!err)
-                    {
-                        // Insert is SYNC
-                        updateScreenShot(screenshot_id, screenshot_image.image_path);
-
-                        // TODO change extension based on what they request
-                        fs.writeFile(screenshot_folder + screenshot_id + '.jpg', image_data, 'binary', function (err) 
-                        {
-                            if (err) 
-                            {
-				console.log('ERROR : '+ err);
-                            }
-                            else
-                            {
-                                console.log('File Created ' +screenshot_id + '.jpg');
-                            }
-                        });
-                    }
-                    else
-                    {
-                        console.log('ERROR : '+ err);
-                    }
-                });
+                createScreenShotRevision(url, image_data);
+		createScreenShot(user_id, url);
             }
             else
             {
-                updateScreenShot(screenshot_id, screenshot.image_path);
+		console.log('Now Check to see how simliar they are, otherwise create a revision');
+		
+		fs.writeFile('/tmp/screenshots/test.jpg', image_data, 'binary', function (err) 
+		{
+		    resemble('/tmp/screenshots/test.jpg').compareTo(screenshot_folder+screenshot_revision._id+'.jpg').onComplete(function(data)
+		    {
+			if(data.misMatchPercentage > 10)
+			{
+			    createScreenShotRevision(url, image_data);
+			}
+			createScreenShot(user_id, url);
+		    });
+		});
             }
         }
         else
@@ -202,24 +158,76 @@ function saveScreenShot(screenshot_id, image_data)
 }
 
 // Update the screenshot to the correct image path
-function updateScreenShot(screenshot_id, image_path)
+function createScreenShot(user_id, url)
 {
-    screenshots.findAndModify({
-	query: {
-	    _id: screenshot_id
-	}, 
-	update: {
-	    $set: {
-		image_path: image_path
-	    }
-	},
-	new: true
-    }, 
-    function(err) 
-    {
+    // Start the screenshot object
+    screenshots.insert({
+	user_id : user_id,
+	url: url,
+	created_at: Date.now() / 1000 | 0
+    },
+    function(err)
+    { 
 	if(err)
 	{
-	    console.log('ERROR '+ err + ', please contact support!');
+	    console.log('ERROR : '+ err);
+	    res.end();
 	}
-    });		
+    });
+}
+
+function createScreenShotRevision(url, image_data)
+{
+    // Create a new record for the screenshot with the path
+    screenshot_revisions.insert({
+	url: url,
+	created_at: Date.now() / 1000 | 0,
+	cache_time: Date.now() / 1000 | 0
+    },
+    function(err, screenshot_revisions)
+    {
+	if(!err)
+	{
+	    fs.writeFile(screenshot_folder + screenshot_revisions._id + '.jpg', image_data, 'binary', function (err) 
+	    {
+		if (err) 
+		{
+		    console.log('ERROR : '+ err);
+		}
+		else
+		{
+		    console.log('File Created ' + screenshot_revisions._id + '.jpg');
+		}
+	    });
+	}
+	else
+	{
+	    console.log('ERROR : '+ err);
+	}
+    });
+}
+
+function getCachedVersion(user_id, url, options, res)
+{
+    // get the domain
+    screenshot_revisions.findOne({
+	url: url,
+	cache_time:{
+	    $gt: (Date.now() / 1000 | 0) - cache_time
+	}
+    }, function(err, screenshot_revision)
+    {
+	if(screenshot_revision === null)
+	{
+	    getScreenshot(user_id, url, options, res);
+	}
+	else
+	{
+	    console.log('return cache!');
+	    fs.readFile(screenshot_folder + screenshot_revision._id + '.jpg', function(err, data) 
+	    {
+		res.end(data);
+	    });
+	}
+    });
 }
