@@ -131,8 +131,8 @@ function checkScreenShot(user_id, url, image_data)
         {
             if(screenshot_revision === null)
             {
-                createScreenShotRevision(url, image_data);
-		createScreenShot(user_id, url);
+                createScreenShotRevision(user_id, url, image_data);
+		
             }
             else
             {
@@ -154,9 +154,12 @@ function checkScreenShot(user_id, url, image_data)
 				    console.log(data.misMatchPercentage);
 				    if(data.misMatchPercentage > 10)
 				    {
-					createScreenShotRevision(url, image_data);
+					createScreenShotRevision(user_id, url, image_data);
 				    }
-				    createScreenShot(user_id, url);
+				    else
+				    {
+					createScreenShot(user_id, url, screenshot_revision._id);
+				    }
 				});
 			    }
 			    else
@@ -181,12 +184,13 @@ function checkScreenShot(user_id, url, image_data)
 }
 
 // Update the screenshot to the correct image path
-function createScreenShot(user_id, url)
+function createScreenShot(user_id, url, screenshot_revision_id)
 {
     // Start the screenshot object
     screenshots.insert({
 	user_id : user_id,
 	url: url,
+	screenshot_revision_id: screenshot_revision_id.toString(),
 	created_at: Date.now() / 1000 | 0
     },
     function(err)
@@ -199,7 +203,7 @@ function createScreenShot(user_id, url)
     });
 }
 
-function createScreenShotRevision(url, image_data)
+function createScreenShotRevision(user_id, url, image_data)
 {
     // Create a new record for the screenshot with the path
     screenshot_revisions.insert({
@@ -207,11 +211,12 @@ function createScreenShotRevision(url, image_data)
 	created_at: Date.now() / 1000 | 0,
 	cache_time: Date.now() / 1000 | 0
     },
-    function(err, screenshot_revisions)
+    function(err, screenshot_revision)
     {
 	if(!err)
 	{
-	    fs.writeFile(screenshot_folder + screenshot_revisions._id + '.jpg', image_data, 'binary', function (err) 
+	    createScreenShot(user_id, url, screenshot_revision._id);
+	    fs.writeFile(screenshot_folder + screenshot_revision._id + '.jpg', image_data, 'binary', function (err) 
 	    {
 		if (err) 
 		{
@@ -219,7 +224,7 @@ function createScreenShotRevision(url, image_data)
 		}
 		else
 		{
-		    console.log('File Created ' + screenshot_revisions._id + '.jpg');
+		    console.log('File Created ' + screenshot_revision._id + '.jpg');
 		}
 	    });
 	}
