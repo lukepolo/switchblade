@@ -32,3 +32,11 @@ body {
 .profile-pic {
     text-align: right;
 }
+.img-container {
+    max-height: 100px;
+    overflow: hidden;
+    margin-bottom:15px;
+    img {
+	max-width: 100%;
+    }
+}

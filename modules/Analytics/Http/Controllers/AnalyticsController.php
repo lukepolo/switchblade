@@ -2,13 +2,12 @@
 
 namespace Modules\Analytics\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\View;
+use \App\Http\Controllers\Controller;
 
 class AnalyticsController extends Controller
 {
     public function index()
     {
-	return View::make('analytics::index');
+	return view('analytics::index');
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 
+use App\Models\Mongo\User as mongoUser;
+
 abstract class Controller extends BaseController
 {
     use DispatchesCommands, ValidatesRequests;

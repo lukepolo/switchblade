@@ -9604,6 +9604,15 @@ body {
   text-align: right;
 }
 
+.img-container {
+  max-height: 100px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.img-container img {
+  max-width: 100%;
+}
+
 #redo-undo .widget-icon {
   padding-right: 10px;
   cursor: pointer;

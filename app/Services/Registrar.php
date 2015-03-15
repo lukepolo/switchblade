@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\UserProviders;
+use App\Models\Mongo\User as mongoUser;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 use Illuminate\Http\Exception\HttpResponseException;
@@ -73,7 +74,11 @@ class Registrar implements RegistrarContract
 	$user->api_key = \Hash::make($user->id);
 	$user->save();
 
-	// add the api key to mongo , not sure why?
+	// add the api key to mongo
+	mongoUser::create([
+	    'user_id' => $user->id,
+	    'api_key' => $user->api_key
+	]);
 
 	\Auth::login($user);
 	return $user;

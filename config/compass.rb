@@ -4,12 +4,12 @@
 environment = :development
 http_path = "/"
 #Compile Paths
-css_dir = "./public/assets/css"
-images_dir = "./resources/assets/images"
+css_dir = "public/assets/css"
+images_dir = "resources/assets/images"
 sourcemap = (environment == :production) ? false : true
 
-sass_dir = "./resources/assets/sass"
-javascripts_dir = "./resources/assets/js"
+sass_dir = "resources/assets/sass"
+javascripts_dir = "resources/assets/js"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
@@ -22,6 +22,6 @@ output_style = (environment == :production) ? :compressed : :expanded
 line_comments = false
 
 additional_import_paths = [
-    "./vendor/bower_components/bootstrap-sass-official/assets/stylesheets",
-    "./vendor/bower_components/fontawesome/scss"
+    "vendor/bower_components/bootstrap-sass-official/assets/stylesheets",
+    "vendor/bower_components/fontawesome/scss"
 ]

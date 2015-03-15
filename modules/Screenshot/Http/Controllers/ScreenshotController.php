@@ -2,18 +2,20 @@
 
 namespace Modules\Screenshot\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\View;
+use \App\Http\Controllers\Controller;
+Use Modules\Screenshot\Models\Mongo\Screenshot;
 
 class ScreenshotController extends Controller
 {
     public function index()
     {
-	return View::make('screenshot::index');
+	return view('screenshot::index');
     }
 
     public function getDashboard()
     {
+	$screenshots = Screenshot::get();
 
+	return view('screenshot::dashboard', ['screenshots' => $screenshots]);
     }
 }

@@ -4,12 +4,18 @@ var mongojs = require('mongojs');
 var crypto = require('crypto');
 var webshot = require('webshot');
 var fs = require('fs');
-var resemble = require('node-resemble-js');
 var app = express();
-var db = mongojs.connect("mongodb://127.0.0.1:27017/switchblade_dev", ["users", "screenshots", "screenshot_images"]);
+
+var db = mongojs('switchblade_dev');
+
+// define collections here
+var users = db.collection('users');
+var screenshots = db.collection('screenshots');
+var screenshot_images = db.collection('screenshot_images');
 
 var delay = 100;
-var screenshot_folder = __dirname.replace('fuel/packages/nodejs/app','') + 'public/assets/img/screenshots/';
+
+var screenshot_folder = __dirname.replace('resources/nodejs','') + 'public/assets/img/screenshots/';
 
 function auth(req, res, next)
 {
@@ -20,13 +26,14 @@ function auth(req, res, next)
     else if(req.query.apikey)
     {
 	console.log('Trying to auth '+ req.query.apikey);
-        db.users.find({api_key: req.query.apikey}, function(err, records)
+        users.find({api_key: req.query.apikey}, function(err, records)
         { 
             if(!err)
             {
                 if(records.length != 0)
                 {
                     console.log('Authed');
+		    req.user_id = records[0].user_id;
                     next();
                 }
                 else
@@ -44,18 +51,17 @@ function auth(req, res, next)
     }
     else
     {
-        // Most likely just displaying it?
         res.status(401).send('Not Authorized');
     }
 };
 
-function get_screenshot(url, options, res, api_key)
+function get_screenshot(url, options, res, user_id)
 {
     // Start the screenshot object
-    db.screenshots.insert({
+    screenshots.insert({
 	url: url, 
 	image_path: null,
-	api_key : api_key
+	user_id : user_id
     },
     function(err, screenshot)
     { 
@@ -88,14 +94,12 @@ function get_screenshot(url, options, res, api_key)
 		else
 		{
 		    console.log('ERROR : '+ err);
-		    res.status(500).send('ERROR '+ err + ', please contact support!');
 		}
 	    });
 	}
 	else
 	{
 	     console.log('ERROR : '+ err);
-                res.status(500).send('ERROR '+ err + ', please contact support!');
 	}
     });
 }
@@ -111,7 +115,7 @@ app.get('/hi', function(req, res)
         },
         renderDelay: !req.query.delay ? delay : req.query.delay
     };
-    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
+    get_screenshot(req.query.url, options, res, req.user_id);
 });
 
 app.get('/', function(req, res) 
@@ -123,7 +127,7 @@ app.get('/', function(req, res)
         },
         renderDelay: !req.query.delay ? delay : req.query.delay
     };
-    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
+    get_screenshot(req.query.url, options, res, req.user_id);
 });
 
 app.get('/low', function(req, res) 
@@ -135,7 +139,7 @@ app.get('/low', function(req, res)
         },
         renderDelay: !req.query.delay ? delay : req.query.delay
     };
-    get_screenshot(req.query.url, options, res, req.query.apikey, req.query.user_id);
+    get_screenshot(req.query.url, options, res, req.user_id);
 });
  
 app.listen(7778);
@@ -143,14 +147,14 @@ app.listen(7778);
 function saveScreenShot(screenshot_id, image_data)
 {
     var checksum =  crypto.createHash('md5').update(image_data).digest('hex');
-    db.screenshot_images.findOne({checksum: checksum}, function(err, screenshot)
+    screenshot_images.findOne({checksum: checksum}, function(err, screenshot)
     {
         if(!err)
         {
             if(screenshot === null)
             {
                 // Create a new record for the screenshot with the path
-                db.screenshot_images.insert({
+                screenshot_images.insert({
                     checksum: checksum,
                     image_path: screenshot_id + '.jpg'
                 },
@@ -166,7 +170,7 @@ function saveScreenShot(screenshot_id, image_data)
                         {
                             if (err) 
                             {
-                                res.status(500).send('ERROR '+ err + ', please contact support!');
+				console.log('ERROR : '+ err);
                             }
                             else
                             {
@@ -177,7 +181,6 @@ function saveScreenShot(screenshot_id, image_data)
                     else
                     {
                         console.log('ERROR : '+ err);
-                        res.status(500).send('ERROR '+ err + ', please contact support!');
                     }
                 });
             }
@@ -189,7 +192,6 @@ function saveScreenShot(screenshot_id, image_data)
         else
         {
             console.log('ERROR : '+ err);
-            res.status(500).send('ERROR '+ err + ', please contact support!');
         }
     });
 }
@@ -197,7 +199,7 @@ function saveScreenShot(screenshot_id, image_data)
 // Update the screenshot to the correct image path
 function updateScreenShot(screenshot_id, image_path)
 {
-    db.screenshots.findAndModify({
+    screenshots.findAndModify({
 	query: {
 	    _id: screenshot_id
 	}, 

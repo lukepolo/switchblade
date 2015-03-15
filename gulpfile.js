@@ -47,9 +47,7 @@ elixir.extend('minify_js', function()
 	})
 	.pipe(concat('all.js')) 
 	.pipe(sourcemaps.init())
-	// ONLY IN PRODUCTION
-	// TODO
-	//.pipe(uglify())
+	.pipe(uglify())
 	.pipe(sourcemaps.write('/',
 	{
 	    sourceMappingURLPrefix: '\\'
@@ -77,10 +75,7 @@ elixir.extend('minify_css', function()
 	.pipe(compass({
 	    css: paths.css_public,
 	    sass: paths.sass,
-	    image: paths.img,
-	    logging  : false,
-	    comments : false,
-	    style    : 'expanded'
+	    image: paths.img
 	}))
 	.pipe(gulp.dest('public/assets/css'))
     });
