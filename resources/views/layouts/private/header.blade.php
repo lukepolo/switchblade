@@ -7,7 +7,7 @@
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 	    </button>
-	    <a class="navbar-brand" href="#">SwitchBlade</a>
+	    <a class="navbar-brand" href="{{ url('/') }} ">SwitchBlade</a>
 	</div>
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav">
@@ -19,7 +19,7 @@
 			</a>
 		    </li>
 		    <li>
-			<a href="#">
+			<a href="{{ action('\Modules\Analytics\Http\Controllers\AnalyticsController@getDashboard') }}">
 			    <i class="fa fa-bar-chart"></i>
 			    Analytics
 			</a>

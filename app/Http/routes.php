@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth'], function()
 // Restful Routes
 Route::group(['prefix' => 'api/v1'], function()
 {
-    Route::resource('mods', 'API\V1\ModsController');
+    Route::resource('mods', 'API\V1\ModsAPI');
 });
 
 // Auth Traits

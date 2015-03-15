@@ -17,7 +17,10 @@ abstract class RestController extends BaseController
     use DispatchesCommands, ValidatesRequests;
     public function __construct(Request $request)
     {
-	if(\Request::has('key'))
+	\Log::info($_SERVER);
+
+	// Stops From Invalid Requests also stops Phantom JS from executing other commands
+	if(\Request::has('key') && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR'])
 	{
 	    $user = User::where('api_key', '=', \Request::input('key'))->first();
 	    if(empty($user))

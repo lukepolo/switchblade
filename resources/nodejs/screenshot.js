@@ -1,21 +1,19 @@
-var express = require('express');
-var HttpStatus = require('http-status-codes');
-var mongojs = require('mongojs');
-var crypto = require('crypto');
-var webshot = require('webshot');
-var fs = require('fs');
-var app = express();
-
-var db = mongojs('switchblade_dev');
+var express = require('express'),
+mongojs = require('mongojs'),
+crypto = require('crypto'),
+webshot = require('webshot'),
+fs = require('fs'),
+app = express(),
+db = mongojs('switchblade_dev'),
 
 // define collections here
-var users = db.collection('users');
-var screenshots = db.collection('screenshots');
-var screenshot_images = db.collection('screenshot_images');
+users = db.collection('users'),
+screenshots = db.collection('screenshots'),
+screenshot_images = db.collection('screenshot_images'),
 
-var delay = 100;
+delay = 100,
 
-var screenshot_folder = __dirname.replace('resources/nodejs','') + 'public/assets/img/screenshots/';
+screenshot_folder = __dirname.replace('resources/nodejs','') + 'public/assets/img/screenshots/';
 
 function auth(req, res, next)
 {
@@ -88,18 +86,19 @@ function get_screenshot(url, options, res, user_id)
 			// Stop the response
 			res.end();
                         saveScreenShot(screenshot._id, image_data);
-                        
 		    });
 		}
 		else
 		{
 		    console.log('ERROR : '+ err);
+		    res.end();
 		}
 	    });
 	}
 	else
 	{
-	     console.log('ERROR : '+ err);
+	    console.log('ERROR : '+ err);
+	    res.end();
 	}
     });
 }

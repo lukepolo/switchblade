@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\RestController;
 
-class ModsController extends RestController
+class ModsAPI extends RestController
 {
     public function index()
     {

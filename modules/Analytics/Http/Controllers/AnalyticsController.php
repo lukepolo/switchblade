@@ -10,4 +10,9 @@ class AnalyticsController extends Controller
     {
 	return view('analytics::index');
     }
+
+    public function getDashboard()
+    {
+	echo 'test'; die;
+    }
 }

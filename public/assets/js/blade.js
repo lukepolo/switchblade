@@ -100,20 +100,13 @@
 
     var init = function()
     {
-        // Load any extra JS files here 
-        // EX : jquery if they dont have
         swb.q.forEach(run_command);
     }
     
     var auth = function(key)
     {
         query_data['key'] = key;
-    }
-    
-    // Gets all nesscary JS files & Appends Them
-    var get_mods = function()
-    {
-        var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/v1/mods");
+	var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/v1/mods");
     }
     
     var pageview = function()
@@ -153,7 +146,6 @@
     {
         init:init,
         auth: auth,
-        get_mods: get_mods,
         pageview: pageview,
         absplit: absplit,
         apply_script: apply_script

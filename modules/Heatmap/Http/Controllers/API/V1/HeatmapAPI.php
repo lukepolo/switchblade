@@ -14,13 +14,17 @@ class HeatmapAPI extends RestController
 	$user = \App::make('user');
 	$domain = \Domains::getDomain($user);
 
+	// generate user image
+	\Screenshots::make($_SERVER['HTTP_REFERER'], $user);
+
         $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
 
         if(isset($parsed_url['path']) === false)
         {
             $parsed_url['path'] = null;
         }
-        $url = trim($parsed_url['host'].$parsed_url['path'], '/');
+
+	$url = trim($parsed_url['host'].$parsed_url['path'], '/');
 
         $heatmap_user = HeatmapUsers::create([
 	    'domain_id' => $domain->id,
@@ -28,9 +32,6 @@ class HeatmapAPI extends RestController
             'user_id' => $user->id,
             'time' => time(),
 	]);
-
-        // generate user image
-	\Screenshots::getScreenshot($url, $user);
 
         // CUSTOM JS back to the user
         return array(

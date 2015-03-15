@@ -21,7 +21,7 @@ desktop.ini
 npm-debug.log
 
 # dynamically generated files
-/public/img/profile_images
-
+public/img/profile_images
+public/assets/img/screenshots
 # Sass Files
 .sass-cache

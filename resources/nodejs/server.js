@@ -1,4 +1,7 @@
-var unserialize = require('./unserialize.js'),
+require('dotenv').load();
+var port = process.env.SERVER_NODE_PORT;
+
+unserialize = require('./unserialize.js'),
 redis = require('redis'),
 client = redis.createClient(),
 cookie = require('cookie'),
@@ -14,15 +17,12 @@ options = {
 },
 
 server = require('https').createServer(options),
-io = require('socket.io')(server);
-
-server.listen(7777);
+io = require('socket.io')(server)
 
 // Maintains a list of timeouts
-var offline_timeout = {};
-
+offline_timeout = {};
 // Maintains an active list of users
-var users = {};
+users = {};
 
 // We need to make sure they have a session, otherwise they are not allowed to access node!
 io.use(function(socket, next) 
@@ -149,3 +149,5 @@ io.on('connection', function (socket)
         }
     });
 });
+
+server.listen(port);
