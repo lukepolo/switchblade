@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
 compass = require('gulp-compass'),
+autoprefixer = require('gulp-autoprefixer'),
 gutil = require('gulp-util'),
 concat = require('gulp-concat'),
 uglify = require('gulp-uglify'),
@@ -48,10 +49,7 @@ elixir.extend('minify_js', function()
 	.pipe(concat('all.js')) 
 	.pipe(sourcemaps.init())
 	.pipe(uglify())
-	.pipe(sourcemaps.write('/',
-	{
-	    sourceMappingURLPrefix: '\\'
-	}))
+	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest(paths.js_public));
     });   
     
@@ -77,6 +75,13 @@ elixir.extend('minify_css', function()
 	    sass: paths.sass,
 	    image: paths.img
 	}))
+	.pipe(sourcemaps.init())
+	.pipe(autoprefixer({ 
+	    browsers: [
+		'last 2 version'
+	    ] 
+	}))
+	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest('public/assets/css'))
     });
     
@@ -87,7 +92,7 @@ elixir.extend('minify_css', function()
     }
     else
     {
-	return this.queueTask('minify_css')
+	return this.queueTask('minify_css');
     }
 });
 
