@@ -144,7 +144,6 @@ function checkScreenShot(user_id, url, image_data)
             if(screenshot_revision === null)
             {
                 createScreenShotRevision(user_id, url, image_data);
-		
             }
             else
             {
@@ -170,6 +169,8 @@ function checkScreenShot(user_id, url, image_data)
 				    }
 				    else
 				    {
+					// Update Cache Time
+					updateCache(screenshot_revision._id);
 					createScreenShot(user_id, url, screenshot_revision._id);
 				    }
 				});
@@ -270,4 +271,26 @@ function getCachedVersion(user_id, url, options, res)
 	    });
 	}
     });
+}
+
+function updateCache(screenshot_id)
+{
+    console.log('Updating!');
+    screenshot_revisions.findAndModify({
+	query: {
+	    _id: screenshot_id
+	}, 
+	update: {
+	    $set: {
+		cache_time: Date.now() / 1000 | 0
+	    }
+	}
+    }, 
+    function(err) 
+    {
+	if(err)
+	{
+	    console.log('ERROR '+ err + ', please contact support!');
+	}
+    });		
 }

@@ -6,16 +6,11 @@ class Screenshots
 {
     public function make($url, \App\Models\User $user)
     {
-	$parsed_url = parse_url($url);
-
-	if(isset($parsed_url['path']) === false)
-	{
-	    $parsed_url['path'] = null;
-	}
-
-	$url = 'http://get.ketchurl.com?apikey='.$user->api_key.'&url='.trim($parsed_url['host'].$parsed_url['path'], '/');
-
-	$parsed_url = parse_url($url);
+	$query_data = http_build_query([
+	    'apikey' => $user->api_key,
+	    'url' => $url
+	]);
+	$parsed_url = parse_url('http://get.ketchurl.com?'.$query_data);
 
 	if(isset($parsed_url['path']) === false)
 	{
