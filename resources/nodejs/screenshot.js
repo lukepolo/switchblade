@@ -21,7 +21,7 @@ screenshot_revisions = db.collection('screenshot_revisions'),
 // 1 Hour
 cache_time = 3600 * 1000,
 // %
-max_diff = 15,
+max_diff = 20,
 delay = 100,
 
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
@@ -218,6 +218,7 @@ function createScreenShot(user_id, url, screenshot_revision_id)
 
 function createScreenShotRevision(user_id, url, image_data)
 {
+    console.log('Creating new revision');
     // Create a new record for the screenshot with the path
     screenshot_revisions.insert({
 	url: url,
@@ -275,7 +276,7 @@ function getCachedVersion(user_id, url, options, res)
 
 function updateCache(screenshot_id)
 {
-    console.log('Updating!');
+    console.log('Updating Cache Time!');
     screenshot_revisions.findAndModify({
 	query: {
 	    _id: screenshot_id
