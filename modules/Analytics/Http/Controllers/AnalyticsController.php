@@ -13,6 +13,18 @@ class AnalyticsController extends Controller
 
     public function getDashboard()
     {
-	return view('analytics::dashboard');
+	$analyticsData = \LaravelAnalytics::getVisitorsAndPageViews(7);
+
+	$analytics = null;
+	foreach($analyticsData as $analyticData)
+	{
+	    $data['labels'][] = $analyticData['date']->toDateString();
+	    $data['visitors'][] = $analyticData['visitors'];
+	    $data['views'][] = $analyticData['pageViews'];
+	}
+
+	return view('analytics::dashboard', [
+	    'data' => json_encode($data)
+	]);
     }
 }

@@ -28,7 +28,9 @@ paths = {
     'bootstrap' : bower_path + 'bootstrap-sass-official/assets/',
     'fontawesome' : bower_path + 'fontawesome/',
     'summernote'  : bower_path + 'summernote/',
-    'heatmap' : bower_path + 'heatmap.js.bower'
+    'heatmap' : bower_path + 'heatmap.js.bower/',
+    'chartjs' : bower_path + 'chartjs/',
+    'moment' : bower_path + 'moment/'
 };
 
 // Minify JS
@@ -40,6 +42,8 @@ elixir.extend('minify_js', function()
 	    paths.jquery_ui + 'jquery-ui.min.js',
 	    paths.bootstrap + 'javascripts/bootstrap.min.js',
 	    paths.summernote + 'dist/summernote.min.js',
+	    paths.chartjs + 'Chart.js',
+	    paths.moment + 'moment.js',
 	    paths.js+ 'prettify/prettify.js',
 	    paths.js+ '**'
 	],
@@ -133,8 +137,8 @@ elixir(function (mix)
     .copy(paths.jquery_ui + 'themes/base/jquery-ui.min.css', paths.sass_partials+'_jquery-ui-min.scss')
     .copy(paths.jquery_ui + 'themes/base/images', paths.img)
     .copy(paths.summernote + 'dist/summernote.css', paths.sass_partials+'_summernote.scss')
-    .copy(paths.fontawesome + '/fonts', paths.fonts_public)
-    .copy(paths.heatmap + '/src/heatmap.js', paths.js_public+'heatmap.js')
+    .copy(paths.fontawesome + 'fonts', paths.fonts_public)
+    .copy(paths.heatmap + 'src/heatmap.js', paths.js_public+'heatmap.js')
     .minify_js(command)
     .minify_css(command)
     .minify_img(command);

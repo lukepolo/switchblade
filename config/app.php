@@ -163,6 +163,7 @@ return [
 	'Pingpong\Modules\ModulesServiceProvider',
 	'Jenssegers\Mongodb\MongodbServiceProvider',
 	'Irazasyed\LaravelGAMP\LaravelGAMPServiceProvider',
+	'Spatie\LaravelAnalytics\LaravelAnalyticsServiceProvider',
 
 	/*
 	 * Custom Service Providers
@@ -233,6 +234,7 @@ return [
         'Form'      => 'Illuminate\Html\FormFacade',
 	'Moloquent'       => 'Jenssegers\Mongodb\Model',
 	'GAMP'  => 'Irazasyed\LaravelGAMP\Facades\GAMP',
+	'LaravelAnalytics' => 'Spatie\LaravelAnalytics\LaravelAnalyticsFacade',
 
 	/*
 	 * Custom Facades

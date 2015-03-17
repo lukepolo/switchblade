@@ -6,7 +6,9 @@
     "fontawesome": "~4.3.0",
     "jquery-ui": "~1.11.3",
     "summernote": "~0.6.1",
-    "heatmap.js.bower": "*"
+    "heatmap.js.bower": "*",
+    "chartjs": "~1.0.2",
+    "moment": "~2.9.0"
   },
   "version": "1",
   "homepage": "https://github.com/lukepolo/switchblade",
