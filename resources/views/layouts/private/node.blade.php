@@ -8,7 +8,7 @@
             }
         @endif
     try {
-//        var socket = io.connect('{{ url("/") }}:7777');
+        var socket = io.connect('{{ url("/") }}:7777');
         var user_data = {
             name: '{{ Auth::user()->first_name }}',
             id: '{{ Auth::user()->id }}',

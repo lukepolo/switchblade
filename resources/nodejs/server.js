@@ -4,11 +4,12 @@ require('dotenv').config({
 });
 
 var port = process.env.SERVER_PORT,
-unserialize = require('./unserialize.js'),
 redis = require('redis'),
-client = redis.createClient(),
+redis_client = redis.createClient(),
 cookie = require('cookie'),
 os = require('os'),
+MCrypt = require('mcrypt').MCrypt,
+PHPUnserialize = require('php-unserialize'),
 
 // HTTPS
 https = require('https'),
@@ -54,12 +55,8 @@ io.use(function(socket, next)
     }
     else
     {
-        // Get the cookies from the headers
-        var cookies = cookie.parse(socket.request.headers.cookie);
-        var session = unserialize.convert(cookies.swbrid);
-	
-        // Check in the memcache for the session
-        client.get(session[0], function(error, result)
+        // Check in redis for the session
+        redis_client.get('switchblade:'+decryptCookie(cookie.parse(socket.request.headers.cookie).switchblade_rid), function(error, result)
         {
             if (error)
             {
@@ -154,3 +151,24 @@ io.on('connection', function (socket)
         }
     });
 });
+
+function decryptCookie(cookie) 
+{
+    var cookie = JSON.parse(new Buffer(cookie, 'base64'));
+    
+    var iv = new Buffer(cookie.iv, 'base64');
+    var value = new Buffer(cookie.value, 'base64');
+    var key = "tQqp^yqBk)xQ_&Q(JKwCmXagJLs)ZO(R";
+
+    var rijCbc = new MCrypt('rijndael-256', 'cbc');
+    rijCbc.open(key, iv);
+
+    var decrypted = rijCbc.decrypt(value).toString();
+    
+    var len = decrypted.length - 1;
+    var pad = decrypted.charAt(len).charCodeAt(0);
+
+    var sessionId = PHPUnserialize.unserialize(decrypted.substr(0, decrypted.length - pad));
+
+    return sessionId;
+}

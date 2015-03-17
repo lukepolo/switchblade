@@ -80,7 +80,7 @@ return [
 
     'key' => 'tQqp^yqBk)xQ_&Q(JKwCmXagJLs)ZO(R',
 
-    'cipher' => MCRYPT_RIJNDAEL_128,
+    'cipher' => MCRYPT_RIJNDAEL_256,
 
     /*
     |--------------------------------------------------------------------------
