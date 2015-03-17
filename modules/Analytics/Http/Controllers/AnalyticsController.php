@@ -13,18 +13,22 @@ class AnalyticsController extends Controller
 
     public function getDashboard()
     {
+	// IDS
+	// Metrics
 	$analyticsData = \LaravelAnalytics::getVisitorsAndPageViews(7);
+	$active_users = \LaravelAnalytics::getActiveUsers();
 
 	$analytics = null;
 	foreach($analyticsData as $analyticData)
 	{
-	    $data['labels'][] = $analyticData['date']->toDateString();
-	    $data['visitors'][] = $analyticData['visitors'];
-	    $data['views'][] = $analyticData['pageViews'];
+	    $analytics['labels'][] = $analyticData['date']->toDateString();
+	    $analytics['visitors'][] = $analyticData['visitors'];
+	    $analytics['views'][] = $analyticData['pageViews'];
 	}
 
 	return view('analytics::dashboard', [
-	    'data' => json_encode($data)
+	    'pageviews' => json_encode($analytics),
+	    'active' => $active_users
 	]);
     }
 }

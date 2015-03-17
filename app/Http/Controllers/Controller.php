@@ -10,17 +10,11 @@ use Illuminate\Http\Request;
 abstract class Controller extends BaseController
 {
     use DispatchesCommands, ValidatesRequests;
-    public function __construct()
+    public function __construct(Request $request)
     {
-	if(\Auth::check())
-	{
-	    $gamp = \GAMP::setClientId(\Auth::user()->id);
-	}
-	else
-	{
-	    $gamp = \GAMP::setClientId(\Session::getId());
-	}
+	$gamp = \GAMP::setClientId(\Session::getId());
 
+	$gamp->setIpOverride($request->ip());
 	$gamp->setDocumentPath(\Request::path());
 	$gamp->sendPageview();
 

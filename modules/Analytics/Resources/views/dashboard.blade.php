@@ -1,12 +1,16 @@
 @extends('layouts.private.template')
 
 @section('content')
-    <h1>Your Visitors</h1>
+    <h1>Your Visitors
+	<div class="pull-right">
+	    {{ $active }} Active
+	</div>
+    </h1>
     <canvas id="chart"></canvas>
     <script>
 	 $(document).ready(function()
 	 {
-	    var analytics = {!! $data !!};
+	    var analytics = {!! $pageviews !!};
 	    var data = {
 		labels: analytics.labels,
 		datasets: [
