@@ -6,7 +6,6 @@
     "fontawesome": "~4.3.0",
     "jquery-ui": "~1.11.3",
     "summernote": "~0.6.1",
-    "heatmap.js.bower": "*",
     "chartjs": "~1.0.2",
     "moment": "~2.9.0"
   },

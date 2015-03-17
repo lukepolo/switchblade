@@ -2,7 +2,7 @@
 
 namespace Modules\Heatmap\Models\Mongo;
 
-class HeatmapUsers extends \Moloquent
+class HeatmapPoint extends \Moloquent
 {
     protected $connection = 'mongodb';
 

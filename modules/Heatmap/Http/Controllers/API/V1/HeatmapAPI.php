@@ -3,9 +3,7 @@
 namespace Modules\Heatmap\Http\Controllers\API\V1;
 
 use \App\Http\Controllers\RestController;
-use \App\Models\Mongo\Domain;
-use Modules\Heatmap\Models\Mongo\HeatmapUsers;
-use Modules\Heatmap\Models\Mongo\HeatmapPoints;
+use Modules\Heatmap\Models\Mongo\HeatmapUser;
 
 class HeatmapAPI extends RestController
 {
@@ -26,7 +24,7 @@ class HeatmapAPI extends RestController
 
 	$url = trim($parsed_url['host'].$parsed_url['path'], '/');
 
-        $heatmap_user = HeatmapUsers::create([
+        $heatmap_user = HeatmapUser::create([
 	    'domain_id' => $domain->id,
             'url' => $url,
 	]);
@@ -35,7 +33,7 @@ class HeatmapAPI extends RestController
         return array(
             'function' => 'apply_script',
             'data' => array(
-                'url' => asset('assets/js/heatmap.js'),
+                'url' => asset('assets/js/heatmap.min.js'),
                 'callback' => "callback = function()
                 {
                     var heat_data = new Array();

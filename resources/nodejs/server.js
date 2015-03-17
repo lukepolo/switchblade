@@ -27,6 +27,8 @@ offline_timeout = {};
 // Maintains an active list of users
 users = {};
 
+server.listen(port);
+
 // We need to make sure they have a session, otherwise they are not allowed to access node!
 io.use(function(socket, next) 
 {
@@ -152,5 +154,3 @@ io.on('connection', function (socket)
         }
     });
 });
-
-server.listen(port);

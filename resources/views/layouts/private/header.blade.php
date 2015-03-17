@@ -25,7 +25,7 @@
 			</a>
 		    </li>
 		    <li>
-			<a href="#">
+			<a href="{{ action('\Modules\Heatmap\Http\Controllers\HeatmapController@getDashboard') }}">
 			    <i class="fa fa-fire"></i>
 			    Heat Mapping
 			</a>
