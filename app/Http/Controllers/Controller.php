@@ -1,4 +1,4 @@
-<?php
+cd <?php
 
 namespace App\Http\Controllers;
 
@@ -14,11 +14,11 @@ abstract class Controller extends BaseController
     {
 	if(\Auth::check())
 	{
-	    $gamp = \GAMP::setClientId(\Session::getId());
+	    $gamp = \GAMP::setClientId(\Auth::user()->id);
 	}
 	else
 	{
-	    $gamp = \GAMP::setClientId(\Auth::user()->id);
+	    $gamp = \GAMP::setClientId(\Session::getId());
 	}
 
 	$gamp->setUserAgentOverride($_SERVER['HTTP_USER_AGENT']);
