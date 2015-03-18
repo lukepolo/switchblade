@@ -31,6 +31,9 @@ app.get('/', function(req, res)
 {
     var options = 
     {
+	screenSize: {
+	    width: 1500
+	},
         shotSize: {
             height: 'all',
             quality : 85
@@ -38,7 +41,15 @@ app.get('/', function(req, res)
         renderDelay: !req.query.delay ? delay : req.query.delay,
 	phantomConfig: {
 	    'ignore-ssl-errors': 'true'
-	}
+	},
+	cookies: [
+	    {
+		name: 'ketchurl',
+		value: req.secret_key,
+		path: '/',
+		domain: '.switchblade.io'
+	    }
+	]
     };
     
     // if we do not pass cache false, then we assume they want a cache
@@ -63,14 +74,15 @@ function auth(req, res, next)
     else if(req.query.apikey)
     {
 	console.log('Trying to auth '+ req.query.apikey);
-        users.find({api_key: req.query.apikey}, function(err, records)
+        users.findOne({api_key: req.query.apikey}, function(err, user)
         { 
             if(!err)
             {
-                if(records.length != 0)
+                if(user.length !== 0)
                 {
                     console.log('Authed');
-		    req.user_id = records[0].user_id;
+		    req.user_id = user.user_id;
+		    req.secret_key = user.secret_key;
                     next();
                 }
                 else

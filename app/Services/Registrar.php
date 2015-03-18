@@ -77,10 +77,11 @@ class Registrar implements RegistrarContract
 	// add the api key to mongo
 	mongoUser::create([
 	    'user_id' => $user->id,
-	    'api_key' => $user->api_key
+	    'api_key' => $user->api_key,
+	    'secret_key' => \Hash::make($user->api_key)
 	]);
 
 	\Auth::login($user);
-	return $user;
+	return redirect(url('/'));
     }
 }

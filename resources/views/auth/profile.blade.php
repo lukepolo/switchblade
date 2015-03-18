@@ -98,6 +98,10 @@
                     </tbody>
                 </table>
             </div>
+	    <div class="row" style="margin:10px;">
+		<h2>Secret Key<small>show</small></h2>
+		<pre><code>{{ Auth::user()->secret_key }}</code></pre>
+	    </div>
             <div class="row" style="margin:10px;">
                 <hr>
                 <h2>Javascript Code <small>Copy and paste directly after your &lthead> tag </small></h2>
