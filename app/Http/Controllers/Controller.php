@@ -12,15 +12,21 @@ abstract class Controller extends BaseController
     use DispatchesCommands, ValidatesRequests;
     public function __construct(Request $request)
     {
-	if(isset($_SERVER['HTTP_USER_AGENT']) === true)
+	if(\Auth::check())
 	{
-	    \Log::info($_SERVER['HTTP_USER_AGENT']);
 	    $gamp = \GAMP::setClientId(\Session::getId());
-	    $gamp->setIpOverride($request->ip());
-	    $gamp->setUserAgentOverride($_SERVER['HTTP_USER_AGENT']);
-	    $gamp->setDocumentPath(\Request::path());
-	    $gamp->sendPageview();
 	}
+	else
+	{
+	    $gamp = \GAMP::setClientId(\Auth::user()->id);
+	}
+
+	$gamp->setUserAgentOverride($_SERVER['HTTP_USER_AGENT']);
+	$gamp->setIpOverride($request->ip());
+	$gamp->setDocumentPath('dev_'.\Request::path());
+	$gamp->setAsyncRequest(true);
+	$gamp->sendPageview();
+
 	// Sets the Title, based on the controller
 	$name = preg_replace('/Controller@.*/', '', str_replace(\Route::getCurrentRoute()->getAction()["namespace"].'\\', '', \Route::currentRouteAction()));
 	\View::share('title', 'Switch Blade | '.$name);

@@ -17,7 +17,7 @@ class ScreenshotController extends Controller
     {
 	// Unquie Screenshots
 	$screenshots = ScreenshotRevision::with('screenshots')->get();
-
+	
 	return view('screenshot::dashboard', ['screenshots' => $screenshots]);
     }
 }
