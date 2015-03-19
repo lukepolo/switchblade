@@ -5,18 +5,12 @@ require('dotenv').config({
 
 var port = process.env.SCREENSHOT_PORT,
 express = require('express'),
-mongojs = require('mongojs'),
+mongoClient = require('mongodb').MongoClient,
 temp = require('temp').track(),
 webshot = require('webshot'),
 fs = require('fs'),
 resemble = require('node-resemble-js'),
 app = express(),
-db = mongojs(process.env.DB_USER+':'+process.env.MONGO_PASS+'@localhost/admin'),
-
-// define collections here
-users = db.collection('users'),
-screenshots = db.collection('screenshots'),
-screenshot_revisions = db.collection('screenshot_revisions'),
 
 // 1 Hour
 cache_time = 3600 * 1000,
@@ -26,7 +20,28 @@ delay = 100,
 
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
 
+// Initialize connection once and authenticate
+mongoClient.connect('mongodb://@localhost:27017/'+process.env.MONGO_DB, function(err, database) 
+{
+    if(err)
+    {
+	throw err;
+    }
+    else
+    {
+	// Auth with the admin so we can use other databases
+	database.admin()
+	.authenticate(process.env.DB_USER, process.env.MONGO_PASS, function(err, result)
+	{
+	    db = database;
+	    app.listen(7778);
+	    console.log('Screenshots Started');
+	});
+    }
+});
+
 app.use(auth);
+
 app.get('/', function(req, res) 
 {
     var options = 
@@ -53,7 +68,7 @@ app.get('/', function(req, res)
     };
     
     // if we do not pass cache false, then we assume they want a cache
-    if(typeof req.query.cache == 'undefined')
+    if(typeof req.query.cache === 'undefined')
     {
 	getCachedVersion(req.user_id, req.query.url, options, res);
     }
@@ -63,8 +78,6 @@ app.get('/', function(req, res)
     }
 });
  
-app.listen(7778);
-
 function auth(req, res, next)
 {
     if (req.url === '/favicon.ico') 
@@ -74,7 +87,8 @@ function auth(req, res, next)
     else if(req.query.apikey)
     {
 	console.log('Trying to auth '+ req.query.apikey);
-        users.findOne({api_key: req.query.apikey}, function(err, user)
+        db.collection('users')
+	.findOne({api_key: req.query.apikey}, function(err, user)
         { 
             if(!err)
             {
@@ -147,13 +161,18 @@ function getScreenshot(user_id, url, options, res)
 function checkScreenShot(user_id, url, image_data)
 {
     // get the domain
-    screenshot_revisions.findOne({
+    db.collection('screenshot_revisions')
+    .find({
 	url: url
-    }, function(err, screenshot_revision)
+    }).sort({
+	created_at:-1
+    })
+    .limit(1)
+    .toArray(function(err, screenshot_revision)
     {
         if(!err)
         {
-            if(screenshot_revision === null)
+	    if(typeof screenshot_revision[0] === 'undefined')
             {
                 createScreenShotRevision(user_id, url, image_data);
             }
@@ -171,7 +190,8 @@ function checkScreenShot(user_id, url, image_data)
 			{
 			    if(!err)
 			    {
-				resemble(file.path).compareTo(screenshot_folder+screenshot_revision._id+'.jpg').onComplete(function(data)
+				resemble(file.path).compareTo(screenshot_folder+screenshot_revision[0]._id+'.jpg')
+				.onComplete(function(data)
 				{
 				    temp.cleanup();
 				    console.log(data.misMatchPercentage);
@@ -182,8 +202,8 @@ function checkScreenShot(user_id, url, image_data)
 				    else
 				    {
 					// Update Cache Time
-					updateCache(screenshot_revision._id);
-					createScreenShot(user_id, url, screenshot_revision._id);
+					updateCache(screenshot_revision[0]._id);
+					createScreenShot(user_id, url, screenshot_revision[0]._id);
 				    }
 				});
 			    }
@@ -211,8 +231,10 @@ function checkScreenShot(user_id, url, image_data)
 // Update the screenshot to the correct image path
 function createScreenShot(user_id, url, screenshot_revision_id)
 {
+    console.log(screenshot_revision_id);
     // Start the screenshot object
-    screenshots.insert({
+    db.collection('screenshots')
+    .insert({
 	user_id : user_id,
 	url: url,
 	screenshot_revision_id: screenshot_revision_id.toString(),
@@ -232,17 +254,19 @@ function createScreenShotRevision(user_id, url, image_data)
 {
     console.log('Creating new revision');
     // Create a new record for the screenshot with the path
-    screenshot_revisions.insert({
+    db.collection('screenshot_revisions')
+    .insert({
 	url: url,
 	created_at: Date.now() / 1000 | 0,
 	cache_time: Date.now() / 1000 | 0
     },
     function(err, screenshot_revision)
     {
+	// screenshot_revision , assumes its an array since we can do more than 1 insert at a time
 	if(!err)
 	{
-	    createScreenShot(user_id, url, screenshot_revision._id);
-	    fs.writeFile(screenshot_folder + screenshot_revision._id + '.jpg', image_data, 'binary', function (err) 
+	    createScreenShot(user_id, url, screenshot_revision[0]._id);
+	    fs.writeFile(screenshot_folder + screenshot_revision[0]._id + '.jpg', image_data, 'binary', function (err) 
 	    {
 		if (err) 
 		{
@@ -250,7 +274,7 @@ function createScreenShotRevision(user_id, url, image_data)
 		}
 		else
 		{
-		    console.log('File Created ' + screenshot_revision._id + '.jpg');
+		    console.log('File Created ' + screenshot_revision[0]._id + '.jpg');
 		}
 	    });
 	}
@@ -264,24 +288,38 @@ function createScreenShotRevision(user_id, url, image_data)
 function getCachedVersion(user_id, url, options, res)
 {
     // get the domain
-    screenshot_revisions.findOne({
+    db.collection('screenshot_revisions')
+    .find({
 	url: url,
 	cache_time:{
 	    $gt: (Date.now() / 1000 | 0) - cache_time
 	}
-    }, function(err, screenshot_revision)
+    })
+    .sort({
+	created_at:-1
+    })
+    .limit(1)
+    .toArray(function(err, screenshot_revision)
     {
-	if(screenshot_revision === null)
+	if(!err)
 	{
-	    getScreenshot(user_id, url, options, res);
+	    if(typeof screenshot_revision[0] === 'undefined')
+	    {
+		getScreenshot(user_id, url, options, res);
+	    }
+	    else
+	    {
+		console.log('return cache!');
+		console.log();
+		fs.readFile(screenshot_folder + screenshot_revision[0]._id + '.jpg', function(err, data) 
+		{
+		    res.end(data);
+		});
+	    }
 	}
 	else
 	{
-	    console.log('return cache!');
-	    fs.readFile(screenshot_folder + screenshot_revision._id + '.jpg', function(err, data) 
-	    {
-		res.end(data);
-	    });
+	    console.log('ERROR '+ err + ', please contact support!');
 	}
     });
 }
@@ -289,16 +327,14 @@ function getCachedVersion(user_id, url, options, res)
 function updateCache(screenshot_id)
 {
     console.log('Updating Cache Time!');
-    screenshot_revisions.findAndModify({
-	query: {
-	    _id: screenshot_id
-	}, 
-	update: {
-	    $set: {
-		cache_time: Date.now() / 1000 | 0
-	    }
+    db.collection('screenshot_revisions')
+    .update({
+	_id: screenshot_id
+    }, {
+	$set: {
+	    cache_time: Date.now() / 1000 | 0
 	}
-    }, 
+    },
     function(err) 
     {
 	if(err)

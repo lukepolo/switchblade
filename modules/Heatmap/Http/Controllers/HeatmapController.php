@@ -28,8 +28,6 @@ class HeatmapController extends Controller
 
 	if(empty($screenshot) === true)
 	{
-	    Dump($user->url);
-	    die;
 	    // get the most recent screenshot
 	    $screenshot = ScreenshotRevision::where('url', '=', $user->url)
 		->orderBy('created_at', 'desc')
