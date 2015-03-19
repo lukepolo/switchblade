@@ -22,7 +22,7 @@ class HeatmapAPI extends RestController
             $parsed_url['path'] = null;
         }
 
-	$url = trim($parsed_url['host'].$parsed_url['path'], '/');
+	$url = $parsed_url['host'].$parsed_url['path'];
 
         $heatmap_user = HeatmapUser::create([
 	    'domain_id' => $domain->id,

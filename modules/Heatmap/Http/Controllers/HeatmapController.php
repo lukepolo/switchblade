@@ -21,35 +21,46 @@ class HeatmapController extends Controller
 	    ->orderBy('created_at', 'desc')
 	    ->first();
 
-	// since these were created in node we cannot use thenormal date time stuff
-	$screenshot = ScreenshotRevision::where('url', '=', $user->url)
-	    ->where('created_at', '>=', strtotime($user->created_at))
-	    ->first();
-
-	if(empty($screenshot) === true)
+	if(empty($user) === false)
 	{
-	    // get the most recent screenshot
+	    // since these were created in node we cannot use thenormal date time stuff
 	    $screenshot = ScreenshotRevision::where('url', '=', $user->url)
-		->orderBy('created_at', 'desc')
+		->where('created_at', '>=', strtotime($user->created_at))
 		->first();
-	}
 
-	if(empty($screenshot) === true)
-	{
-	    echo 'Still Rendering!';
+	    if(empty($screenshot) === true)
+	    {
+		// get the most recent screenshot
+		$screenshot = ScreenshotRevision::where('url', '=', $user->url)
+		    ->orderBy('created_at', 'desc')
+		    ->first();
+	    }
+
+	    if(empty($screenshot) === true)
+	    {
+		return view('heatmap::dashboard',[
+		    'reason' => 'Screenshot Still Rendering'
+		]);
+	    }
+	    else
+	    {
+		$data = array();
+		foreach($user->HeatmapPoints as $HeatmapPoints)
+		{
+		    $data = array_merge($data, $HeatmapPoints->data);
+		}
+
+		// we are in test mode, just do this for now
+		return view('heatmap::dashboard', [
+		    'screenshot' => $screenshot,
+		    'data' => json_encode($data)
+		]);
+	    }
 	}
 	else
 	{
-	    $data = array();
-	    foreach($user->HeatmapPoints as $HeatmapPoints)
-	    {
-		$data = array_merge($data, $HeatmapPoints->data);
-	    }
-
-	    // we are in test mode, just do this for now
-	    return view('heatmap::dashboard', [
-		'screenshot' => $screenshot,
-		'data' => json_encode($data)
+	    return view('heatmap::dashboard',[
+		'reason' => 'You dont have any heap map users yet!'
 	    ]);
 	}
     }

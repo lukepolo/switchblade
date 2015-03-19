@@ -5,6 +5,7 @@ namespace Modules\Screenshot\Http\Controllers;
 use \App\Http\Controllers\Controller;
 Use Modules\Screenshot\Models\Mongo\Screenshot;
 Use Modules\Screenshot\Models\Mongo\ScreenshotRevision;
+use App\Models\Mongo\Domain;
 
 class ScreenshotController extends Controller
 {
@@ -18,6 +19,14 @@ class ScreenshotController extends Controller
 	// Unquie Screenshots
 	$screenshots = ScreenshotRevision::has('screenshots')->get();
 
-	return view('screenshot::dashboard', ['screenshots' => $screenshots]);
+	if($screenshots->count() == 0)
+	{
+	    $domain = Domain::first()->domain;
+	    return view('screenshot::dashboard', ['domain' => $domain]);
+	}
+	else
+	{
+	    return view('screenshot::dashboard', ['screenshots' => $screenshots]);
+	}
     }
 }
