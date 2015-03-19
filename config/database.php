@@ -60,8 +60,12 @@ return [
 	    'driver'   => 'mongodb',
 	    'host'     => 'localhost',
 	    'port'     => 27017,
+            'username' => 'switchblade',
 	    'password' => '=b.!urDQ4NDF{h',
-	    'database' => env('DATABASE', 'switchblade_dev')
+	    'database' => env('DATABASE', 'switchblade_dev'),
+            'options' => array(
+                'db' => 'admin'
+            )
 	),
     ],
 

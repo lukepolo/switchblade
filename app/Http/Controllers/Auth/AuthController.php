@@ -88,6 +88,8 @@ class AuthController extends Controller
                     'nickname' => $user->getNickname()
                 ]);
             }
+            
+            return redirect(url('/'));
         }
     }
 }
