@@ -5,7 +5,7 @@
 	    {{ $screenshot->url }}
 	</h1>
 	<div id="img">
-	    <img width="1110" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">
+	    <img class="img-responsive" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">
 	</div>
 
 	<script>
@@ -33,6 +33,8 @@
 
 	    function render_heatmap()
 	    {
+		console.log($('#img img').width())
+
 		heatmapInstance = h337.create({
 		container: $('#img')[0],
 		    radius: 15
@@ -42,7 +44,7 @@
 		$(heatmap_data).each(function(index, point)
 		{
 		    heatmapInstance.addData({
-			x: point.x,
+			x: $('#img img').innerWidth() * (point.x / point.width) + 20,
 			y: point.y,
 			value: count++
 		    });

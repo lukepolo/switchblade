@@ -13,7 +13,7 @@ resemble = require('node-resemble-js'),
 parse_url = require('url'),
 
 // 1 Hour
-cache_time = 3600 * 1000,
+cache_time = 3600,
 // %
 max_diff = 20,
 delay = 100,
@@ -67,6 +67,11 @@ app.get('/', function(req, res)
 	    }
 	]
     };
+    
+    if(req.query.width)
+    {
+	options.screenSize.width = req.query.width;
+    } 
     
     parsed_url = parse_url.parse(req.query.url);
     // lets fix the req.query.url
