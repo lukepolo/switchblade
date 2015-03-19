@@ -11,7 +11,7 @@ webshot = require('webshot'),
 fs = require('fs'),
 resemble = require('node-resemble-js'),
 app = express(),
-db = mongojs(process.env.DATABASE),
+db = mongojs(process.env.DB_USER+':'+process.env.MONGO_PASS+'@localhost/admin'),
 
 // define collections here
 users = db.collection('users'),
@@ -78,7 +78,7 @@ function auth(req, res, next)
         { 
             if(!err)
             {
-                if(user.length !== 0)
+                if(user)
                 {
                     console.log('Authed');
 		    req.user_id = user.user_id;

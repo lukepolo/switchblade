@@ -18,6 +18,7 @@ class HeatmapController extends Controller
     {
 	$user = HeatmapUser::has('HeatmapPoints')
 	    ->with('HeatmapPoints')
+	    ->orderBy('created_at', 'desc')
 	    ->first();
 
 	// since these were created in node we cannot use thenormal date time stuff
@@ -27,6 +28,8 @@ class HeatmapController extends Controller
 
 	if(empty($screenshot) === true)
 	{
+	    Dump($user->url);
+	    die;
 	    // get the most recent screenshot
 	    $screenshot = ScreenshotRevision::where('url', '=', $user->url)
 		->orderBy('created_at', 'desc')
@@ -44,12 +47,12 @@ class HeatmapController extends Controller
 	    {
 		$data = array_merge($data, $HeatmapPoints->data);
 	    }
-	}
 
-	// we are in test mode, just do this for now
-	return view('heatmap::dashboard', [
-	    'screenshot' => $screenshot,
-	    'data' => json_encode($data)
-	]);
+	    // we are in test mode, just do this for now
+	    return view('heatmap::dashboard', [
+		'screenshot' => $screenshot,
+		'data' => json_encode($data)
+	    ]);
+	}
     }
 }
