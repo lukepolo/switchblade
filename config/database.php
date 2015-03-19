@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -48,9 +47,9 @@ return [
 	'mysql' => [
 	    'driver'    => 'mysql',
 	    'host'      => 'localhost',
-	    'database'  => env('DATABASE', 'switchblade_dev'),
-	    'username'  => 'switchblade',
-	    'password'  => '!MolyPOX!',
+	    'database'  => env('MYSQL_DB'),
+	    'username'  => env('DB_USER'),
+	    'password'  => env('MYSQL_PASS'),
 	    'charset'   => 'utf8',
 	    'collation' => 'utf8_unicode_ci',
 	    'prefix'    => '',
@@ -60,8 +59,12 @@ return [
 	    'driver'   => 'mongodb',
 	    'host'     => 'localhost',
 	    'port'     => 27017,
-	    'password' => '=b.!urDQ4NDF{h',
-	    'database' => env('DATABASE', 'switchblade_dev')
+	    'database' => env('MONGO_DB'),
+	    'username' => env('DB_USER'),
+	    'password' => env('MONGO_PASS'),
+	    'options' => array(
+		'db' => 'admin'
+	    )
 	),
     ],
 

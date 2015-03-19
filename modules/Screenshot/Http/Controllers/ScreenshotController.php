@@ -16,8 +16,8 @@ class ScreenshotController extends Controller
     public function getDashboard()
     {
 	// Unquie Screenshots
-	$screenshots = ScreenshotRevision::with('screenshots')->get();
-	
+	$screenshots = ScreenshotRevision::has('screenshots')->get();
+
 	return view('screenshot::dashboard', ['screenshots' => $screenshots]);
     }
 }
