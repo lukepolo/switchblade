@@ -37,15 +37,15 @@
 
 		heatmapInstance = h337.create({
 		container: $('#img')[0],
-		    radius: 15
+		    radius: 5
 		});
 
 		var count = 1;
 		$(heatmap_data).each(function(index, point)
 		{
 		    heatmapInstance.addData({
-			x: $('#img img').innerWidth() * (point.x / point.width) + 20,
-			y: point.y,
+			x: $('#img img').innerWidth() * (point.x / point.width),
+			y: $('#img img').innerHeight() * (point.y / point.height),
 			value: count++
 		    });
 		});

@@ -37,14 +37,24 @@ class HeatmapAPI extends RestController
                 'callback' => "callback = function()
                 {
                     var heat_data = new Array();
+		    var body = document.body,
+		    html = document.documentElement;
 
+		    var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+		    var width = Math.min(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+
+		    console.log(height);
+		    console.log(width);
                     document.querySelector('body').onmousemove = function(ev)
                     {
                         heat_data.push({
                             x: ev.x + window.scrollX,
                             y: ev.y + window.scrollY,
-                            width: window.innerWidth
+                            width: width,
+			    height: height
                         });
+
+
 
                         if(heat_data.length >= 50)
                         {
