@@ -33,7 +33,16 @@
 
 	    function render_heatmap()
 	    {
-		console.log($('#img img').width())
+		var image_width = $('#img img').width();
+		var image_natural_width = $('#img img')[0].naturalWidth;
+		var image_natural_height = $('#img img')[0].naturalHeight;
+		var image_height = $('#img img').height();
+
+		var distance_to_middle_img = image_width / 2;
+
+		console.log('Img Natural Height: '+image_natural_height);
+		console.log('Img Natural Width: '+image_natural_width);
+		console.log(image_width);
 
 		heatmapInstance = h337.create({
 		container: $('#img')[0],
@@ -41,13 +50,25 @@
 		});
 
 		var count = 1;
+
 		$(heatmap_data).each(function(index, point)
 		{
-		    heatmapInstance.addData({
-			x: $('#img img').innerWidth() * (point.x / point.width),
-			y: $('#img img').innerHeight() * (point.y / point.height),
-			value: count++
-		    });
+		    // we gotta do some math now
+		    console.log(point.width);
+		    point.x =  point.x * (point.width / image_natural_width) - (point.width - image_natural_width) / 2;
+		    point.x =  image_width * (point.x / point.width);
+
+		    point.y =  point.y * (point.height / image_natural_height) - (point.height - image_natural_height);
+		    point.y = image_height * (point.y / point.height);
+
+		    if(point.x <= image_width)
+		    {
+			heatmapInstance.addData({
+			    x: point.x,
+			    y: point.y,
+			    value: count++
+			});
+		    }
 		});
 	    }
 	</script>
