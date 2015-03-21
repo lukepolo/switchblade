@@ -19,7 +19,15 @@ class ScreenshotController extends Controller
 	// Unquie Screenshots
 	$screenshots = ScreenshotRevision::has('screenshots')->get();
 
-	$domain = Domain::first()->domain;
+	$domain = Domain::first();
+	if(empty($domain) === false)
+	{
+	    $domain = $domain->domain;
+	}
+	else
+	{
+	    $domain = 'http://google.com';
+	}
 
 	if($screenshots->count() == 0)
 	{
