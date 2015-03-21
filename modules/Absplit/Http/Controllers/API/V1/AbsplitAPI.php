@@ -24,13 +24,25 @@ class AbsplitAPI extends RestController
             {
                 $experiment_data = json_decode($experiment->data->js);
                 $variation = 1;
-                $js_code = [];
+                $js_code = null;
                 foreach($experiment_data->$variation as $variation => $data)
                 {
-                    $js_code['data'][] = reset($data)->apply_function;
+                    $js_code[] = $data->html->apply_function;
                 }
-                $js_code['function'] = 'absplit';
-                return $js_code;
+                
+                // CUSTOM JS back to the user
+                return [
+                    'function' => 'apply_function',
+                    'data' => [
+                        'function' => ' 
+                            data='.json_encode($js_code).';
+                            data.forEach(function(data)
+                            {
+                                eval(data);
+                            });
+                        '
+                    ]
+                ];
             }
         }
     }

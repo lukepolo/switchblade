@@ -20,6 +20,8 @@ Route::group(['middleware' => 'auth'], function()
 
     // For now we want them to always login
     Route::get('/', 'HomeController@index');
+
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 });
 
 // Restful Routes

@@ -20,6 +20,6 @@ class PageViewAPI extends RestController
             'time' => time()
 	]);
 
-	return \response()->json();
+	\App::abort(204);
     }
 }

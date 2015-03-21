@@ -1,0 +1,15 @@
+{
+    "name": "Tracer",
+    "alias": "tracer",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Tracer\\Providers\\TracerServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

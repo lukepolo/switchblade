@@ -11,6 +11,7 @@ class ModsAPI extends RestController
         // Based on their activated mods , grab the JS code to execute
         $mods[] = \Modules\Absplit\Http\Controllers\API\V1\AbsplitAPI::getCode();
         $mods[] = \Modules\Heatmap\Http\Controllers\API\V1\HeatmapAPI::getCode();
+        $mods[] = \Modules\Tracer\Http\Controllers\API\V1\TracerAPI::getCode();
 
         return response($mods);
     }
