@@ -10,14 +10,15 @@ temp = require('temp').track(),
 webshot = require('webshot'),
 fs = require('fs'),
 resemble = require('node-resemble-js'),
-app = express(),
+parse_url = require('url'),
 
 // 1 Hour
-cache_time = 3600 * 1000,
+cache_time = 3600,
 // %
 max_diff = 20,
 delay = 100,
 
+app = express(),
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
 
 // Initialize connection once and authenticate
@@ -66,6 +67,18 @@ app.get('/', function(req, res)
 	    }
 	]
     };
+    
+    if(req.query.width)
+    {
+	options.screenSize.width = req.query.width;
+    } 
+    
+    parsed_url = parse_url.parse(req.query.url);
+    // lets fix the req.query.url
+    if(parsed_url.hostname !== null)
+    {
+	req.query.url = parsed_url.hostname + parsed_url.path;
+    }
     
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined')

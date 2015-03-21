@@ -4,6 +4,8 @@ namespace Modules\Heatmap\Models\Mongo;
 
 class HeatmapUser extends \Moloquent
 {
+    use \App\Models\Traits\ByUser;
+
     protected $connection = 'mongodb';
 
     protected $guarded = ['_id'];

@@ -33,13 +33,13 @@
                 {
                     // Apend the JS to the end of the file
                     var data = JSON.parse(xhr.responseText);
-                    console.log(data);
                     data.forEach(function(command)
                     {
                         if(command)
                         {
                             // run what we need to get
-                            console.log(command);
+			    console.log(command.function);
+                            console.log(command.data);
                             try 
                             {
                                 swb_fn[command.function].apply(this,command.data);
@@ -126,6 +126,7 @@
     {
         var script_url = script_arguments.url;
         var script_callback = eval(script_arguments.callback);
+	
         // Adding the script tag to the head as suggested before
         var head = document.getElementsByTagName('head')[0];
         var script = document.createElement('script');
@@ -141,6 +142,10 @@
         head.appendChild(script);
     }
     
+    var apply_function = function(script_arguments)
+    {
+	eval(script_arguments.function);
+    }
     // All Functions Must Be Set Here 
     var swb_fn = 
     {
@@ -148,7 +153,8 @@
         auth: auth,
         pageview: pageview,
         absplit: absplit,
-        apply_script: apply_script
+        apply_script: apply_script,
+	apply_function: apply_function
     };
     
     init();
