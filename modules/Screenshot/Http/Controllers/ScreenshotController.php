@@ -19,14 +19,15 @@ class ScreenshotController extends Controller
 	// Unquie Screenshots
 	$screenshots = ScreenshotRevision::has('screenshots')->get();
 
+	$domain = Domain::first()->domain;
+
 	if($screenshots->count() == 0)
 	{
-	    $domain = Domain::first()->domain;
 	    return view('screenshot::dashboard', ['domain' => $domain]);
 	}
 	else
 	{
-	    return view('screenshot::dashboard', ['screenshots' => $screenshots]);
+	    return view('screenshot::dashboard', ['screenshots' => $screenshots, 'domain' => $domain]);
 	}
     }
 }

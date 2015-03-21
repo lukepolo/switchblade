@@ -4,6 +4,8 @@ namespace App\Models\Mongo;
 
 class Domain extends \Moloquent
 {
+    use \App\Models\Traits\ByUser;
+    
     protected $connection = 'mongodb';
 
     protected $guarded = ['_id'];

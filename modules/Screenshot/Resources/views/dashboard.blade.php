@@ -3,6 +3,7 @@
 @section('content')
     @if (isset($screenshots))
     <div class="row">
+	<pre class="text-center"><code>http://get.ketchurl.com/?apikey={{ \Auth::user()->api_key  }}&url={{ $domain }}</code></pre>
 	@foreach($screenshots as $screenshot)
 	    <div class="col-sm-3">
 		<div class="img-container">

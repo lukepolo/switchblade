@@ -3,7 +3,7 @@
     @if(isset($screenshot))
 	<h1>
 	    {{ \Request::get('url') }}
-	    <small class="pull-right">Total Points {{ $total_points }}</small>
+	    <small class="pull-right">{{ $total_points }} points by {{ $total_users }} users</small>
 	</h1>
 	<div id="img">
 	    <img class="img-responsive" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">

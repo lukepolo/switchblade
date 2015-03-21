@@ -13,7 +13,7 @@ class HeatmapController extends Controller
     {
 	return view('heatmap::index');
     }
-    
+
     public function getHeatmap()
     {
 	// Make sure its their domain!
@@ -51,7 +51,8 @@ class HeatmapController extends Controller
 		return view('heatmap::heatmap', [
 		    'screenshot' => $screenshot,
 		    'data' => json_encode($data),
-		    'total_points' => count($data)
+		    'total_points' => count($data),
+		    'total_users' => count($users)
 		]);
 	    }
 	}
