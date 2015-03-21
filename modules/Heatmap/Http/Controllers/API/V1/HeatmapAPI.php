@@ -26,16 +26,15 @@ class HeatmapAPI extends RestController
 
         $heatmap_user = HeatmapUser::create([
 	    'domain_id' => $domain->id,
-            'url' => $url,
+	    'user_id' => $user->id,
+            'url' => $url
 	]);
 
         // CUSTOM JS back to the user
         return array(
-            'function' => 'apply_script',
+            'function' => 'apply_function',
             'data' => array(
-                'url' => asset('assets/js/heatmap.min.js'),
-                'callback' => "callback = function()
-                {
+                'function' => "
                     var heat_data = new Array();
 		    var body = document.body,
 		    html = document.documentElement;
@@ -43,8 +42,6 @@ class HeatmapAPI extends RestController
 		    var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
 		    var width = Math.min(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 
-		    console.log(height);
-		    console.log(width);
                     document.querySelector('body').onmousemove = function(ev)
                     {
                         heat_data.push({
@@ -53,8 +50,6 @@ class HeatmapAPI extends RestController
                             width: width,
 			    height: height
                         });
-
-
 
                         if(heat_data.length >= 50)
                         {
@@ -70,7 +65,7 @@ class HeatmapAPI extends RestController
                             heat_data = new Array();
                         }
                     };
-                };"
+                "
             )
         );
     }

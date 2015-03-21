@@ -13,55 +13,60 @@ class HeatmapController extends Controller
     {
 	return view('heatmap::index');
     }
-
-    public function getDashboard()
+    
+    public function getHeatmap()
     {
-	$user = HeatmapUser::has('HeatmapPoints')
+	// Make sure its their domain!
+	$users = HeatmapUser::has('HeatmapPoints')
 	    ->with('HeatmapPoints')
-	    ->orderBy('created_at', 'desc')
-	    ->first();
+	    ->where('url', '=', \Request::get('url'))
+	    ->get();
 
-	if(empty($user) === false)
+	if(empty($users) === false)
 	{
-	    // since these were created in node we cannot use thenormal date time stuff
-	    $screenshot = ScreenshotRevision::where('url', '=', $user->url)
-		->where('created_at', '>=', strtotime($user->created_at))
+	    // get the most recent screenshot
+	    $screenshot = ScreenshotRevision::where('url', '=', \Request::get('url'))
+		->orderBy('created_at', 'desc')
 		->first();
 
 	    if(empty($screenshot) === true)
 	    {
-		// get the most recent screenshot
-		$screenshot = ScreenshotRevision::where('url', '=', $user->url)
-		    ->orderBy('created_at', 'desc')
-		    ->first();
-	    }
-
-	    if(empty($screenshot) === true)
-	    {
-		return view('heatmap::dashboard',[
+		return view('heatmap::heatmap',[
 		    'reason' => 'Screenshot Still Rendering'
 		]);
 	    }
 	    else
 	    {
 		$data = array();
-		foreach($user->HeatmapPoints as $HeatmapPoints)
+		foreach($users as $user)
 		{
-		    $data = array_merge($data, $HeatmapPoints->data);
+		    foreach($user->HeatmapPoints as $points)
+		    {
+			$data[] = ['reset' => true];
+			$data = array_merge($data, $points->data);
+		    }
 		}
 
 		// we are in test mode, just do this for now
-		return view('heatmap::dashboard', [
+		return view('heatmap::heatmap', [
 		    'screenshot' => $screenshot,
-		    'data' => json_encode($data)
+		    'data' => json_encode($data),
+		    'total_points' => count($data)
 		]);
 	    }
 	}
 	else
 	{
-	    return view('heatmap::dashboard',[
+	    return view('heatmap::heatmap',[
 		'reason' => 'You dont have any heap map users yet!'
 	    ]);
 	}
+    }
+
+    public function getDashboard()
+    {
+	$urls = HeatmapUser::Distinct('url')->get();
+
+	return view('heatmap::dashboard', ['urls' => $urls]);
     }
 }
