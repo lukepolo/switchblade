@@ -164,6 +164,7 @@ return [
 	'Jenssegers\Mongodb\MongodbServiceProvider',
 	'Irazasyed\LaravelGAMP\LaravelGAMPServiceProvider',
 	'Spatie\LaravelAnalytics\LaravelAnalyticsServiceProvider',
+        'Jenssegers\Agent\AgentServiceProvider',
 
 	/*
 	 * Custom Service Providers
@@ -235,6 +236,7 @@ return [
 	'Moloquent'       => 'Jenssegers\Mongodb\Model',
 	'GAMP'  => 'Irazasyed\LaravelGAMP\Facades\GAMP',
 	'LaravelAnalytics' => 'Spatie\LaravelAnalytics\LaravelAnalyticsFacade',
+        'Agent'            => 'Jenssegers\Agent\Facades\Agent',
 
 	/*
 	 * Custom Facades
@@ -245,6 +247,7 @@ return [
 	/*
 	 * Modules Facades
 	 */
-	'Screenshots' => 'Modules\Screenshot\Facades\Screenshots'
+	'Screenshots' => 'Modules\Screenshot\Facades\Screenshots',
+        'Tracer' => 'Modules\Tracer\Facades\Tracer'
     ],
 ];

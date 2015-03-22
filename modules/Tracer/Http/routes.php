@@ -26,5 +26,5 @@ Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modu
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'Modules\Tracer\Http\Controllers'], function()
 {
-    Route::resource('tracer/js', 'API\V1\JsAPI');
+    Route::resource('tracer', 'API\V1\TracerAPI');
 });

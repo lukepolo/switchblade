@@ -22,7 +22,7 @@ abstract class Controller extends BaseController
 	}
 
 	$gamp->setUserAgentOverride($_SERVER['HTTP_USER_AGENT']);
-	$gamp->setIpOverride($request->ip());
+	$gamp->setIpOverride(\Request::getClientIp(true));
 	$gamp->setDocumentPath(\Request::path());
 	$gamp->setAsyncRequest(true);
 	$gamp->sendPageview();

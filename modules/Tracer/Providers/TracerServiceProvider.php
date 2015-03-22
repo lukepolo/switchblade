@@ -20,7 +20,11 @@ class TracerServiceProvider extends ServiceProvider
      */
     public function register()
     {		
-    $this->registerConfig();
+        $this->app->bindShared('tracer', function()
+        {
+            return new \Modules\Tracer\Services\Tracer;
+        });
+        $this->registerConfig();
     }
 
     /**
@@ -45,6 +49,6 @@ class TracerServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array();
+        return array('tracer');
     }
 }

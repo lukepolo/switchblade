@@ -298,7 +298,8 @@
   // made by creating a temporary JavaScript `Image` object.
   function request(url, params) {
       
-    swb('send', 'api/v1/tracer/js', params);
+    params.type = 'js';
+    swb('send', 'api/v1/tracer', params);return;
       
 //    url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     return;

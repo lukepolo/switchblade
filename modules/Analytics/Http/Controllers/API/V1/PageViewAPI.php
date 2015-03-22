@@ -3,7 +3,6 @@
 namespace Modules\Analytics\Http\Controllers\API\V1;
 
 use \App\Http\Controllers\RestController;
-use \App\Models\Mongo\Domain;
 use  \Modules\Analytics\Models\Mongo\PageViews;
 
 class PageViewAPI extends RestController
@@ -11,8 +10,8 @@ class PageViewAPI extends RestController
     public function index()
     {
 	$user = \App::make('user');
-	$domain = \Domains::getDomain($user);
-
+	$domain = \Domains::get($_SERVER['HTTP_REFERER']);
+        
         PageViews::create([
 	    'domain_id' => $domain->id,
             'url' => $_SERVER['HTTP_REFERER'],

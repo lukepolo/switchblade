@@ -18,4 +18,16 @@ class TracerAPI extends RestController
             )
         );
     }
+    
+    public function index()
+    {
+        \Tracer::store(\Request::input());
+        \App::abort(204);
+    }
+    
+    public function store()
+    {
+        \Tracer::store(\Request::input());
+        return response()->status(200);
+    }
 }

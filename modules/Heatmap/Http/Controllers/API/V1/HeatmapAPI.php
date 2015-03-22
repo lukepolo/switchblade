@@ -10,7 +10,7 @@ class HeatmapAPI extends RestController
     public static function getCode()
     {
 	$user = \App::make('user');
-	$domain = \Domains::getDomain($user);
+	$domain = \Domains::get($_SERVER['HTTP_REFERER']);
 
 	// generate user image
 	\Screenshots::make($_SERVER['HTTP_REFERER'], $user);
