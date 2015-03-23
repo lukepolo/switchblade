@@ -44,7 +44,10 @@ elixir.extend('minify_js', function()
 	    paths.chartjs + 'Chart.js',
 	    paths.moment + 'moment.js',
 	    paths.js+ 'prettify/prettify.js',
-	    paths.js+ '**'
+	    paths.js+ '**',
+            // Don't include our scripts for outside switchblade!
+            '!'+paths.js+'switchblade',
+            '!'+paths.js+'switchblade/**'
 	],
 	{
 	    base: './'
@@ -54,7 +57,47 @@ elixir.extend('minify_js', function()
 	.pipe(uglify())
 	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest(paths.js_public));
-    });   
+
+        gulp.src([
+	    paths.js+ 'switchblade/*',
+	],
+	{
+	    base: './'
+	})
+	.pipe(concat('bladetrace.js')) 
+	.pipe(sourcemaps.init())
+	.pipe(uglify())
+	.pipe(sourcemaps.write('.'))
+	.pipe(gulp.dest(paths.js_public));
+
+
+        gulp.src([
+	    paths.js+ 'switchblade/blade.js',
+	],
+	{
+	    base: './'
+	})
+	.pipe(concat('blade.js')) 
+	.pipe(sourcemaps.init())
+	.pipe(uglify())
+	.pipe(sourcemaps.write('.'))
+	.pipe(gulp.dest(paths.js_public));
+
+
+        gulp.src([
+	    paths.js+ 'switchblade/_tracer.js',
+	],
+	{
+	    base: './'
+	})
+	.pipe(concat('tracer.js')) 
+	.pipe(sourcemaps.init())
+	.pipe(uglify())
+	.pipe(sourcemaps.write('.'))
+	.pipe(gulp.dest(paths.js_public));
+    }); 
+    
+    
     
     if(command == 'watch')
     {

@@ -14,7 +14,8 @@ class TracerAPI extends RestController
         return array(
             'function' => 'insert_script',
             'data' => array(
-                'url' => asset('assets/js/tracer.js')
+                'url' => asset('assets/js/tracer.js'),
+                'module' => 'tracer'
             )
         );
     }
