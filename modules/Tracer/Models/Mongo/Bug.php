@@ -15,7 +15,7 @@ class Bug extends \Moloquent
         return $this->hasOne('Modules\Tracer\Models\Mongo\BugHistory');
     }
     
-    public function browser()
+    public function browsers()
     {
         return $this->hasMany('Modules\Tracer\Models\Mongo\BugBrowser');
     }

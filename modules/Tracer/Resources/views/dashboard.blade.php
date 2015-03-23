@@ -12,7 +12,7 @@
 	</thead>
     <tbody>
 	@foreach ($bugs as $bug)
-	    <tr class="bug-{{ $bug->type }}">
+	    <tr class="bug bug-{{ $bug->type }}" data-id="{{ $bug->id }}">
 		<td>
 		    <p>{{ $bug->name }}</p>
 		    <p>{{ $bug->message }}</p>
@@ -25,4 +25,13 @@
         @endforeach
     </tbody>
   </table>
+<script>
+    $(document).ready(function()
+    {
+        $('tr.bug').click(function()
+        {
+            window.location.href = "{{ action('\Modules\Tracer\Http\Controllers\TracerController@getBug') }}/"+$(this).data('id');
+        });
+    });
+</script>
 @stop

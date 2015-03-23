@@ -4,6 +4,7 @@ namespace Modules\Tracer\Services;
 
 use Modules\Tracer\Models\Mongo\Bug;
 use Modules\Tracer\Models\Mongo\BugBrowser;
+use Modules\Tracer\Models\Mongo\BugBrowserVersion;
 use Modules\Tracer\Models\Mongo\BugHistory;
 
 use Modules\Tracer\Models\Mongo\BugUser;
@@ -17,11 +18,12 @@ class Tracer
         
         \Agent::setUserAgent($error['userAgent']);
         
-        $bug = Bug::with(['browser' => function($query)
+        $bug = Bug::with(['browsers' => function($query)
             {
-                $browser =  \Agent::browser();
-                $query->where('browser', '=', $browser)
-                    ->where('version', '=', \Agent::version($browser));
+                $query->where('browser', '=',  \Agent::browser())->with(['versions' => function($query)
+                {
+                    $query->where('version', '=', \Agent::version(\Agent::browser()));
+                }]);
             }])
             ->with('history')
             ->where('stacktrace', '=', $error['stacktrace'])
@@ -33,9 +35,13 @@ class Tracer
         }
         else
         {
-            if($bug->browser->count() == 0)
+            if($bug->browsers->count() == 0)
             {
                 Tracer::createBugBrowser($bug->id);
+            }
+            elseif($bug->browsers[0]->versions->count() == 0)
+            {
+                Tracer::createBugBrowserVersion($bug->browsers[0]->id, \Agent::version(\Agent::browser()));
             }
           
             $user = BugUser::where('ip', '=', \Request::getClientIp(true))
@@ -91,11 +97,19 @@ class Tracer
     
     public function createBugBrowser($bug_id)
     {
-        $browser =  \Agent::browser();
-        $bug_affected_browsers = BugBrowser::create([
+        $bug_browser = BugBrowser::create([
             'bug_id' => $bug_id,
-            'browser' => $browser,
-            'version' => \Agent::version($browser),
+            'browser' => \Agent::browser(),
+        ]);
+        
+        Tracer::createBugBrowserVersion($bug_browser->id, \Agent::version(\Agent::browser()));
+    }
+    
+    public function createBugBrowserVersion($browser_id, $version)
+    {
+        $bug_browser = BugBrowserVersion::create([
+            'bug_browser_id' => $browser_id,
+            'version' => $version
         ]);
     }
     

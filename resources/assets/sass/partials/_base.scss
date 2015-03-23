@@ -48,3 +48,11 @@ body {
 .bug-php {
     background-color: #cdbfe3;
 }
+
+.bug {
+    cursor: pointer;
+}
+
+.bug:hover {
+    background-color: darkcyan;
+}

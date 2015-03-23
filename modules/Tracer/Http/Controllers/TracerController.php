@@ -14,8 +14,21 @@ class TracerController extends Controller
     }
     public function getDashboard()
     {
-        $bugs = Bug::with('history')->with('browser')->get();
+        $bugs = Bug::with('history')
+            ->with('browsers')
+            ->get();
         
         return view('tracer::dashboard', ['bugs' => $bugs]);
+    }
+    
+    public function getBug($id)
+    {
+        $bug = Bug::where('_id', '=', $id)
+            ->with('history')
+            ->with('browsers')
+            ->with('browsers.versions')
+            ->first();
+                
+        return view('tracer::bug', ['bug' => $bug]);
     }
 }
