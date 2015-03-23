@@ -65,9 +65,7 @@ elixir.extend('minify_js', function()
 	    base: './'
 	})
 	.pipe(concat('bladetrace.js')) 
-	.pipe(sourcemaps.init())
 	.pipe(uglify())
-	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest(paths.js_public));
 
 
@@ -78,9 +76,7 @@ elixir.extend('minify_js', function()
 	    base: './'
 	})
 	.pipe(concat('blade.js')) 
-	.pipe(sourcemaps.init())
 	.pipe(uglify())
-	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest(paths.js_public));
 
 
@@ -91,9 +87,7 @@ elixir.extend('minify_js', function()
 	    base: './'
 	})
 	.pipe(concat('tracer.js')) 
-	.pipe(sourcemaps.init())
 	.pipe(uglify())
-	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest(paths.js_public));
     }); 
     

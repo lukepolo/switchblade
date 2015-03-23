@@ -7,6 +7,7 @@
 	    <th>Error</th>
 	    <th>Occurrences</th>
 	    <th>Unquie Users</th>
+            <th>Browsers</th>
 	    <th>Severity</th>
 	  </tr>
 	</thead>
@@ -20,6 +21,13 @@
 		</td>
 		<td>{{ $bug->history->occurences }}</td>
 		<td>{{ $bug->history->unique_users }}</td>
+                <td>
+                    @foreach($bug->browsers as $browser)
+                        <ul class="bug-browsers">
+                            <li><img src="{{ asset('/assets/img/browsers/'.strtolower($browser->browser).'.svg') }}"></li>
+                        </ul>
+                    @endforeach
+                </td>
 		<td>{{ $bug->severity }}</td>
 	    </tr>
         @endforeach
