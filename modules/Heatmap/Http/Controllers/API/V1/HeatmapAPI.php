@@ -10,7 +10,7 @@ class HeatmapAPI extends RestController
     public static function getCode()
     {
 	$user = \App::make('user');
-	$domain = \Domains::getDomain($user);
+	$domain = \Domains::get($_SERVER['HTTP_REFERER']);
 
 	// generate user image
 	\Screenshots::make($_SERVER['HTTP_REFERER'], $user);
@@ -53,15 +53,14 @@ class HeatmapAPI extends RestController
 
                         if(heat_data.length >= 50)
                         {
-                            $.ajax({
-                                type: 'POST',
-                                url: '".url('api/v1/heatmap/point')."',
-                                data: {
-                                    key:'".\Request::input('key')."',
-                                    point_data: heat_data,
-                                    user: '".$heatmap_user->id."'
-                                }
-                            });
+                            data = {
+                                key:'".\Request::input('key')."',
+                                point_data: heat_data,
+                                user: '".$heatmap_user->id."'
+                            }
+                                
+                            swb('send', 'api/v1/heatmap/point', data);
+                            
                             heat_data = new Array();
                         }
                     };

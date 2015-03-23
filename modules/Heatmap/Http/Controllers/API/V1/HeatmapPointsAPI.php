@@ -8,7 +8,7 @@ use Modules\Heatmap\Models\Mongo\HeatmapPoint;
 
 class HeatmapPointsAPI extends RestController
 {
-    public function store()
+    public function index()
     {
 	$user = \App::make('user');
 
@@ -17,6 +17,6 @@ class HeatmapPointsAPI extends RestController
             'data' => \Request::input('point_data')
 	]);
 
-	return response()->json();
+	\App::abort(204);
     }
 }

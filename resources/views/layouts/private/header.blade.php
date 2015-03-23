@@ -37,15 +37,9 @@
 			</a>
 		    </li>
 		    <li>
-			<a href="#">
-			    <i class="fa fa-dashboard"></i>
-			    Pinger
-			</a>
-		    </li>
-		    <li>
-			<a href="#">
+			<a href="{{ action('\Modules\Tracer\Http\Controllers\TracerController@getDashboard') }}">
 			    <i class="fa fa-exclamation"></i>
-			    Error Reporting
+			    Tracer
 			</a>
 		    </li>
 		    <li>
