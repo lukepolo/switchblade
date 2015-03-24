@@ -15,7 +15,7 @@ parse_url = require('url'),
 // 1 Hour
 cache_time = 3600,
 // %
-max_diff = 20,
+max_diff = 10,
 delay = 100,
 
 app = express(),
@@ -45,6 +45,14 @@ app.use(auth);
 
 app.get('/', function(req, res) 
 {
+    
+    parsed_url = parse_url.parse(req.query.url);
+    
+    if (!parsed_url.scheme)
+    {
+        parsed_url = parse_url.parse('http://'+req.query.url);
+    }
+    
     var options = 
     {
 	screenSize: {
@@ -63,7 +71,7 @@ app.get('/', function(req, res)
 		name: 'ketchurl',
 		value: req.secret_key,
 		path: '/',
-		domain: '.switchblade.io'
+		domain: '.'+parsed_url.hostname
 	    }
 	]
     };
@@ -73,12 +81,8 @@ app.get('/', function(req, res)
 	options.screenSize.width = req.query.width;
     } 
     
-    parsed_url = parse_url.parse(req.query.url);
     // lets fix the req.query.url
-    if(parsed_url.hostname !== null)
-    {
-	req.query.url = parsed_url.hostname + parsed_url.path;
-    }
+    req.query.url = parsed_url.hostname + parsed_url.path;
     
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined')

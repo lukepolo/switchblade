@@ -15,7 +15,6 @@ class Tracer
 {
     public function store($error)
     {
-        
         \Agent::setUserAgent($error['userAgent']);
         
         $bug = Bug::with(['browsers' => function($query)
@@ -26,7 +25,9 @@ class Tracer
                 }]);
             }])
             ->with('history')
-            ->where('stacktrace', '=', $error['stacktrace'])
+            ->where('url', '=', $error['url'])
+            ->where('file', '=', $error['file'])
+            ->where('lineNumber', '=', $error['lineNumber'])
             ->first();
         
         if(empty($bug) === true)
