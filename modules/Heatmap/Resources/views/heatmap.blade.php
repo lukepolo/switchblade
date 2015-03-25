@@ -3,8 +3,9 @@
     @if(isset($screenshot))
 	<h1>
 	    {{ \Request::get('url') }}
-	    <small class="pull-right">{{ $total_points }} points by {{ $total_users }} users</small>
+            <small class="pull-right"><span id="total_points" data-points="{{ $total_points }}">{{ $total_points }}</span> points by {{ $total_users }} users</small>
 	</h1>
+        <br>
 	<div id="img">
 	    <img class="img-responsive" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">
 	</div>
@@ -13,6 +14,12 @@
 	    var heatmap_data = {!! $data !!};
 	    var heatmapInstance;
 	    var img_loaded = false;
+            
+            var image_width;
+            var image_natural_width;
+            var image_natural_height;
+            var image_height;
+                
 	    $('#img img').load(function()
 	    {
 		img_loaded = true;
@@ -34,16 +41,14 @@
 
 	    function render_heatmap()
 	    {
-		var image_width = $('#img img').width();
-		var image_natural_width = $('#img img')[0].naturalWidth;
-		var image_natural_height = $('#img img')[0].naturalHeight;
-		var image_height = $('#img img').height();
-
-		var distance_to_middle_img = image_width / 2;
-
-		console.log('Img Natural Height: '+image_natural_height);
-		console.log('Img Natural Width: '+image_natural_width);
-		console.log(image_width);
+                image_width = $('#img img').width();
+		image_width_natural = $('#img img')[0].naturalWidth;
+                image_width_ratio = image_width / image_width_natural
+                image_half_width = (image_width / 2) / image_width_ratio;
+                
+                image_height = $('#img img').height();
+		image_height_natural = $('#img img')[0].naturalHeight;
+                image_height_ratio = image_height / image_height_natural;
 
 		heatmapInstance = h337.create({
 		container: $('#img')[0],
@@ -52,30 +57,36 @@
 
 		$(heatmap_data).each(function(index, point)
 		{
-		    if(point.reset)
-		    {
-			count = 1;
-		    }
-		    else
-		    {
-			// we gotta do some math now
-			point.x =  point.x * (point.width / image_natural_width) - (point.width - image_natural_width) / 2;
-			point.x =  image_width * (point.x / point.width);
-
-			point.y =  point.y * (point.height / image_natural_height) - (point.height - image_natural_height);
-			point.y = image_height * (point.y / point.height);
-
-			if(point.x <= image_width)
-			{
-			    heatmapInstance.addData({
-				x: point.x,
-				y: point.y,
-				value: count++
-			    });
-			}
-		    }
+                    add_data(point);
 		});
 	    }
+            
+            function add_data(point)
+            {
+                // we gotta do some math now
+                point.x = (image_half_width - ((point.width / 2) - point.x)) * image_width_ratio;
+                        
+                point.y = image_height * (point.y / point.height);
+                
+                if(point.x >= 0 && point.x <= image_width)
+                {
+                    heatmapInstance.addData({
+                        x: point.x,
+                        y: point.y,
+                        value: point.count
+                    });
+                }
+            }
+            
+            function add_realtime_data(data)
+            {
+                $(data).each(function(index, point)
+		{
+                    add_data(point);
+                    $('#total_points').data('points', $('#total_points').data('points') + 1);
+                    $('#total_points').html($('#total_points').data('points'));
+		});
+            }
 	</script>
 	<script src="{{ asset('assets/js/heatmap.min.js') }}"></script>
     @else

@@ -2,7 +2,7 @@
 
 namespace Modules\Heatmap\Models\Mongo;
 
-class HeatmapUser extends \Moloquent
+class HeatmapUrl extends \Moloquent
 {
     use \App\Models\Traits\ByUser;
 

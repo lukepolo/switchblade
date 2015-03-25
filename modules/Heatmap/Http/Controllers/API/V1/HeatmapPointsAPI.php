@@ -13,10 +13,16 @@ class HeatmapPointsAPI extends RestController
 	$user = \App::make('user');
 
         HeatmapPoint::create([
-	    'heatmap_user_id' => \Request::input('user'),
+	    'heatmap_url_id' => \Request::input('heatmap_url_id'),
             'data' => \Request::input('point_data')
 	]);
-
+        
+        \Emitter::apply_broadcast(
+            'add_realtime_data',
+            action('\Modules\Heatmap\Http\Controllers\HeatmapController@getMap', ['id' => \Request::input('heatmap_url_id')]),
+            \Request::input('point_data')
+        );
+        
 	\App::abort(204);
     }
 }

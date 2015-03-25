@@ -3,7 +3,7 @@ require('dotenv').config({
     path: base_path+'.env'
 });
 
-var port = process.env.SERVER_PORT,
+var port = process.env.NODE_SERVER_PORT,
 redis = require('redis'),
 redis_client = redis.createClient(),
 cookie = require('cookie'),
@@ -25,14 +25,17 @@ io = require('socket.io')(server)
 
 // Maintains a list of timeouts
 offline_timeout = {};
+
 // Maintains an active list of users
 users = {};
+locations = {};
 
 server.listen(port);
 
 // We need to make sure they have a session, otherwise they are not allowed to access node!
 io.use(function(socket, next) 
 {
+    console.log(next);
     // Get all the interfaces
     var interfaces = os.networkInterfaces();
     var addresses = [];
@@ -49,33 +52,42 @@ io.use(function(socket, next)
     }
   
     // Check to see if the request is coming from our server, via PHP
-    if(addresses.indexOf(socket.request.connection.remoteAddress) >= 0)
+    if(socket.request.connection.remoteAddress == '127.0.0.1' || addresses.indexOf(socket.request.connection.remoteAddress) >= 0)
     {
+        console.log('From Server');
         next();
     }
     else
     {
-        // Check in redis for the session
-        redis_client.get('switchblade:'+decryptCookie(cookie.parse(socket.request.headers.cookie).switchblade_rid), function(error, result)
+        if(typeof socket.request.headers.cookie != 'undefined')
         {
-            if (error)
+            // Check in redis for the session
+            redis_client.get('switchblade:'+decryptCookie(cookie.parse(socket.request.headers.cookie).switchblade_rid), function(error, result)
             {
-                console.log('ERROR');
-                next(new Error(error));
-            }
-            // They are authorized
-            else if (result)
-            {
-                console.log('LOGGED IN!');
-                next();
-            }
-            // Not authorized
-            else
-            {
-                console.log('Not Authorized');
-                next(new Error('Not Authorized'));
-            }
-        });
+                if (error)
+                {
+                    console.log('ERROR');
+                    next(new Error(error));
+                }
+                // They are authorized
+                else if (result)
+                {
+                    console.log('Logged In');
+                    next();
+                }
+                // Not authorized
+                else
+                {
+                    console.log('Not Authorized');
+                    next(new Error('Not Authorized'));
+                }
+            });
+        }
+        else
+        {
+            console.log('Not Authorized');
+            next(new Error('Not Authorized'));
+        }
     }
 });
 
@@ -86,13 +98,24 @@ io.on('connection', function (socket)
         // Clears the timeout for the user
         clearTimeout(offline_timeout[user_info.id]);
         
-        // Set the users name
-        socket.user_id = user_info.id;
-        
-        users[user_info.id] = {
-            socket_info: socket,
-            user_info : user_info
-        };
+        if(!users[user_info.id])
+        {
+            // Set the users name
+            socket.user_id = user_info.id;
+
+            users[user_info.id] = {
+                socket_info: socket,
+                first_name : user_info.first_name,
+                last_name : user_info.last_name,
+                location: user_info.location
+            };
+        }
+        else
+        {
+            socket.leave(users[user_info.id].location);
+            users[user_info.id].location = user_info.location;
+        }
+        socket.join(user_info.location);
     });
     
     socket.on('append', function(data)
@@ -118,22 +141,18 @@ io.on('connection', function (socket)
         }
         else
         {
-            if (user_ids == null)
-            {
-                console.log('broadcast');
-            }
-            else
-            {
-                if (users.hasOwnProperty(user_ids))
-                {
-                    users[user_ids].socket_info.emit('pull', {
-                        element: element,
-                        html: html,
-                        callback : callback,
-                    });
-                }
-            }
+            // Broadcast
         }
+    });
+    
+    
+    socket.on('apply_broadcast', function(data)
+    {
+        io.to(data['location']).emit('apply',
+        {
+            data: data['data'],
+            callback : data['function'],
+        });
     });
   
     socket.on('disconnect', function ()

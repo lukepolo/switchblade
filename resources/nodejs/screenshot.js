@@ -3,7 +3,7 @@ require('dotenv').config({
     path: base_path+'.env'
 });
 
-var port = process.env.SCREENSHOT_PORT,
+var port = process.env.NODE_SCREENSHOT_PORT,
 express = require('express'),
 mongoClient = require('mongodb').MongoClient,
 temp = require('temp').track(),

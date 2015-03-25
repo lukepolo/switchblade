@@ -3,7 +3,7 @@
 namespace Modules\Heatmap\Http\Controllers\API\V1;
 
 use \App\Http\Controllers\RestController;
-use Modules\Heatmap\Models\Mongo\HeatmapUser;
+use Modules\Heatmap\Models\Mongo\HeatmapUrl;
 
 class HeatmapAPI extends RestController
 {
@@ -24,12 +24,22 @@ class HeatmapAPI extends RestController
 
 	$url = $parsed_url['host'].$parsed_url['path'];
 
-        $heatmap_user = HeatmapUser::create([
-	    'domain_id' => $domain->id,
-	    'user_id' => $user->id,
-            'url' => $url
-	]);
-
+        $heatmap_url = HeatmapUrl::where('url', '=', $url)->first();
+        if(empty($heatmap_url))
+        {
+            $heatmap_url = HeatmapUrl::create([
+                'user_id' => $user->id,
+                'url' => $url,
+                'user_count' => 0
+            ]);
+        }
+        else
+        {
+            $heatmap_url->increment('user_count');
+            $heatmap_url->save();
+        }
+        
+        
         // CUSTOM JS back to the user
         return array(
             'function' => 'apply_function',
@@ -38,17 +48,16 @@ class HeatmapAPI extends RestController
                     var heat_data = new Array();
 		    var body = document.body,
 		    html = document.documentElement;
-
-		    var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-		    var width = Math.min(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
-
+                    var count = 1;
+                    
                     document.querySelector('body').onmousemove = function(ev)
                     {
+                        console.log(ev.x + window.scrollX);
                         heat_data.push({
                             x: ev.x + window.scrollX,
                             y: ev.y + window.scrollY,
-                            width: width,
-			    height: height
+                            width:  Math.min(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth),
+			    height:  Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight)
                         });
 
                         if(heat_data.length >= 50)
@@ -56,7 +65,8 @@ class HeatmapAPI extends RestController
                             data = {
                                 key:'".\Request::input('key')."',
                                 point_data: heat_data,
-                                user: '".$heatmap_user->id."'
+                                heatmap_url_id: '".$heatmap_url->id."',
+                                value: count++
                             }
                                 
                             swb('send', 'api/v1/heatmap/point', data);

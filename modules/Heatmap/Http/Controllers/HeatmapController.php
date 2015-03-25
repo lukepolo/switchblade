@@ -4,7 +4,8 @@ namespace Modules\Heatmap\Http\Controllers;
 
 use \App\Http\Controllers\Controller;
 
-use Modules\Heatmap\Models\Mongo\HeatmapUser;
+use Modules\Heatmap\Models\Mongo\HeatmapUrl;
+use Modules\Heatmap\Models\Mongo\HeatmapPoint;
 use Modules\Screenshot\Models\Mongo\ScreenshotRevision;
 
 class HeatmapController extends Controller
@@ -14,18 +15,18 @@ class HeatmapController extends Controller
 	return view('heatmap::index');
     }
 
-    public function getHeatmap()
+    public function getMap($id)
     {
+        $url = HeatmapUrl::where('_id', '=', $id)->first();
+        
 	// Make sure its their domain!
-	$users = HeatmapUser::has('HeatmapPoints')
-	    ->with('HeatmapPoints')
-	    ->where('url', '=', \Request::get('url'))
-	    ->get();
+	$heatmaps = HeatmapPoint::where('heatmap_url_id', '=', $id)
+            ->get();
 
-	if(empty($users) === false)
+	if(empty($url) === false)
 	{
 	    // get the most recent screenshot
-	    $screenshot = ScreenshotRevision::where('url', '=', \Request::get('url'))
+	    $screenshot = ScreenshotRevision::where('url', '=', $url->url)
 		->orderBy('created_at', 'desc')
 		->first();
 
@@ -38,13 +39,9 @@ class HeatmapController extends Controller
 	    else
 	    {
 		$data = array();
-		foreach($users as $user)
+		foreach($heatmaps as $heatmap)
 		{
-		    foreach($user->HeatmapPoints as $points)
-		    {
-			$data[] = ['reset' => true];
-			$data = array_merge($data, $points->data);
-		    }
+                    $data = array_merge($data, $heatmap->data);
 		}
 
 		// we are in test mode, just do this for now
@@ -52,7 +49,7 @@ class HeatmapController extends Controller
 		    'screenshot' => $screenshot,
 		    'data' => json_encode($data),
 		    'total_points' => count($data),
-		    'total_users' => count($users)
+		    'total_users' => $url->user_count
 		]);
 	    }
 	}
@@ -66,7 +63,7 @@ class HeatmapController extends Controller
 
     public function getDashboard()
     {
-	$urls = HeatmapUser::Distinct('url')->get();
+	$urls = HeatmapUrl::get();
 
 	return view('heatmap::dashboard', ['urls' => $urls]);
     }

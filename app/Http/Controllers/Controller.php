@@ -11,7 +11,7 @@ abstract class Controller extends BaseController
 {
     use DispatchesCommands, ValidatesRequests;
     public function __construct(Request $request)
-    {
+    { 
 	if(\Auth::check())
 	{
 	    $gamp = \GAMP::setClientId(\Auth::user()->id);
