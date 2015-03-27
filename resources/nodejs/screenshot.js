@@ -45,13 +45,15 @@ app.use(auth);
 
 app.get('/', function(req, res) 
 {
-    
     parsed_url = parse_url.parse(req.query.url);
     
-    if (!parsed_url.scheme)
+    // we need to add http on to it
+    if(parsed_url.protocol === null)
     {
-        parsed_url = parse_url.parse('http://'+req.query.url);
+	parsed_url = parse_url.parse('http://'+req.query.url);
     }
+    
+    req.query.url = parsed_url.hostname + parsed_url.path;
     
     var options = 
     {
@@ -80,9 +82,6 @@ app.get('/', function(req, res)
     {
 	options.screenSize.width = req.query.width;
     } 
-    
-    // lets fix the req.query.url
-    req.query.url = parsed_url.hostname + parsed_url.path;
     
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined')
