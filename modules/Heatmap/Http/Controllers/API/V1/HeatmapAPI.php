@@ -90,8 +90,8 @@ class HeatmapAPI extends RestController
 			    heatmap_url_id: '".$heatmap_url->id."',
 			    user_id: '".$heatmap_user->id."',
 			    click_data: {
-				x: ev.layerX,
-				y: ev.layerY,
+				x: ev.x + window.scrollX,
+				y: ev.y + window.scrollY,
 				width:  Math.min(swb_body.scrollWidth, swb_body.offsetWidth, swb_html.clientWidth, swb_html.scrollWidth, swb_html.offsetWidth),
 				height:  Math.max(swb_body.scrollHeight, swb_body.offsetHeight, swb_html.clientHeight, swb_html.scrollHeight, swb_html.offsetHeight),
 			    },
