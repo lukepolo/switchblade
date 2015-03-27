@@ -3,7 +3,6 @@
     var modules = {};
     var query_data = {};
     var base_url = "https://luke.switchblade.io/";
-//    console.log = function() {}
     
     function createCORSRequest(method, url) 
     {
@@ -41,7 +40,6 @@
                         if(command)
                         {
                             // run what we need to get
-			    console.log(command.function);
                             try 
                             {
                                 swb_fn[command.function].apply(this,command.data);
@@ -74,7 +72,6 @@
         catch(err)
         {
             console.log(err);
-            document.getElementsByTagName('html')[0].style.visibility= "";
         }
     }
         
@@ -136,15 +133,10 @@
             // Fire the loading
             head.appendChild(script);
         }
-        else
-        {
-            console.log('Already Loaded');
-        }
     }
     
     var apply_function = function(script_arguments)
     {
-        console.log(script_arguments);
 	eval(script_arguments.function);
     }
     

@@ -22,9 +22,9 @@ Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modu
     Route::controllers([
 	'/' => 'HeatmapController',
     ]);
-    
+
     Route::get('/heatmap/heatmap', array('after' => 'no-cache', 'uses' => 'HeatmapController@getHeatmap'));
-    
+
     Route::filter('no-cache', function($route, $request, $response)
     {
         $response->header("Cache-Control","no-cache,no-store, must-revalidate");
@@ -37,4 +37,5 @@ Route::group(['middleware' => 'auth' , 'prefix' => $prefix, 'namespace' => 'Modu
 Route::group(['prefix' => 'api/v1', 'namespace' => 'Modules\Heatmap\Http\Controllers'], function()
 {
     Route::resource('heatmap/point', 'API\V1\HeatmapPointsAPI');
+    Route::resource('heatmap/click', 'API\V1\HeatmapClicksAPI');
 });

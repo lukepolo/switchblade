@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Illuminate\Session\Middleware\StartSession as BaseStartSession;
 
-class VerifyCsrfToken extends BaseVerifier
+class StartSession extends BaseStartSession
 {
 
     /**
@@ -17,10 +17,9 @@ class VerifyCsrfToken extends BaseVerifier
      */
     public function handle($request, Closure $next)
     {
-	// TODO - JWT
 	if(\Request::has('api_key'))
 	{
-	    return $next($request);
+	    \Config::set('session.driver', 'array');
 	}
 	return parent::handle($request, $next);
     }

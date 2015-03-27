@@ -5,7 +5,9 @@ namespace Modules\Heatmap\Http\Controllers;
 use \App\Http\Controllers\Controller;
 
 use Modules\Heatmap\Models\Mongo\HeatmapUrl;
+use Modules\Heatmap\Models\Mongo\HeatmapUser;
 use Modules\Heatmap\Models\Mongo\HeatmapPoint;
+use Modules\Heatmap\Models\Mongo\HeatmapClick;
 use Modules\Screenshot\Models\Mongo\ScreenshotRevision;
 
 class HeatmapController extends Controller
@@ -17,16 +19,19 @@ class HeatmapController extends Controller
 
     public function getMap($id)
     {
-        $url = HeatmapUrl::where('_id', '=', $id)->first();
-        
+        $heatmap_url = HeatmapUrl::where('_id', '=', $id)->first();
+
 	// Make sure its their domain!
-	$heatmaps = HeatmapPoint::where('heatmap_url_id', '=', $id)
+	$points = HeatmapPoint::where('heatmap_url_id', '=', $id)
             ->get();
 
-	if(empty($url) === false)
+	$clicks = HeatmapClick::where('heatmap_url_id', '=', $id)
+	    ->get();
+
+	if(empty($heatmap_url) === false)
 	{
 	    // get the most recent screenshot
-	    $screenshot = ScreenshotRevision::where('url', '=', $url->url)
+	    $screenshot = ScreenshotRevision::where('url', '=', $heatmap_url->url)
 		->orderBy('created_at', 'desc')
 		->first();
 
@@ -38,18 +43,27 @@ class HeatmapController extends Controller
 	    }
 	    else
 	    {
-		$data = array();
-		foreach($heatmaps as $heatmap)
+		$point_data = array();
+		foreach($points as $point)
 		{
-                    $data = array_merge($data, $heatmap->data);
+                    $point_data = array_merge($point_data, $point->data);
 		}
 
-		// we are in test mode, just do this for now
+		$click_data = array();
+		foreach($clicks as $click)
+		{
+                    $click_data[] = $click->data;
+		}
+
+		$user_count = HeatmapUser::where('heatmap_url_id', '=', $heatmap_url->id)
+		    ->count();
+
 		return view('heatmap::heatmap', [
 		    'screenshot' => $screenshot,
-		    'data' => json_encode($data),
-		    'total_points' => count($data),
-		    'total_users' => $url->user_count
+		    'point_data' => json_encode($point_data),
+		    'click_data' => json_encode($click_data),
+		    'total_points' => count($point_data),
+		    'total_users' => $user_count
 		]);
 	    }
 	}

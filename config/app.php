@@ -148,6 +148,7 @@ return [
          *  Extened Service Providers
          */
         'App\Providers\HtmlServiceProvider',
+	'App\Providers\SessionServiceProvider',
 
 	/*
 	 * Laravel Packages...
