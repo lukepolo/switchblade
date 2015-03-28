@@ -3,7 +3,7 @@ require('dotenv').config({
     path: base_path+'.env'
 });
 
-var port = process.env.SCREENSHOT_PORT,
+var port = process.env.NODE_SCREENSHOT_PORT,
 express = require('express'),
 mongoClient = require('mongodb').MongoClient,
 temp = require('temp').track(),
@@ -15,7 +15,7 @@ parse_url = require('url'),
 // 1 Hour
 cache_time = 3600,
 // %
-max_diff = 20,
+max_diff = 10,
 delay = 100,
 
 app = express(),
@@ -45,6 +45,16 @@ app.use(auth);
 
 app.get('/', function(req, res) 
 {
+    parsed_url = parse_url.parse(req.query.url);
+    
+    // we need to add http on to it
+    if(parsed_url.protocol === null)
+    {
+	parsed_url = parse_url.parse('http://'+req.query.url);
+    }
+    
+    req.query.url = parsed_url.hostname + parsed_url.path;
+    
     var options = 
     {
 	screenSize: {
@@ -63,7 +73,7 @@ app.get('/', function(req, res)
 		name: 'ketchurl',
 		value: req.secret_key,
 		path: '/',
-		domain: '.switchblade.io'
+		domain: '.'+parsed_url.hostname
 	    }
 	]
     };
@@ -72,13 +82,6 @@ app.get('/', function(req, res)
     {
 	options.screenSize.width = req.query.width;
     } 
-    
-    parsed_url = parse_url.parse(req.query.url);
-    // lets fix the req.query.url
-    if(parsed_url.hostname !== null)
-    {
-	req.query.url = parsed_url.hostname + parsed_url.path;
-    }
     
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined')

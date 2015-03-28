@@ -44,12 +44,6 @@
 		    </li>
 		    <li>
 			<a href="#">
-			    <i class="fa fa-share-alt"></i>
-			    Shortener
-			</a>
-		    </li>
-		    <li>
-			<a href="#">
 			    <i class="fa fa-paper-plane"></i>
 			    Web Hooks
 			</a>

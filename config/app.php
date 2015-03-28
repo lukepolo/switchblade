@@ -148,6 +148,7 @@ return [
          *  Extened Service Providers
          */
         'App\Providers\HtmlServiceProvider',
+	'App\Providers\SessionServiceProvider',
 
 	/*
 	 * Laravel Packages...
@@ -170,7 +171,8 @@ return [
 	 * Custom Service Providers
 	 */
 	'App\Providers\SettingsServiceProvider',
-	'App\Providers\DomainsServiceProvider'
+	'App\Providers\DomainsServiceProvider',
+        'App\Providers\EmitterServiceProvider'
 
     ],
 
@@ -243,6 +245,7 @@ return [
 	 */
 	'Settings' => 'App\Facades\Settings',
 	'Domains' => 'App\Facades\Domains',
+        'Emitter' => 'App\Facades\Emitter',
 
 	/*
 	 * Modules Facades

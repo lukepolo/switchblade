@@ -7,13 +7,16 @@
                 localStorage.debug='socket.io-client:socket';
             }
         @endif
-    try {
-        var socket = io.connect('{{ url("/") }}:7777');
+        var socket = io.connect('{{ url("/") }}:{{ env("NODE_SERVER_PORT") }}');
+        
         var user_data = {
-            name: '{{ Auth::user()->first_name }}',
+            first_name: '{{ Auth::user()->first_name }}',
+            last_name: '{{ Auth::user()->last_name }}',
             id: '{{ Auth::user()->id }}',
+            location: "{{ \Request::url() }}"
         }
         socket.emit('user_info', user_data);
+        
         socket.on('pull', function(data)
         {
             console.log('PULLING');
@@ -28,9 +31,16 @@
                 }
             }
         });
-    }
-    catch(e)
-    {
-        console.log('Node is down!');
-    }
+        
+        socket.on('apply', function(data)
+        {
+            console.log('Applying Function');
+            console.log(data);
+            
+            var fn = window[data.callback];
+            if (typeof fn === "function")
+            {
+                fn(data.data);
+            }
+        });
 </script>

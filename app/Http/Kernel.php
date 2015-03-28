@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
 	'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 	'Illuminate\Cookie\Middleware\EncryptCookies',
 	'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
-	'Illuminate\Session\Middleware\StartSession',
+	'App\Http\Middleware\StartSession',
 	'Illuminate\View\Middleware\ShareErrorsFromSession',
 	'App\Http\Middleware\VerifyCsrfToken'
     ];

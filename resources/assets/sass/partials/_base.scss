@@ -48,3 +48,19 @@ body {
 .bug-php {
     background-color: #cdbfe3;
 }
+
+.bug {
+    cursor: pointer;
+}
+
+.bug:hover {
+    background-color: darkcyan;
+}
+.bug-browsers {
+    list-style: none;
+    padding-left: 0px;
+}
+
+.bug-browsers img {
+    width: 20px;
+}
