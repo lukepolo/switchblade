@@ -62,7 +62,7 @@ class HeatmapController extends Controller
 		    'screenshot' => $screenshot,
 		    'point_data' => json_encode($point_data),
 		    'click_data' => json_encode($click_data),
-		    'total_points' => count($point_data),
+		    'total_points' => count($point_data) + count($click_data),
 		    'total_users' => $user_count
 		]);
 	    }

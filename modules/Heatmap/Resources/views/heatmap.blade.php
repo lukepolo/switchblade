@@ -76,7 +76,7 @@
                 // we gotta do some math now
                 point.x = (image_half_width - ((point.width / 2) - point.x)) * image_width_ratio;
 
-		point.y = point.y * image_height_ratio
+		point.y = point.y * image_height_ratio;
 
                 if(point.x >= 0 && point.x <= image_width)
                 {
