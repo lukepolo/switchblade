@@ -1,0 +1,124 @@
+// FORM STYLES =============================================
+// =========================================================
+$form-background-color: $grayLight;
+$form-border: 2px solid $white; //1px solid $gray;
+$form-padding: 10px;
+$form-label-size: 13px;
+
+$form-color: $red;
+ 
+
+// BASIC FORM STYLES ---------------------------------------
+// ---------------------------------------------------------
+
+// FORMS
+.form-control:focus { border-color: $form-color; @include box-shadow(inset 0 1px 1px rgba($black,.075),0 0 8px rgba($form-color,0.6)); }
+
+
+// BUTTONS
+.control {
+	.btn-submit { position: absolute; top: 0px; bottom: 0px; right: 0px; margin: 0px; width: 35%; 
+		.btn { display: block; height: 100%; @include border-radius(0px); border: none; background-color: $red; color: $white; line-height: 40px; }
+		.btn:hover { background-color: darken($red, 5%); }
+	}
+	input { padding-right: 38%; }
+}
+.btn-submit { margin-top: 20px;
+	.btn { font-size: 1.3em; font-weight: 700; text-transform: uppercase; }
+}
+
+
+// FLOAT LABEL STYLES --------------------------------------
+// ---------------------------------------------------------
+.float-label {
+	.control {
+		background-color: $white; 
+		position: relative;
+		width: 100%;
+		border: $form-border;
+		margin-bottom: 15px;
+		padding: $form-padding;
+		padding-top: $form-padding + $form-label-size;
+	}
+  
+	input, textarea, .select, .k-datepicker {
+		display: block;
+		width: 100%;
+		border: 0;
+		outline: 0;
+		resize: none;
+    
+		// inactive but shown label (exceptions: opacity and top)
+	    & + label {
+			position: absolute;
+			top: 10px;
+			transition: top 0.7s ease, opacity 0.7s ease;
+			opacity: 0;
+			
+			// Some nice styling
+			font-size: $form-label-size;
+			font-weight: 600;
+			color: $gray;
+	    }
+	    
+		&.active + label {
+			opacity: 1;
+			top: 3px;
+		}
+
+		// and we highlight the focused input label
+		&:focus + label, 
+		&.active.focus + label {
+			color: $form-color;
+		}
+	}
+}
+
+
+
+// CUSTOM SELECT BOX STYLES --------------------------------
+// ---------------------------------------------------------
+$select-color: $form-color;
+$select-background: $white;
+$select-height: 27px; 
+
+
+.select { display: inline-block; font-size: 18px; color: $select-color; line-height: 25px; position: relative; height: $select-height; cursor: pointer; 
+	.select-hidden { display: none; visibility: hidden; padding-right: 10px; }
+	.select-styled { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-color: $select-background; color: #999; padding: 0px; @include transition(all 0.2s ease-in); 
+		&:after { content:""; border: 7px solid transparent; border-color: $select-color transparent transparent transparent; position: absolute; top: 10px; right: 10px; width: 0; height: 0; }
+		&:active, &.active { 
+	    	&:after { top: 0px; border-color: transparent transparent $select-color transparent; }
+    	}
+	}
+	.select-options { display: none; list-style: none; font-weight: 500; background-color: $select-background; border-top: none; border: 1px solid #CCC; box-shadow: 2px 5px 5px #CCC; margin: 0px 0px 0px -11px; padding: 0px;
+		position: absolute;	top: 100%; right: 0; left: 0; z-index: 999; max-height: 300px; overflow-y: scroll;
+		li { margin: 0px; padding: 12px 0px; text-indent: 15px; border-top: 1px solid darken($select-background, 10); @include transition(all 0.15s ease-in);
+			&:hover { color: $select-background; background: $select-color; }
+			&[rel="hide"] { display: none; }
+		}
+	}
+	.filled .select-styled { color: $textColor; }
+}
+
+
+
+
+// FORM ERROR STYLES ---------------------------------------
+// ---------------------------------------------------------
+.form { position: relative; 
+	.help-block { display: none; text-align: right; font-size: .9em; font-style: italic; color: $errorText; margin: -10px 10px 0px 0px; }
+	.control-error + .help-block { display: inherit; }
+	
+	.icon-cancel-circle { display: none; color: $errorText; position: absolute; bottom: 10px; right: 10px; }
+	.control-error { border-color: $errorText; 
+		label, input, input:valid + label, textarea:valid + label { color: $errorText; }
+		.icon-cancel-circle { display: inherit; }
+	}
+}
+
+
+
+
+
+

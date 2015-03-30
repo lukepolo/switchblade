@@ -141,7 +141,7 @@ elixir.extend('minify_img', function(command)
 {
     gulp.task('minify_img', function()
     {
-	gulp.src(paths.img+'*')
+	gulp.src(paths.img+'**')
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],

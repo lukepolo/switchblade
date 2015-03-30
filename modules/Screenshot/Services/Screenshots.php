@@ -6,11 +6,17 @@ class Screenshots
 {
     public function make($url, \App\Models\User $user)
     {
-	$query_data = http_build_query([
+	$query_options = [
 	    'apikey' => $user->api_key,
 	    'url' => $url
-	]);
-	$parsed_url = parse_url('http://get.ketchurl.com?'.$query_data);
+	];
+
+	foreach($options as $option => $value)
+	{
+	    $query_options[$option] = $value;
+	}
+
+	$parsed_url = parse_url('http://get.ketchurl.com?'.$query_options);
 
 	if(isset($parsed_url['path']) === false)
 	{
@@ -26,5 +32,32 @@ class Screenshots
 
 	fwrite($fp, $out);
 	fclose($fp);
+    }
+
+    public function get($url, \App\Models\User $user, $options = array())
+    {
+	$query_options = [
+	    'apikey' => $user->api_key,
+	    'url' => $url
+	];
+
+	foreach($options as $option => $value)
+	{
+	    $query_options[$option] = $value;
+	}
+
+	$url = 'http://get.ketchurl.com?'.http_build_query($query_options);
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+	// Fetch image data
+	$imageData = curl_exec($ch);
+
+	curl_close($ch);
+
+	// Encode returned data with base64
+	return response($imageData)->header('Content-Type', 'image/png');
     }
 }

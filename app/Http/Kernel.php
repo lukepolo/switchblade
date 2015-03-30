@@ -26,6 +26,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-	'auth' => 'App\Http\Middleware\Authenticate'
+	'auth' => 'App\Http\Middleware\Authenticate',
+	'screenshots' => '\Modules\Screenshot\Http\Middleware\ScreenshotTokens'
     ];
 }

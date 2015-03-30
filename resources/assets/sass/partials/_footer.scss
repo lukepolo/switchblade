@@ -1,0 +1,56 @@
+// FOOTER STYLES ===========================================
+// =========================================================
+#footer { font-size: .8em; background-color: $gray; border-top: 1px solid $gray;
+	.logo-container { text-align: center; margin: 15px 0px; 
+		.wp-logo { float: left; padding-left: 20px; display: none;
+			img { height: 75px; width: auto; }
+		}
+		.privo-logo, 
+		.evanced-logo { height: 40px; display: inline-block;
+			img { height: 100%; width: auto; }
+		}
+		
+	}
+	.footer-links { list-style: none; text-align: center; padding: 0px;
+		li { display: inline-block; }
+		li:first-child { padding-right: 10px; }
+		a { padding: 0px 10px; border-left: 1px solid $gray; }
+	}
+}
+
+
+
+
+// STICKY FOOTER -------------------------------------------
+// ---------------------------------------------------------
+$footerHeight: 100px; 
+
+html { 
+	position: relative; 
+	min-height: 100%; 
+}
+
+body { 
+	margin-bottom: $footerHeight; 
+}
+
+#footer { 
+	position: absolute; 
+	bottom: 0; 
+	width: 100%;
+	height: $footerHeight;
+}
+
+
+
+
+// RESPONSIVE FOOTER ---------------------------------------
+// ---------------------------------------------------------
+@media (max-width: 850px) {
+	body { margin-bottom: 0px; }
+	#footer { position: static; height: 100%; font-size: .65em;
+		.logo-container {
+			.evanced-logo { display: block; }
+		}
+	}	
+}

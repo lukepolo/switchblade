@@ -1,0 +1,25 @@
+// COVER SECTION STYLES ====================================
+// =========================================================
+
+.cover { position: relative; padding: 100px 100px 73px; 
+	@media (max-width: 767px) { padding-left: 20px; padding-right: 20px; }
+	
+	&#test { background-image: url('/assets/img/modules/ketchscreen/texture.jpg'); background-size: cover; background-position: center center;
+		&:before {content: "";
+		display: block;
+		background-color: rgba($green, .93);
+		position: absolute;
+		top: 0px; 
+		bottom: 0px; 
+		left: 0px; right: 0px; } 
+}
+	&#features { background-color: $gray; border-top: 20px solid $grayDark; }
+	&#compare { background-color: $white; }
+	&#pricing { background-color: green; }
+	&#signup { background-color: aqua; }
+}
+
+
+
+//  -------------------------------------
+// ---------------------------------------------------------

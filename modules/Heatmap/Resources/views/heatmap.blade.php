@@ -7,7 +7,7 @@
 	</h1>
         <br>
 	<div id="img">
-	    <img class="img-responsive" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">
+	    <img class="img-responsive" src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.png">
 	</div>
 
 	<script>
