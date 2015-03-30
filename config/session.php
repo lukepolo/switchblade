@@ -1,23 +1,23 @@
 <?php
 
-if(isset($_SERVER['SERVER_NAME']) === true)
+if($_SERVER['SERVER_NAME'])
 {
-    $session_domain = substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'], '.'));
-
-    if($session_domain == '.switchblade.io')
-    {
-	$secure = true;
-    }
-    else
-    {
-	$secure = false;
-    }
+    $domain = $_SERVER['SERVER_NAME'];
 }
 else
 {
-    $secure = true;
-    $session_domain = '.switchblade.io';
+    $domain = null;
 }
+
+if(isset($_SERVER['HTTPS']) === true)
+{
+    $secure = true;
+}
+else
+{
+    $secure = false;
+}
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -153,7 +153,7 @@ return [
     |
     */
 
-    'domain' => $session_domain,
+    'domain' => $domain,
 
     /*
     |--------------------------------------------------------------------------
