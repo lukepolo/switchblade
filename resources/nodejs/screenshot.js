@@ -35,7 +35,7 @@ mongoClient.connect('mongodb://@localhost:27017/'+process.env.MONGO_DB, function
 	{
 	    db = database;
 	    app.listen(port);
-	    console.log('Screenshots Started');
+	    console.log('Screenshots Started ON '+ port);
 	});
     }
 });
@@ -76,7 +76,7 @@ app.get('/', function(req, res)
 		domain: '.'+parsed_url.hostname
 	    }
 	],
-	userAgent : req.query.mobile ? req.query.agent : 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
+	userAgent : req.query.mobile ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) Version/5.1' : 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/534.34 (KHTML, like Gecko) Firefox/31.0 Safari/534.34'
     };
     
     // if we do not pass cache false, then we assume they want a cache

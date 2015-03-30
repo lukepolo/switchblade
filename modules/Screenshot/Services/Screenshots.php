@@ -16,7 +16,7 @@ class Screenshots
 	    $query_options[$option] = $value;
 	}
 
-	$parsed_url = parse_url('http://get.ketchurl.com?'.$query_options);
+	$parsed_url = parse_url(env('SCREENSHOT_CAPTURE_URL').'?'.$query_options);
 
 	if(isset($parsed_url['path']) === false)
 	{
@@ -46,7 +46,7 @@ class Screenshots
 	    $query_options[$option] = $value;
 	}
 
-	$url = 'http://get.ketchurl.com?'.http_build_query($query_options);
+	$url = env('SCREENSHOT_CAPTURE_URL').'?'.http_build_query($query_options);
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
