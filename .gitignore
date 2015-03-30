@@ -25,3 +25,5 @@ public/img/profile_images
 public/assets/img/screenshots
 # Sass Files
 .sass-cache
+
+node_modules
