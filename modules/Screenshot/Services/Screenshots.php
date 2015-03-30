@@ -4,7 +4,7 @@ namespace Modules\Screenshot\Services;
 
 class Screenshots
 {
-    public function make($url, \App\Models\User $user)
+    public function make($url, \App\Models\User $user, $options = array())
     {
 	$query_options = [
 	    'apikey' => $user->api_key,
@@ -16,7 +16,7 @@ class Screenshots
 	    $query_options[$option] = $value;
 	}
 
-	$parsed_url = parse_url(env('SCREENSHOT_CAPTURE_URL').'?'.$query_options);
+	$parsed_url = parse_url(env('SCREENSHOT_CAPTURE_URL').'?'.http_build_query($query_options));
 
 	if(isset($parsed_url['path']) === false)
 	{
