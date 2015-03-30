@@ -34,7 +34,7 @@ mongoClient.connect('mongodb://@localhost:27017/'+process.env.MONGO_DB, function
 	.authenticate(process.env.DB_USER, process.env.MONGO_PASS, function(err, result)
 	{
 	    db = database;
-	    app.listen(7778);
+	    app.listen(port);
 	    console.log('Screenshots Started');
 	});
     }
