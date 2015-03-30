@@ -1,0 +1,37 @@
+// VARIABLES ===============================================
+// =========================================================
+
+// COLORS --------------------------------------------------
+// ---------------------------------------------------------
+$white: 			#FFFFFF;
+$black: 			#000000;
+
+$gray:				#999290;
+$grayLight: 		rgba($gray, .3);
+$grayDark:			darken($gray, 45%);
+
+$green:				#A1CC68;
+$red: 				#CC6C54;
+$orange:			#FAA71B;
+$purple:			#A87CB7;
+$blue: blue; 
+
+// Text Colors --
+$textColor: 		$grayDark;
+$headingColor: 		$gray;
+$linkColor: 		darken($purple, 20%);  
+
+$errorText:			#B94A48;
+$errorBackground: 	#F2DEDE;
+
+
+
+// FONTS ---------------------------------------------------
+// ---------------------------------------------------------
+@import 'fonts';
+$bodyFont: 			'Slabo 27px', serif; //'Lato', Helvetica Neue, Helvetica, sans-serif;
+$headingFont: 		'Lato', Helvetica Neue, Helvetica, sans-serif;
+$iconFont: 			'icomoon';
+
+
+

@@ -1,0 +1,127 @@
+// FONT & ICON STYLES ======================================
+// =========================================================
+
+// SLABO ---------------------------------------------------
+// ---------------------------------------------------------
+@import url(http://fonts.googleapis.com/css?family=Slabo+27px);
+
+
+// LATO ----------------------------------------------------
+// ---------------------------------------------------------
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic);
+
+
+// ICOMOON -------------------------------------------------
+// ---------------------------------------------------------
+@font-face {
+	font-family: 'icomoon';
+	src:url('../fonts/icomoon.eot?r44u78');
+	src:url('../fonts/icomoon.eot?#iefixr44u78') format('embedded-opentype'),
+		url('../fonts/icomoon.woff?r44u78') format('woff'),
+		url('../fonts/icomoon.ttf?r44u78') format('truetype'),
+		url('../fonts/icomoon.svg?r44u78#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-checkbox-unchecked:before {
+	content: "\e612";
+}
+
+.icon-checkbox-checked:before {
+	content: "\e611";
+}
+
+.icon-pencil-circle:before {
+	content: "\e60b";
+}
+
+.icon-minus-circle:before {
+	content: "\e609";
+}
+
+.icon-plus-circle:before {
+	content: "\e60a";
+}
+
+.icon-image:before {
+	content: "\e60f";
+}
+
+.icon-calendar:before {
+	content: "\e610";
+}
+
+.icon-spinner:before {
+	content: "\e608";
+}
+
+.icon-cog:before {
+	content: "\e607";
+}
+
+.icon-info:before {
+	content: "\e600";
+}
+
+.icon-cancel-circle:before {
+	content: "\e601";
+}
+
+.icon-checkmark-circle:before {
+	content: "\e602";
+}
+
+.icon-arrow-up:before {
+	content: "\e603";
+}
+
+.icon-arrow-right:before {
+	content: "\e604";
+}
+
+.icon-arrow-down:before {
+	content: "\e605";
+}
+
+.icon-arrow-left:before {
+	content: "\e606";
+}
+
+.icon-radio-checked:before {
+	content: "\e60c";
+}
+
+.icon-radio-unchecked:before {
+	content: "\e60d";
+}
+
+.icon-googleplus:before {
+	content: "\e613";
+}
+
+.icon-facebook:before {
+	content: "\e614";
+}
+
+.icon-twitter:before {
+	content: "\e615";
+}
+
+.icon-share:before {
+	content: "\e60e";
+}

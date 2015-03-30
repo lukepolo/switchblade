@@ -1,0 +1,48 @@
+// MODAL STYLES ============================================
+// =========================================================
+.modal { 
+	.modal-header { border-bottom: none; }
+	.modal-title { text-align: center; margin-top: 30px; }
+	.modal-body { max-height: 400px; overflow-y: auto; @media (max-width: 767px) { max-height: 250px; } }
+	.close { color: $gray; opacity: 1; }
+	.modal-footer { text-align: center;
+		.btn { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding-left: 30px; padding-right: 30px; }
+	}
+}
+
+
+
+// CONFIRMATION MODALS -------------------------------------
+// ---------------------------------------------------------
+.add-message { text-align: center; height: 230px; background-image: url('../img/message-clock.png'); background-position: center center; background-repeat: no-repeat; padding-top: 40px; color: $gray;
+	.message { font-size: 3em; font-weight: 700; @include text-shadow(2px 2px 2px $white); line-height: 1em; }
+	[class^="icon-"], [class*=" icon-"] { font-size: 2em; }
+}
+
+#home .add-message.minutes { background-image: url('../img/message_clock_purple.png'); } 
+#books .add-message.minutes { background-image: url('../img/message_clock_orange.png'); }
+
+#home .add-message.books { background-image: url('../img/message_books_purple.png'); } 
+#books .add-message.books { background-image: url('../img/message_books_orange.png'); }
+
+#home .add-message.pages { background-image: url('../img/message_pages_purple.png'); } 
+#books .add-message.pages { background-image: url('../img/message_pages_orange.png'); }
+
+
+
+// SHARE SECTION -------------------------------------------
+// ---------------------------------------------------------
+.dropdown.share { float: right; 
+	.share-container h5 { margin-top: 0px; }
+	.dropdown-menu { right: 0px; left: auto; }
+	.share-container { text-align: center; }
+}
+
+.share-container {
+	[class^="icon-"], [class*=" icon-"] { font-size: 1.6em; color: $gray; margin: 5px; }
+	a:hover { text-decoration: none; 
+		.icon-facebook { color: #3B5998; }
+		.icon-twitter { color: #00ACED; }
+		.icon-googleplus { color: #DD4B39; }
+	}
+}

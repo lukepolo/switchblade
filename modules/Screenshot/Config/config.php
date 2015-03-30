@@ -1,5 +1,6 @@
 <?php
 
 return [
-	'name' => 'Screenshot'
+    'name' => 'Screenshot',
+    
 ];

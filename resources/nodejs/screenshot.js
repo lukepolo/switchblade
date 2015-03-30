@@ -16,7 +16,6 @@ parse_url = require('url'),
 cache_time = 3600,
 // %
 max_diff = 10,
-delay = 100,
 
 app = express(),
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
@@ -57,17 +56,18 @@ app.get('/', function(req, res)
     
     var options = 
     {
-	screenSize: {
-	    width: 1500
+	windowSize: {
+	    width: req.query.width ? req.query.width: 1500
 	},
         shotSize: {
-            height: 'all',
-            quality : 85
+            height: req.query.height ? req.query.height : 'all',
+//            quality : 75 -- To use needs to be jpg, issue is that resemble doesn't like JPG's so we will need to change what we are doing there
         },
-        renderDelay: !req.query.delay ? delay : req.query.delay,
+        renderDelay: req.query.delay ? req.query.delay : 100,
 	phantomConfig: {
 	    'ignore-ssl-errors': 'true'
 	},
+	streamType: req.query.type ? req.query.type : 'png',
 	cookies: [
 	    {
 		name: 'ketchurl',
@@ -75,13 +75,9 @@ app.get('/', function(req, res)
 		path: '/',
 		domain: '.'+parsed_url.hostname
 	    }
-	]
+	],
+	userAgent : req.query.mobile ? req.query.agent : 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
     };
-    
-    if(req.query.width)
-    {
-	options.screenSize.width = req.query.width;
-    } 
     
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined')
@@ -158,7 +154,7 @@ function getScreenshot(user_id, url, options, res)
 		res.end();
 		if(image_data)
 		{
-		    checkScreenShot(user_id, url, image_data);
+		    checkScreenShot(user_id, url, options, image_data);
 		}
 		else
 		{
@@ -174,12 +170,15 @@ function getScreenshot(user_id, url, options, res)
     });
 }
 
-function checkScreenShot(user_id, url, image_data)
+function checkScreenShot(user_id, url, options, image_data)
 {
     // get the domain
     db.collection('screenshot_revisions')
     .find({
-	url: url
+	url: url,
+	width : options.windowSize.width,
+	height: options.shotSize.height,
+	agent : options.userAgent
     }).sort({
 	created_at:-1
     })
@@ -190,13 +189,13 @@ function checkScreenShot(user_id, url, image_data)
         {
 	    if(typeof screenshot_revision[0] === 'undefined')
             {
-                createScreenShotRevision(user_id, url, image_data);
+                createScreenShotRevision(user_id, url, options, image_data);
             }
             else
             {
 		console.log('Now Check to see how simliar they are, otherwise create a revision');
 		
-		temp.open({suffix: '.jpg'}, function(err, file)
+		temp.open({suffix: '.png'}, function(err, file)
 		{
 		    console.log(file.path);
 		    if (!err) 
@@ -206,20 +205,20 @@ function checkScreenShot(user_id, url, image_data)
 			{
 			    if(!err)
 			    {
-				resemble(file.path).compareTo(screenshot_folder+screenshot_revision[0]._id+'.jpg')
+				resemble(file.path).compareTo(screenshot_folder+screenshot_revision[0]._id+'.png')
 				.onComplete(function(data)
 				{
 				    temp.cleanup();
 				    console.log(data.misMatchPercentage);
 				    if(data.misMatchPercentage > max_diff)
 				    {
-					createScreenShotRevision(user_id, url, image_data);
+					createScreenShotRevision(user_id, url, options, image_data);
 				    }
 				    else
 				    {
 					// Update Cache Time
 					updateCache(screenshot_revision[0]._id);
-					createScreenShot(user_id, url, screenshot_revision[0]._id);
+					createScreenShot(user_id, url, options, screenshot_revision[0]._id);
 				    }
 				});
 			    }
@@ -245,7 +244,7 @@ function checkScreenShot(user_id, url, image_data)
 }
 
 // Update the screenshot to the correct image path
-function createScreenShot(user_id, url, screenshot_revision_id)
+function createScreenShot(user_id, url, options, screenshot_revision_id)
 {
     console.log(screenshot_revision_id);
     // Start the screenshot object
@@ -254,6 +253,9 @@ function createScreenShot(user_id, url, screenshot_revision_id)
 	user_id : user_id,
 	url: url,
 	screenshot_revision_id: screenshot_revision_id.toString(),
+	width : options.windowSize.width,
+	height: options.shotSize.height,
+	agent : options.userAgent,
 	created_at: Date.now() / 1000 | 0
     },
     function(err)
@@ -266,13 +268,16 @@ function createScreenShot(user_id, url, screenshot_revision_id)
     });
 }
 
-function createScreenShotRevision(user_id, url, image_data)
+function createScreenShotRevision(user_id, url, options, image_data)
 {
     console.log('Creating new revision');
     // Create a new record for the screenshot with the path
     db.collection('screenshot_revisions')
     .insert({
 	url: url,
+	width : options.windowSize.width,
+	height: options.shotSize.height,
+	agent : options.userAgent,
 	created_at: Date.now() / 1000 | 0,
 	cache_time: Date.now() / 1000 | 0
     },
@@ -281,8 +286,8 @@ function createScreenShotRevision(user_id, url, image_data)
 	// screenshot_revision , assumes its an array since we can do more than 1 insert at a time
 	if(!err)
 	{
-	    createScreenShot(user_id, url, screenshot_revision[0]._id);
-	    fs.writeFile(screenshot_folder + screenshot_revision[0]._id + '.jpg', image_data, 'binary', function (err) 
+	    createScreenShot(user_id, url, options, screenshot_revision[0]._id);
+	    fs.writeFile(screenshot_folder + screenshot_revision[0]._id + '.png', image_data, 'binary', function (err) 
 	    {
 		if (err) 
 		{
@@ -290,7 +295,7 @@ function createScreenShotRevision(user_id, url, image_data)
 		}
 		else
 		{
-		    console.log('File Created ' + screenshot_revision[0]._id + '.jpg');
+		    console.log('File Created ' + screenshot_revision[0]._id + '.png');
 		}
 	    });
 	}
@@ -303,13 +308,16 @@ function createScreenShotRevision(user_id, url, image_data)
 
 function getCachedVersion(user_id, url, options, res)
 {
-    // get the domain
+    // Find a revision with the same url, width, height and cached time is less than the cache_time
     db.collection('screenshot_revisions')
     .find({
 	url: url,
 	cache_time:{
 	    $gt: (Date.now() / 1000 | 0) - cache_time
-	}
+	},
+	width : options.windowSize.width,
+	height: options.shotSize.height,
+	agent : options.userAgent
     })
     .sort({
 	created_at:-1
@@ -327,7 +335,7 @@ function getCachedVersion(user_id, url, options, res)
 	    {
 		console.log('return cache!');
 		console.log();
-		fs.readFile(screenshot_folder + screenshot_revision[0]._id + '.jpg', function(err, data) 
+		fs.readFile(screenshot_folder + screenshot_revision[0]._id + '.png', function(err, data) 
 		{
 		    res.end(data);
 		});

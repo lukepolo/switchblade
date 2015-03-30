@@ -1,4 +1,16 @@
 <?php
+
+$session_domain = substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'], '.'));
+
+if($session_domain == '.switchblade.io')
+{
+    $secure = true;
+}
+else
+{
+    $secure = false;
+}
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -134,7 +146,7 @@ return [
     |
     */
 
-    'domain' => '.switchblade.io',
+    'domain' => $session_domain,
 
     /*
     |--------------------------------------------------------------------------
@@ -147,5 +159,5 @@ return [
     |
     */
 
-    'secure' => true,
+    'secure' => $secure,
 ];

@@ -7,7 +7,7 @@
 	@foreach($screenshots as $screenshot)
 	    <div class="col-sm-3">
 		<div class="img-container">
-		    <img src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.jpg">
+		    <img src="{{ asset('assets/img/screenshots').'/'.$screenshot->id }}.png">
 		</div>
 	    </div>
 	@endforeach
