@@ -72,6 +72,7 @@ class Registrar implements RegistrarContract
 	}
 
 	$user->api_key = \Hash::make($user->id);
+	$user->secret_key = \Hash::make($user->api_key);
 	$user->save();
 
 	// add the api key to mongo
