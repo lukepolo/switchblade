@@ -63,7 +63,6 @@ class ScreenshotController extends Controller
 
 	return \Screenshots::get(\Request::get('url'), $user, [
 	    'width' => 600,
-	    'height' => 667,
 	    'delay' => 700
 	]);
     }
@@ -87,7 +86,6 @@ class ScreenshotController extends Controller
 
 	return \Screenshots::get(\Request::get('url'), $user, [
 	    'width' => 375,
-	    'height' => 667,
 	    'delay' => 700,
 	    'mobile' => true
 	]);
