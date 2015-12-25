@@ -331,7 +331,7 @@ function getCachedVersion(user_id, url, options, res)
 	{
 	    if(typeof screenshot_revision[0] === 'undefined')
 	    {
-		getScreenshot(user_id, url, options, res);
+		getScreenshot(user_id, url, options, false, res);
 	    }
 	    else
 	    {
