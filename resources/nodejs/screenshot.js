@@ -56,6 +56,8 @@ app.get('/', function(req, res)
     
     var options = 
     {
+        // fonts - apt-get install fontconfig libfontconfig-dev libfontenc-dev libfontenc1 libxfont-dev libxfont1 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic ttf-mscorefonts-installer libxext-dev libwayland-dev
+        // sudo apt-get install ttf-mscorefonts-installer
 	windowSize: {
 	    width: req.query.width ? req.query.width: 1500
 	},
@@ -86,7 +88,7 @@ app.get('/', function(req, res)
     }
     else
     {
-	getScreenshot(req.user_id, req.query.url, options, res);
+	getScreenshot(req.user_id, req.query.url, options, req.query.force ? true : false, res);
     }
 });
  
@@ -130,7 +132,7 @@ function auth(req, res, next)
     }
 };
 
-function getScreenshot(user_id, url, options, res)
+function getScreenshot(user_id, url, options, forceUpdate, res)
 {
     // Using the webshot API Libary create a stream
     webshot(url, options, function(err, renderStream) 
@@ -154,7 +156,7 @@ function getScreenshot(user_id, url, options, res)
 		res.end();
 		if(image_data)
 		{
-		    checkScreenShot(user_id, url, options, image_data);
+		    checkScreenShot(user_id, url, options, image_data, forceUpdate);
 		}
 		else
 		{
@@ -170,7 +172,7 @@ function getScreenshot(user_id, url, options, res)
     });
 }
 
-function checkScreenShot(user_id, url, options, image_data)
+function checkScreenShot(user_id, url, options, image_data, forceUpdate)
 {
     // get the domain
     db.collection('screenshot_revisions')
@@ -187,7 +189,7 @@ function checkScreenShot(user_id, url, options, image_data)
     {
         if(!err)
         {
-	    if(typeof screenshot_revision[0] === 'undefined')
+	    if(typeof screenshot_revision[0] === 'undefined' || forceUpdate)
             {
                 createScreenShotRevision(user_id, url, options, image_data);
             }
@@ -195,7 +197,8 @@ function checkScreenShot(user_id, url, options, image_data)
             {
 		console.log('Now Check to see how simliar they are, otherwise create a revision');
 		
-		temp.open({suffix: '.png'}, function(err, file)
+                
+                temp.open({suffix: '.png'}, function(err, file)
 		{
 		    console.log(file.path);
 		    if (!err) 
@@ -232,7 +235,6 @@ function checkScreenShot(user_id, url, options, image_data)
 		    {
 			console.log('ERROR : '+ err);
 		    }
-		  
 		});
             }
         }
@@ -286,8 +288,8 @@ function createScreenShotRevision(user_id, url, options, image_data)
 	// screenshot_revision , assumes its an array since we can do more than 1 insert at a time
 	if(!err)
 	{
-	    createScreenShot(user_id, url, options, screenshot_revision[0]._id);
-	    fs.writeFile(screenshot_folder + screenshot_revision[0]._id + '.png', image_data, 'binary', function (err) 
+	    createScreenShot(user_id, url, options, screenshot_revision.ops[0]._id);
+	    fs.writeFile(screenshot_folder + screenshot_revision.ops[0]._id + '.png', image_data, 'binary', function (err) 
 	    {
 		if (err) 
 		{
@@ -295,7 +297,7 @@ function createScreenShotRevision(user_id, url, options, image_data)
 		}
 		else
 		{
-		    console.log('File Created ' + screenshot_revision[0]._id + '.png');
+		    console.log('File Created ' + screenshot_revision.ops[0]._id + '.png');
 		}
 	    });
 	}

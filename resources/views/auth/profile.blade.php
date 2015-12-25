@@ -108,7 +108,7 @@
                 <pre class="prettyprint">
     <code class="language-js">
     &lt;script type="text/javascript">
-        (function(g,c,e,f,a){window[a]=function(){window[a].q.push(arguments)};window[a].q=[];b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//luke.switchblade.io/assets/js/blade.js","swb");
+        (function(g,c,e,f,a){window[a]=function(){window[a].q.push(arguments)};window[a].q=[];b=c.createElement(e);d=c.getElementsByTagName(e)[0];b.async=1;b.src=f;d.parentNode.insertBefore(b,d)})(window,document,"script","//switchblade.lukepolo.com/assets/js/blade.js","swb");
         swb('auth','{{ Auth::user()->api_key }}');
     &lt;/script></code>
                 </pre>

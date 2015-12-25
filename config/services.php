@@ -44,11 +44,11 @@ return [
     'google' => [
 	'client_id' => '528960278580-0ceodaa98qa4kqbrnfc7rd2k1460knv8.apps.googleusercontent.com',
 	'client_secret' => 'Ddf_LOsXtW7uB8U0JyozfZmP',
-	'redirect' => 'https://oauth.switchblade.io/auth/callback/google'
+	'redirect' => 'https://login.switchblade.lukepolo.com/auth/callback/google'
     ],
     'twitter' => [
 	'client_id' => 'DxbUf9Dn6KhUuPDqLvvfdMpD4',
 	'client_secret' => 'FCxCL6nRTgCveGVSbVosPEvY0CeX49EOrMOOrBet04yhz7QEfe',
-	'redirect' => $host.'/auth/callback/twitter'
+	'redirect' => 'https://login.switchblade.lukepolo.com/auth/callback/twitter'
     ]
 ];

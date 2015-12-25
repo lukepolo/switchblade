@@ -12,15 +12,12 @@ MCrypt = require('mcrypt').MCrypt,
 PHPUnserialize = require('php-unserialize'),
 
 // HTTPS
-https = require('https'),
 fs = require('fs'),
-options = {
-    key:    fs.readFileSync('/etc/ssl/switchblade.key'),
-    cert:   fs.readFileSync('/etc/ssl/switchblade.crt'),
-    ca:     fs.readFileSync('/etc/ssl/COMODORSADomainValidationSecureServerCA.crt')
-},
 
-server = require('https').createServer(options),
+server = require('https').createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/lukepolo.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/lukepolo.com/cert.pem')
+}),
 io = require('socket.io')(server)
 
 // Maintains a list of timeouts

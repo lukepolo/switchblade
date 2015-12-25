@@ -11,12 +11,7 @@ class Screenshots
 	    'url' => $url
 	];
 
-	foreach($options as $option => $value)
-	{
-	    $query_options[$option] = $value;
-	}
-
-	$parsed_url = parse_url(env('SCREENSHOT_CAPTURE_URL').'?'.$query_options);
+	$parsed_url = parse_url(env('SCREENSHOT_CAPTURE_URL').'?'.http_build_query($query_options));
 
 	if(isset($parsed_url['path']) === false)
 	{

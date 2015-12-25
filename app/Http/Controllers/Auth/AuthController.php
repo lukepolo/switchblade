@@ -62,7 +62,7 @@ class AuthController extends Controller
         $user = \Socialize::with($provider)->user();
         if(empty($user) === false)
         {
-            $user_provider = UserProviders::where('provider_id', '=', $user->id)
+            $user_provider = UserProviders::where('provider_id', $user->id)
                 ->where('provider', '=' , $provider)
                 ->first();
 

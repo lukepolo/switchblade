@@ -58,7 +58,7 @@ class ScreenshotController extends Controller
     public function getShortShot()
     {
 	// use a standard user aka KETCH
-	$user = User::where('id', '=', '1')
+	$user = User::where('id', '4')
 	    ->first();
 
 	return \Screenshots::get(\Request::get('url'), $user, [
@@ -71,7 +71,7 @@ class ScreenshotController extends Controller
     public function getLongShot()
     {
 	// use a standard user aka KETCH
-	$user = User::where('id', '=', '1')
+	$user = User::where('id', '4')
 	    ->first();
 
 	return \Screenshots::get(\Request::get('url'), $user, [
@@ -82,7 +82,7 @@ class ScreenshotController extends Controller
     public function getMobileShot()
     {
 	// use a standard user aka KETCH
-	$user = User::where('id', '=', '1')
+	$user = User::where('id', '4')
 	    ->first();
 
 	return \Screenshots::get(\Request::get('url'), $user, [

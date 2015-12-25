@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use \ElephantIO\Client;
 use \ElephantIO\Engine\SocketIO\Version1X;
 
@@ -12,7 +11,8 @@ class Emitter
     
     public function __construct()
     {
-        $this->client = new Client(new Version1X('https://localhost:7777'));
+        $this->client = new Client(new Version1X('https://lukepolo.com:8880'));
+        
         $this->client->initialize();
     }
     
@@ -35,6 +35,6 @@ class Emitter
     
     public function __destruct() 
     {
-       echo 'yay'; die;
+        $this->client->close();
     }
 }
