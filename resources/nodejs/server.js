@@ -7,7 +7,6 @@ var port = process.env.NODE_SERVER_PORT,
 redis = require('redis'),
 redis_client = redis.createClient(),
 cookie = require('cookie'),
-os = require('os'),
 MCrypt = require('mcrypt').MCrypt,
 PHPUnserialize = require('php-unserialize'),
 
@@ -33,23 +32,8 @@ server.listen(port);
 io.use(function(socket, next) 
 {
     console.log(next);
-    // Get all the interfaces
-    var interfaces = os.networkInterfaces();
-    var addresses = [];
-    // Go through all the interfaces
-    for (k in interfaces) {
-        for (k2 in interfaces[k]) {
-            var address = interfaces[k][k2];
-            // Check to see if we have an IPv4 address
-            if (address.family == 'IPv4' && !address.internal) {
-                // Record the address
-                addresses.push(address.address)
-            }
-        }
-    }
-  
     // Check to see if the request is coming from our server, via PHP
-    if(socket.request.connection.remoteAddress == '127.0.0.1' || addresses.indexOf(socket.request.connection.remoteAddress) >= 0)
+    if(!socket.request.headers.cookie)
     {
         console.log('From Server');
         next();

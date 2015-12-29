@@ -12,6 +12,12 @@ abstract class Controller extends BaseController
     use DispatchesCommands, ValidatesRequests;
     public function __construct(Request $request)
     {
+        \Emitter::apply_broadcast(
+            'add_realtime_clicks',
+            action('\Modules\Heatmap\Http\Controllers\HeatmapController@getMap', ['id' => \Request::input('heatmap_url_id')]),
+            \Request::input('click_data')
+        );
+              
 	if(\Auth::check())
 	{
 	    $gamp = \GAMP::setClientId(\Auth::user()->id);
