@@ -4,6 +4,7 @@ namespace Modules\Absplit\Http\Controllers;
 
 use \App\Http\Controllers\Controller;
 use Modules\Absplit\Models\Absplit_Experiments;
+use Modules\Absplit\Models\Absplit_Experiment_Data;
 
 class AbsplitController extends Controller
 {
@@ -33,8 +34,7 @@ class AbsplitController extends Controller
 	$experiment->save();
 
 	return redirect(action(
-		'\Modules\Absplit\Http\Controllers\AbsplitController@getExperiment',
-		[
+		'\Modules\Absplit\Http\Controllers\AbsplitController@getExperiment', [
 		    'id' => $experiment->id
 		]
 	    )
@@ -43,8 +43,7 @@ class AbsplitController extends Controller
 
     public function getExperiment($id)
     {
-	$experiment = Absplit_Experiments::where('id', '=', $id)
-	    ->first();
+	$experiment = Absplit_Experiments::where('id', $id)->first();
 
 	if(empty($experiment) === false)
 	{
@@ -67,5 +66,19 @@ class AbsplitController extends Controller
 	{
 	    return redirect()->back()->withErrors('Experiment Not Found, please contact support!');
 	}
+    }
+    
+    public function postExperiment()
+    {
+        $experiment = Absplit_Experiments::where('id', \Request::get('experiment_id'))->firstOrFail();
+        
+        $absplit_experiment_data = Absplit_Experiment_Data::create([
+            'absplit__experiments_id' => $experiment->id,
+            'js' => json_encode(\Request::get('changes')),
+            'css' => null,
+            'history' => json_encode(\Request::get('history'))
+        ]);
+        
+        $absplit_experiment_data->save();
     }
 }

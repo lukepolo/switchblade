@@ -270,7 +270,7 @@ function save()
     
     // Save it to the database
     $.ajax({
-        url: window.location.origin+'/absplit/experiment/save',
+        url: window.location.origin+'/absplit/experiment',
         type: 'post',
         data: {
             experiment_id: experiment_id,

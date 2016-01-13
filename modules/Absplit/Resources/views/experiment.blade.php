@@ -3,11 +3,11 @@
 @section('content')
     <script type="text/javascript">
 	// Add the base to our template!
-	var base_url = "<?php echo $base_url; ?>";
+	var base_url = "{{ $base_url }}";
 	// TODO - this will be set in PHP
 	var variation_id = 1;
 
-	var experiment_id = <?php echo $experiment->id; ?>;
+	var experiment_id = {{ $experiment->id }};
     </script>
     <div class="jarviswidget jarviswidget-sortable" id="absplit-editor" role="widget" style="">
 	<header role="heading">
