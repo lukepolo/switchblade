@@ -1,9 +1,12 @@
 var base_path = __dirname.replace('resources/nodejs', '');
+
 require('dotenv').config({
     path: base_path+'.env'
 });
 
-var port = process.env.NODE_SCREENSHOT_PORT,
+var env = process.env;
+
+var port = env.NODE_SCREENSHOT_PORT,
 express = require('express'),
 mongoClient = require('mongodb').MongoClient,
 temp = require('temp').track(),
@@ -21,41 +24,47 @@ app = express(),
 screenshot_folder = base_path + 'public/assets/img/screenshots/';
 
 // Initialize connection once and authenticate
-mongoClient.connect('mongodb://@localhost:27017/'+process.env.MONGO_DB, function(err, database) 
-{
-    if(err)
-    {
+mongoClient.connect('mongodb://@localhost:27017/'+env.MONGO_DB, function(err, database) {
+    if(err) {
 	throw err;
     }
-    else
-    {
+    else {
 	// Auth with the admin so we can use other databases
 	database.admin()
-	.authenticate(process.env.DB_USER, process.env.MONGO_PASS, function(err, result)
-	{
-	    db = database;
-	    app.listen(port);
-	    console.log('Screenshots Started ON '+ port);
-	});
+        .authenticate(env.DB_USER, env.MONGO_PASS, function(err, result) {
+            db = database;
+            
+            if(env.NODE_HTTPS == 'true') {
+                console.log('https');
+                require('https').createServer({
+                       key: fs.readFileSync(env.SSL_KEY),
+                       cert: fs.readFileSync(env.SSL_CERT)
+                   },
+                   app
+                ).listen(port);
+            } else {
+                app.listen(port);
+            }
+            
+            console.log('Screenshots Started ON '+ port);
+        });
     }
 });
 
 app.use(auth);
 
-app.get('/', function(req, res) 
-{
+
+app.get('/', function(req, res) {
     parsed_url = parse_url.parse(req.query.url);
     
     // we need to add http on to it
-    if(parsed_url.protocol === null)
-    {
+    if(parsed_url.protocol === null) {
 	parsed_url = parse_url.parse('http://'+req.query.url);
     }
     
     req.query.url = parsed_url.hostname + parsed_url.path;
     
-    var options = 
-    {
+    var options = {
         // fonts - apt-get install fontconfig libfontconfig-dev libfontenc-dev libfontenc1 libxfont-dev libxfont1 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic ttf-mscorefonts-installer libxext-dev libwayland-dev
         // sudo apt-get install ttf-mscorefonts-installer
 	windowSize: {
@@ -70,110 +79,89 @@ app.get('/', function(req, res)
 	    'ignore-ssl-errors': 'true'
 	},
 	streamType: req.query.type ? req.query.type : 'png',
-	cookies: [
-	    {
-		name: 'ketchurl',
-		value: req.secret_key,
-		path: '/',
-		domain: '.'+parsed_url.hostname
-	    }
-	],
+	cookies: [{
+            name: 'ketchurl',
+            value: req.secret_key,
+            path: '/',
+            domain: '.'+parsed_url.hostname
+	}],
 	userAgent : req.query.mobile ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) Version/5.1' : 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/534.34 (KHTML, like Gecko) Firefox/31.0 Safari/534.34'
     };
     
     // if we do not pass cache false, then we assume they want a cache
-    if(typeof req.query.cache === 'undefined')
-    {
+    if(typeof req.query.cache === 'undefined') {
 	getCachedVersion(req.user_id, req.query.url, options, res);
     }
-    else
-    {
+    else {
 	getScreenshot(req.user_id, req.query.url, options, req.query.force ? true : false, res);
     }
 });
  
 function auth(req, res, next)
 {
-    if (req.url === '/favicon.ico') 
-    {
+    if (req.url === '/favicon.ico') {
 	res.end();
     } 
-    else if(req.query.apikey)
-    {
+    else if(req.query.apikey) {
 	console.log('Trying to auth '+ req.query.apikey);
         db.collection('users')
-	.findOne({api_key: req.query.apikey}, function(err, user)
-        { 
-            if(!err)
-            {
-                if(user)
-                {
+	.findOne({api_key: req.query.apikey}, function(err, user) {
+            if(!err) {
+                if(user) {
                     console.log('Authed');
 		    req.user_id = user.user_id;
 		    req.secret_key = user.secret_key;
                     next();
                 }
-                else
-                {
+                else {
                     console.log('Not Authed');
                     res.status(401).send('Not Authorized');
                 }
             }
-            else
-            {
+            else {
                 console.log('ERROR : '+ err);
                 res.status(500).send('ERROR '+ err + ', please contact support!');
             }
         });
     }
-    else
-    {
+    else {
         res.status(401).send('Not Authorized');
     }
 };
 
-function getScreenshot(user_id, url, options, forceUpdate, res)
-{
+function getScreenshot(user_id, url, options, forceUpdate, res) {
     // Using the webshot API Libary create a stream
-    webshot(url, options, function(err, renderStream) 
-    {
-	if(!err)
-	{
+    webshot(url, options, function(err, renderStream) {
+	if(!err) {
 	    var image_data = '';
-	    renderStream.on('data', function(data) 
-	    {
+	    renderStream.on('data', function(data) {
 		var chunk = data.toString('binary');
 		image_data = image_data + chunk;
-
+                
 		// Return to the browser 
 		res.write(chunk, 'binary');
 	    });
 
 	    // After the image has been completed we need to store it in our mongo db
-	    renderStream.on('end', function() 
-	    {
+	    renderStream.on('end', function() {
 		// Stop the response
 		res.end();
-		if(image_data)
-		{
+		if(image_data) {
 		    checkScreenShot(user_id, url, options, image_data, forceUpdate);
 		}
-		else
-		{
+		else {
 		    console.log('Failed to grab screenshot');
 		}
 	    });
 	}
-	else
-	{
+	else {
 	    console.log('ERROR : '+ err);
 	    res.end();
 	}
     });
 }
 
-function checkScreenShot(user_id, url, options, image_data, forceUpdate)
-{
+function checkScreenShot(user_id, url, options, image_data, forceUpdate) {
     // get the domain
     db.collection('screenshot_revisions')
     .find({
@@ -185,69 +173,53 @@ function checkScreenShot(user_id, url, options, image_data, forceUpdate)
 	created_at:-1
     })
     .limit(1)
-    .toArray(function(err, screenshot_revision)
-    {
-        if(!err)
-        {
-	    if(typeof screenshot_revision[0] === 'undefined' || forceUpdate)
-            {
+    .toArray(function(err, screenshot_revision) {
+        if(!err) {
+	    if(typeof screenshot_revision[0] === 'undefined' || forceUpdate) {
                 createScreenShotRevision(user_id, url, options, image_data);
             }
-            else
-            {
+            else {
 		console.log('Now Check to see how simliar they are, otherwise create a revision');
-		
                 
-                temp.open({suffix: '.png'}, function(err, file)
-		{
+                temp.open({suffix: '.png'}, function(err, file) {
 		    console.log(file.path);
-		    if (!err) 
-		    {
+		    if (!err) {
 			fs.writeFile(file.path, image_data, 'binary');
-			fs.close(file.fd, function(err)
-			{
-			    if(!err)
-			    {
+			fs.close(file.fd, function(err) {
+			    if(!err) {
 				resemble(file.path).compareTo(screenshot_folder+screenshot_revision[0]._id+'.png')
-				.onComplete(function(data)
-				{
+				.onComplete(function(data) {
 				    temp.cleanup();
 				    console.log(data.misMatchPercentage);
-				    if(data.misMatchPercentage > max_diff)
-				    {
+				    if(data.misMatchPercentage > max_diff) {
 					createScreenShotRevision(user_id, url, options, image_data);
 				    }
-				    else
-				    {
+				    else {
 					// Update Cache Time
 					updateCache(screenshot_revision[0]._id);
 					createScreenShot(user_id, url, options, screenshot_revision[0]._id);
 				    }
 				});
 			    }
-			    else
-			    {
+			    else {
 				console.log('ERROR : '+ err)
 			    }
 			});
 		    }
-		    else
-		    {
+                    else {
 			console.log('ERROR : '+ err);
 		    }
 		});
             }
         }
-        else
-        {
+        else {
             console.log('ERROR : '+ err);
         }
     });
 }
 
 // Update the screenshot to the correct image path
-function createScreenShot(user_id, url, options, screenshot_revision_id)
-{
+function createScreenShot(user_id, url, options, screenshot_revision_id) {
     console.log(screenshot_revision_id);
     // Start the screenshot object
     db.collection('screenshots')
@@ -259,19 +231,15 @@ function createScreenShot(user_id, url, options, screenshot_revision_id)
 	height: options.shotSize.height,
 	agent : options.userAgent,
 	created_at: Date.now() / 1000 | 0
-    },
-    function(err)
-    { 
-	if(err)
-	{
+    }, function(err) { 
+	if(err) {
 	    console.log('ERROR : '+ err);
 	    res.end();
 	}
     });
 }
 
-function createScreenShotRevision(user_id, url, options, image_data)
-{
+function createScreenShotRevision(user_id, url, options, image_data) {
     console.log('Creating new revision');
     // Create a new record for the screenshot with the path
     db.collection('screenshot_revisions')
@@ -282,76 +250,62 @@ function createScreenShotRevision(user_id, url, options, image_data)
 	agent : options.userAgent,
 	created_at: Date.now() / 1000 | 0,
 	cache_time: Date.now() / 1000 | 0
-    },
-    function(err, screenshot_revision)
-    {
+    }, function(err, screenshot_revision) {
 	// screenshot_revision , assumes its an array since we can do more than 1 insert at a time
-	if(!err)
-	{
+	if(!err) {
 	    createScreenShot(user_id, url, options, screenshot_revision.ops[0]._id);
-	    fs.writeFile(screenshot_folder + screenshot_revision.ops[0]._id + '.png', image_data, 'binary', function (err) 
-	    {
-		if (err) 
-		{
+	    fs.writeFile(screenshot_folder + screenshot_revision.ops[0]._id + '.png', image_data, 'binary', function (err) {
+		if (err) {
 		    console.log('ERROR : '+ err);
 		}
-		else
-		{
+		else {
 		    console.log('File Created ' + screenshot_revision.ops[0]._id + '.png');
 		}
 	    });
 	}
-	else
-	{
+	else {
 	    console.log('ERROR : '+ err);
 	}
     });
 }
 
-function getCachedVersion(user_id, url, options, res)
-{
+function getCachedVersion(user_id, url, options, res) {
     // Find a revision with the same url, width, height and cached time is less than the cache_time
     db.collection('screenshot_revisions')
     .find({
-	url: url,
-	cache_time:{
-	    $gt: (Date.now() / 1000 | 0) - cache_time
-	},
-	width : options.windowSize.width,
-	height: options.shotSize.height,
-	agent : options.userAgent
+        url: url,
+        cache_time:{
+            $gt: (Date.now() / 1000 | 0) - cache_time
+        },
+        width : options.windowSize.width,
+        height: options.shotSize.height,
+        agent : options.userAgent
     })
     .sort({
-	created_at:-1
+        created_at:-1
     })
     .limit(1)
-    .toArray(function(err, screenshot_revision)
-    {
-	if(!err)
-	{
-	    if(typeof screenshot_revision[0] === 'undefined')
-	    {
-		getScreenshot(user_id, url, options, false, res);
-	    }
-	    else
-	    {
-		console.log('return cache!');
-		console.log();
-		fs.readFile(screenshot_folder + screenshot_revision[0]._id + '.png', function(err, data) 
-		{
-		    res.end(data);
-		});
-	    }
-	}
-	else
-	{
-	    console.log('ERROR '+ err + ', please contact support!');
-	}
+    .toArray(function(err, screenshot_revision) {
+        if(!err) {
+            if(typeof screenshot_revision[0] === 'undefined') {
+                getScreenshot(user_id, url, options, false, res);
+            }
+            else {
+                console.log('return cache!');
+                console.log();
+                fs.readFile(screenshot_folder + screenshot_revision[0]._id + '.png', function(err, data) 
+                {
+                    res.end(data);
+                });
+            }
+        }
+        else {
+            console.log('ERROR '+ err + ', please contact support!');
+        }
     });
 }
 
-function updateCache(screenshot_id)
-{
+function updateCache(screenshot_id) {
     console.log('Updating Cache Time!');
     db.collection('screenshot_revisions')
     .update({
@@ -361,10 +315,8 @@ function updateCache(screenshot_id)
 	    cache_time: Date.now() / 1000 | 0
 	}
     },
-    function(err) 
-    {
-	if(err)
-	{
+    function(err) {
+	if(err) {
 	    console.log('ERROR '+ err + ', please contact support!');
 	}
     });		

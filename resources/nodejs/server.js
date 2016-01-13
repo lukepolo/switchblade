@@ -2,8 +2,9 @@ var base_path = __dirname.replace('resources/nodejs', '');
 require('dotenv').config({
     path: base_path+'.env'
 });
+var env = process.env;
 
-var port = process.env.NODE_SERVER_PORT,
+var port = env.NODE_SERVER_PORT,
 redis = require('redis'),
 redis_client = redis.createClient(),
 cookie = require('cookie'),
@@ -11,13 +12,19 @@ MCrypt = require('mcrypt').MCrypt,
 PHPUnserialize = require('php-unserialize'),
 
 // HTTPS
-fs = require('fs'),
+fs = require('fs');
 
-server = require('https').createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/lukepolo.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/lukepolo.com/cert.pem')
-}),
-io = require('socket.io')(server)
+if(env.NODE_HTTPS == 'true') {
+    console.log('https');
+    var server = require('https').createServer({
+        key:    fs.readFileSync(env.SSL_KEY),
+        cert:   fs.readFileSync(env.SSL_CERT),
+    });
+} else {
+    var server = require('http').createServer();
+}
+
+var io = require('socket.io')(server);
 
 // Maintains a list of timeouts
 offline_timeout = {};
