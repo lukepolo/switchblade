@@ -62,7 +62,7 @@ app.get('/', function(req, res) {
 	parsed_url = parse_url.parse('http://'+req.query.url);
     }
     
-    req.query.url = parsed_url.hostname + parsed_url.path;
+    var url = parsed_url.protocol + '//' + parsed_url.hostname + parsed_url.path;
     
     var options = {
         // fonts - apt-get install fontconfig libfontconfig-dev libfontenc-dev libfontenc1 libxfont-dev libxfont1 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic ttf-mscorefonts-installer libxext-dev libwayland-dev
@@ -88,12 +88,15 @@ app.get('/', function(req, res) {
 	userAgent : req.query.mobile ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) Version/5.1' : 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/534.34 (KHTML, like Gecko) Firefox/31.0 Safari/534.34'
     };
     
+    console.log(url);
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined') {
-	getCachedVersion(req.user_id, req.query.url, options, res);
+        console.log('get cached version');
+	getCachedVersion(req.user_id, url, options, res);
     }
     else {
-	getScreenshot(req.user_id, req.query.url, options, req.query.force ? true : false, res);
+        console.log('get new screenshot');
+	getScreenshot(req.user_id, url, options, req.query.force ? true : false, res);
     }
 });
  
