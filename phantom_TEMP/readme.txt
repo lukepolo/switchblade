@@ -1,1 +1,1 @@
-add steps to implement phantom or write a script 
+cp phantom_TEMP/phantomjs node_modules/phantomjs/lib/phantom/bin/phantomjs
