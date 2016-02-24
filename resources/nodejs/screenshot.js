@@ -89,6 +89,7 @@ app.get('/', function(req, res) {
     };
     
     console.log(url);
+
     // if we do not pass cache false, then we assume they want a cache
     if(typeof req.query.cache === 'undefined') {
         console.log('get cached version');
