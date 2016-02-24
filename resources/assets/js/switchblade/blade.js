@@ -1,58 +1,42 @@
-(function() 
-{
+(function() {
     var modules = {};
     var query_data = {};
-    var base_url = "https://luke.switchblade.io/";
+    var base_url = "https://switchblade.lukepolo.com/";
     
-    function createCORSRequest(method, url) 
-    {
+    function createCORSRequest(method, url) {
         url = url+"?"+EncodeQueryData(query_data);
         var xhr = new XMLHttpRequest();
-        if ("withCredentials" in xhr) 
-        {
+        if ("withCredentials" in xhr) {
             // Check if the XMLHttpRequest object has a "withCredentials" property.
             // "withCredentials" only exists on XMLHTTPRequest2 objects.
             xhr.open(method, url, true);
         } 
-        else if (typeof XDomainRequest != "undefined")
-        {
+        else if (typeof XDomainRequest != "undefined") {
             // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
             xhr = new XDomainRequest();
             xhr.open(method, url);
         }
-        else 
-        {
+        else {
             // Otherwise, CORS is not supported by the browser.
             xhr =  null;
             throw new Error('CORS not supported');
         }
         
-        xhr.onreadystatechange = function() 
-        {
-            if (xhr.readyState == 4) 
-            { 
-                if(xhr.responseText && xhr.status == 200)
-                {
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) { 
+                if(xhr.responseText && xhr.status == 200) {
                     // Apend the JS to the end of the file
                     var data = JSON.parse(xhr.responseText);
-                    data.forEach(function(command)
-                    {
-                        if(command)
-                        {
-                            // run what we need to get
-                            try 
-                            {
+                    data.forEach(function(command) {
+                        if(command) {
+                            try {
                                 swb_fn[command.function].apply(this,command.data);
                             } 
-                            catch(e)
-                            {
-                                // try to call instead
-                                try 
-                                {
+                            catch(e) {
+                                try {
                                     swb_fn[command.function].call(this,command.data);
                                 }
-                                catch(e)
-                                {
+                                catch(e) {
                                     document.getElementsByTagName('html')[0].style.visibility= "";
                                     console.log('BAD FUNCTION: '+command.function);
                                     console.log(e);
@@ -65,18 +49,15 @@
             }
         }
         
-        try
-        {
+        try {
             xhr.send();
         }
-        catch(err)
-        {
+        catch(err) {
             console.log(err);
         }
     }
         
-    function EncodeQueryData(data)
-    {
+    function EncodeQueryData(data) {
         var ret = [];
         for (var d in data)
         {
@@ -86,32 +67,27 @@
     }
     
     // Watch for the events inside the array and run them
-    swb.q.push = function() 
-    {    
+    swb.q.push = function() {    
         run_command(arguments[0]);
     };
     
-    function run_command(commands) 
-    {
+    function run_command(commands) {
         commands = Array.prototype.slice.call(commands);
         swb_fn[commands[0]].apply(this, commands.slice(1));
     }
 
-    var init = function()
-    {
+    var init = function() {
         swb.q.forEach(run_command);
     }
     
-    var auth = function(api_key)
-    {
+    var auth = function(api_key) {
         query_data['api_key'] = api_key;
-	var xhr = createCORSRequest('GET', "https://luke.switchblade.io/api/v1/mods");
+	var xhr = createCORSRequest('GET', base_url + "api/v1/mods");
     }
     
     var insert_script = function(script_arguments)
     {
-        if(!modules[script_arguments.module])
-        {
+        if(!modules[script_arguments.module]) {
             swb('register', script_arguments.module);
             
             var script_url = script_arguments.url;
@@ -121,8 +97,7 @@
             script.type = 'text/javascript';
             script.src = script_url;
 
-            if(script_arguments.callback)
-            {
+            if(script_arguments.callback) {
                 var script_callback = eval(script_arguments.callback);
 
                 // Then bind the event to the callback function.
@@ -135,21 +110,17 @@
         }
     }
     
-    var apply_function = function(script_arguments)
-    {
+    var apply_function = function(script_arguments) {
 	eval(script_arguments.function);
     }
     
      // To quickly send things an optimize the sending we are going to just send an "img"
     // this allows for cross browser and expects no return!
-    var send = function(url, params)
-    {
-        if(params)
-        {
+    var send = function(url, params) {
+        if(params) {
             params.api_key = query_data['api_key'];
         }
-        else
-        {
+        else {
             params = {
                 api_key: query_data['api_key']
             };
@@ -160,45 +131,36 @@
         img.src = url;
     }
     
-    var register = function(name)
-    {
+    var register = function(name) {
         modules[name] = true;
     }
     
-    function serialize(obj, prefix, depth) 
-    {
-        if (depth >= 5) 
-        {
+    function serialize(obj, prefix, depth) {
+        if (depth >= 5) {
             return encodeURIComponent(prefix) + "=[RECURSIVE]";
         }
         depth = depth + 1 || 1;
-
-        try 
-        {
-            if (window.Node && obj instanceof window.Node) 
-            {
+        
+        try {
+            if (window.Node && obj instanceof window.Node) {
                 return encodeURIComponent(prefix) + "=" + encodeURIComponent(targetToString(obj));
             }
             var str = [];
-            for (var p in obj) 
-            {
-                if (obj.hasOwnProperty(p) && p != null && obj[p] != null) 
-                {
+            for (var p in obj) {
+                if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
                     var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
                     str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
                 }
             }
             return str.join("&");
         }
-        catch (e) 
-        {
+        catch (e) {
             return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
         }
     }
     
     // All Functions Must Be Set Here 
-    var swb_fn = 
-    {
+    var swb_fn = {
         init:init,
         auth: auth,
         insert_script: insert_script,

@@ -9,7 +9,7 @@ imagemin = require('gulp-imagemin'),
 chalk = require('chalk'),
 pngquant = require('imagemin-pngquant'),
 elixir = require('laravel-elixir'),
-
+Task = elixir.Task,
 bower_path = './vendor/bower_components/',
 resources_path = './resources/';
 
@@ -35,23 +35,22 @@ paths = {
 // Minify JS
 elixir.extend('minify_js', function() 
 {
-    gulp.task('minify_js', function() 
-    {
+    new Task('minify_js', function() {
 	gulp.src([
-	    paths.jquery_ui + 'jquery-ui.min.js',
-	    paths.bootstrap + 'javascripts/bootstrap.min.js',
-	    paths.summernote + 'dist/summernote.min.js',
-	    paths.chartjs + 'Chart.js',
-	    paths.moment + 'moment.js',
-	    paths.js+ 'prettify/prettify.js',
-	    paths.js+ '**',
-            // Don't include our scripts for outside switchblade!
-            '!'+paths.js+'switchblade',
-            '!'+paths.js+'switchblade/**'
-	],
-	{
-	    base: './'
-	})
+                paths.jquery_ui + 'jquery-ui.min.js',
+                paths.bootstrap + 'javascripts/bootstrap.min.js',
+                paths.summernote + 'dist/summernote.min.js',
+                paths.chartjs + 'Chart.js',
+                paths.moment + 'moment.js',
+                paths.js+ 'prettify/prettify.js',
+                paths.js+ '**',
+                // Don't include our scripts for outside switchblade!
+                '!'+paths.js+'switchblade',
+                '!'+paths.js+'switchblade/**'
+            ],{
+                base: './'
+            }
+        )
 	.pipe(concat('all.js')) 
 	.pipe(sourcemaps.init())
 	.pipe(uglify())
@@ -59,56 +58,44 @@ elixir.extend('minify_js', function()
 	.pipe(gulp.dest(paths.js_public));
 
         gulp.src([
-	    paths.js+ 'switchblade/*',
-	],
-	{
-	    base: './'
-	})
+                paths.js+ 'switchblade/*',
+            ],{
+                base: './'
+            }
+        )
 	.pipe(concat('bladetrace.js')) 
 	.pipe(uglify())
 	.pipe(gulp.dest(paths.js_public));
 
 
         gulp.src([
-	    paths.js+ 'switchblade/blade.js',
-	],
-	{
-	    base: './'
-	})
+                paths.js+ 'switchblade/blade.js',
+            ],{
+                base: './'
+            }
+        )
 	.pipe(concat('blade.js')) 
 	.pipe(uglify())
 	.pipe(gulp.dest(paths.js_public));
 
 
         gulp.src([
-	    paths.js+ 'switchblade/_tracer.js',
-	],
-	{
-	    base: './'
-	})
+                paths.js+ 'switchblade/_tracer.js',
+            ], {
+                base: './'
+            }
+        )
 	.pipe(concat('tracer.js')) 
 	.pipe(uglify())
 	.pipe(gulp.dest(paths.js_public));
-    }); 
-    
-    
-    
-    if(command == 'watch')
-    {
-	gutil.log('Starting', '\'' + chalk.cyan('watch-js') + '\'...');
-	return this.registerWatcher('minify_js', resources_path+'**/*.js');
-    }
-    else
-    {
-	return this.queueTask('minify_js');
-    }
+        
+    }).watch(resources_path+'**/*.js'); 
 });
 
 // Minify CSS
 elixir.extend('minify_css', function() 
 {
-    gulp.task('minify_css', function() 
-    {
+    new Task('minify_css', function() {
 	gulp.src([paths.sass+'*'])
 	.pipe(compass({
 	    css: paths.css_public,
@@ -116,31 +103,23 @@ elixir.extend('minify_css', function()
 	    image: paths.img
 	}))
 	.pipe(sourcemaps.init())
-	.pipe(autoprefixer({ 
-	    browsers: [
-		'last 2 version'
-	    ] 
-	}))
+	.pipe(autoprefixer({
+                    browsers: [
+                        'last 2 version'
+                    ] 
+                }
+            )
+        )
 	.pipe(sourcemaps.write('.'))
-	.pipe(gulp.dest('public/assets/css'))
-    });
-    
-    if(command == 'watch')
-    {
-	gutil.log('Starting', '\'' + chalk.cyan('watch-sass') + '\'...');
-	return this.registerWatcher('minify_css', resources_path+'**/*.scss');
-    }
-    else
-    {
-	return this.queueTask('minify_css');
-    }
+	.pipe(gulp.dest('public/assets/css'));
+        
+    }).watch(paths.sass+'**/*.scss');
 });
 
 // Minify Images
 elixir.extend('minify_img', function(command) 
 {
-    gulp.task('minify_img', function()
-    {
+    new Task('minify_img', function() {
 	gulp.src(paths.img+'**')
         .pipe(imagemin({
             progressive: true,
@@ -148,18 +127,7 @@ elixir.extend('minify_img', function(command)
             use: [pngquant()]
         }))
         .pipe(gulp.dest('public/assets/img'));
-    });
-    
-    if(command == 'watch')
-    {
-	gutil.log('Starting', '\'' + chalk.cyan('watch-images') + '\'...');
-	return this.registerWatcher('minify_js', resources_path+'**/*.js');
-	return this.registerWatcher('minify_img', paths.img+'*');
-    }
-    else
-    {
-	return this.queueTask('minify_img');
-    }
+    }).watch(paths.img+'**');
 });
 
 elixir(function (mix) 
